@@ -1,0 +1,3 @@
+app/etc/modules/*.xml                   app/etc/modules/
+app/code/community/KL/*                 app/code/community/KL/
+skin/frontend/base/default/kl/*         skin/frontend/base/default/kl/
