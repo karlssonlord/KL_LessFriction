@@ -28,7 +28,7 @@
                 <observers>
                     <lessfriction>
                         <class>lessfriction/observer</class>
-                        <method>predispatch</method>
+                        <method>preDispatch</method>
                     </lessfriction>
                 </observers>
             </controller_action_predispatch_checkout_onepage_index>
