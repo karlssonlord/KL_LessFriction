@@ -12,6 +12,9 @@ require_once Mage::getModuleDir('controllers', 'Mage_Checkout') . DS . 'OnepageC
  */
 class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
 {
+    const LAYOUT_HANDLE_BASE    = 'lessfriction_boilerplate';
+    const LAYOUT_HANDLE_DEFAULT = 'lessfriction_default';
+
     /**
      * Index
      *
@@ -228,5 +231,22 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     {
         $helper = Mage::helper('lessfriction');
         return $helper;
+    }
+
+    /**
+     * Adds checkitout layout handles if it is enabled
+     *
+     * @return Mage_Core_Controller_Varien_Action
+     */
+    public function addActionLayoutHandles()
+    {
+        parent::addActionLayoutHandles();
+
+        if ($this->_getHelper()->isActive() == true) {
+            $this->getLayout()->getUpdate()->addHandle(self::LAYOUT_HANDLE_BASE);
+            $this->getLayout()->getUpdate()->addHandle(self::LAYOUT_HANDLE_DEFAULT);
+        }
+
+        return $this;
     }
 }

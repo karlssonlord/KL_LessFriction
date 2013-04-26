@@ -1,0 +1,9 @@
+<h1><?php echo $this->__('Less Friction Checkout'); ?></h1>
+
+<?php if ($this->helper('lessfriction')->includeCart()): ?>
+<div class="cart">
+    <h2><?php echo $this->__('Cart'); ?></h2>
+</div>
+<?php else: ?>
+    <!-- Cart disabled -->
+<?php endif; ?>

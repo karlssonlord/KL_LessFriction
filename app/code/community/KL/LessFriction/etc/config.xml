@@ -23,6 +23,13 @@
         </models>
     </global>
     <frontend>
+        <layout>
+            <updates>
+                <lessfriction>
+                    <file>kl/lessfriction.xml</file>
+                </lessfriction>
+            </updates>
+        </layout>
         <routers>
             <checkout>
                 <use>standard</use>
