@@ -219,6 +219,11 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
         return $quote;
     }
 
+    /**
+     * Get helper
+     *
+     * @return KL_LessFriction_Helper_Data
+     */
     protected function _getHelper()
     {
         $helper = Mage::helper('lessfriction');
