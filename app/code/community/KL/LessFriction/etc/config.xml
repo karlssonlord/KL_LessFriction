@@ -23,6 +23,16 @@
         </models>
     </global>
     <frontend>
+        <routers>
+            <checkout>
+                <use>standard</use>
+                <args>
+                    <modules>
+                        <lessfriction before="Mage_Checkout">KL_LessFriction</lessfriction>
+                    </modules>
+                </args>
+            </checkout>
+        </routers>
         <events>
             <controller_action_predispatch_checkout_onepage_index>
                 <observers>
@@ -44,7 +54,7 @@
                                 <config>
                                     <children>
                                         <lessfriction>
-                                            <title><![CDATA[Karlsson &amp; Lord Settings]]></title>
+                                            <title>Less Friction Settings</title>
                                         </lessfriction>
                                     </children>
                                 </config>
@@ -55,8 +65,6 @@
             </resources>
         </acl>
     </adminhtml>
-    <default>
-    </default>
     <phpunit>
         <suite>
             <modules>
