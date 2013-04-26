@@ -2,6 +2,12 @@
 
 Module description.
 
+## Features
+
+* A
+* B
+* C
+
 ## Install
 
 The easiest way to install the module is by using [modman](https://github.com/karlssonlord/modman):
