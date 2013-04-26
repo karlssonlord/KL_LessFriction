@@ -27,7 +27,9 @@
             <checkout>
                 <use>standard</use>
                 <args>
-                    <module before="Mage_Checkout">KL_LessFriction</module>
+                    <modules>
+                        <lessfriction before="Mage_Checkout">KL_LessFriction</lessfriction>
+                    </modules>
                 </args>
             </checkout>
         </routers>
