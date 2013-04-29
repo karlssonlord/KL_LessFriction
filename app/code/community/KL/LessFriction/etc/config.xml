@@ -23,6 +23,15 @@
         </models>
     </global>
     <frontend>
+        <translate>
+            <modules>
+                <lessfriction>
+                    <files>
+                        <default>KL_LessFriction.csv</default>
+                    </files>
+                </lessfriction>
+            </modules>
+        </translate>
         <layout>
             <updates>
                 <lessfriction>
@@ -72,6 +81,13 @@
             </resources>
         </acl>
     </adminhtml>
+    <default>
+        <lessfriction>
+            <login>
+                <hide>1</hide>
+            </login>
+        </lessfriction>
+    </default>
     <phpunit>
         <suite>
             <modules>

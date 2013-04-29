@@ -99,9 +99,19 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
      */
     public function saveMethodAction()
     {
-        if ($this->_getHelper()->isActive() == false) {
+        if ($this->_getHelper()->isActive() === false) {
             parent::saveMethodAction();
             return;
+        }
+
+        if ($this->_expireAjax()) {
+            return;
+        }
+
+        if ($this->getRequest()->isPost()) {
+            $method = $this->getRequest()->getPost('method');
+            $result = $this->getOnepage()->saveCheckoutMethod($method);
+            $this->_jsonResponse($result);
         }
     }
 

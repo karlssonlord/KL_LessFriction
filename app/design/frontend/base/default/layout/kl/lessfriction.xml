@@ -15,12 +15,27 @@
                 <type>skin_js</type>
                 <name>kl/lessfriction/lessfriction.js</name>
             </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>kl/lessfriction/scripts.js</name>
+            </action>
         </reference>
     </lessfriction_boilerplate>
 
     <lessfriction_default>
         <reference name="content">
-            <block name="checkout.layout" type="core/template" template="kl/lessfriction/layout.phtml" />
+            <block name="checkout.layout" type="checkout/onepage" template="kl/lessfriction/layout.phtml">
+                <block type="checkout/onepage_login" name="checkout.onepage.login" as="login" template="kl/lessfriction/login.phtml">
+                    <block type="page/html_wrapper" name="checkout.onepage.login.before" as="login_before" translate="label">
+                        <label>Login/Registration Before</label>
+                        <action method="setMayBeInvisible"><value>1</value></action>
+                    </block>
+                </block>
+                <block type="checkout/onepage_shipping_method" name="checkout.onepage.shipping_method" as="shipping_method" template="kl/lessfriction/shipping_method.phtml">
+                    <block type="checkout/onepage_shipping_method_available" name="checkout.onepage.shipping_method.available" as="available" template="kl/lessfriction/shipping_method/available.phtml"/>
+                    <block type="checkout/onepage_shipping_method_additional" name="checkout.onepage.shipping_method.additional" as="additional" template="checkout/onepage/shipping_method/additional.phtml"/>
+                </block>
+            </block>
         </reference>
     </lessfriction_default>
 </layout>

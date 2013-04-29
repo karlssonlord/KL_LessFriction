@@ -1,9 +1,15 @@
+var Checkout, 
+    checkout,
+    ShippingMethod,
+    shippingMethod;
+
 (function() {
-  var Checkout = Class.create();
+  Checkout = Class.create();
 
   Checkout.prototype = {
-    initialize: function() {
+    initialize: function(config) {
       this.isDeveloperMode = false;
+      this.saveMethodUrl = config.saveMethodUrl;
     },
 
     _onSectionClick: function(event) {
@@ -16,6 +22,37 @@
 
     reloadProgressBlock: function(toStep) {
 
+    },
+
+    setMethod: function(method) {
+      if (method != 'guest' && method != 'register') {
+        var message = Translator.translate('Please choose to register or to checkout as a guest').stripTags();
+        alert(message);
+        return false;
+      }
+
+      this.log(method);
+
+      if (method == 'guest') {
+        // Element.hide('register-customer-password');
+      } else if(method == 'register') {
+        // Element.show('register-customer-password');
+      } 
+
+      var request = new Ajax.Request(
+        this.saveMethodUrl,
+        {
+          method:     'post',
+          // onFailure: this.ajaxFailure.bind(this),
+          parameters: { method: method },
+          onSuccess:  function() {
+            $$('.login-section').invoke('hide')
+          }
+        }
+      );
+
+      this.method = method;
+      document.body.fire('login:setMethod', {method : this.method});
     },
 
     log: function(message) {
@@ -195,11 +232,8 @@
     }
   });
 
-  var ShippingMethod  = Class.create(Section, {});
-  new ShippingMethod;
-
-  var PaymentMethod   = Class.create(Section, {});
-  new PaymentMethod;
+  ShippingMethod  = Class.create(Section, {});
+  PaymentMethod   = Class.create(Section, {});
 
   /**
    * Address

@@ -18,7 +18,7 @@
                     <show_in_website>1</show_in_website>
                     <fields>
                         <active translate="label">
-                            <label>Enabled</label>
+                            <label>Enable LessFriction Checkout</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>101</sort_order>
@@ -28,15 +28,34 @@
                         </active>
                     </fields>
                 </general>
+                <login translate="label" module="lessfriction">
+                    <label>Login</label>
+                    <sort_order>15</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_store>1</show_in_store>
+                    <show_in_website>1</show_in_website>
+                    <fields>
+                        <hide translate="label">
+                            <label>Hide login prompt</label>
+                            <comment><![CDATA[]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>101</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </hide>
+                    </fields>
+                </login>
                 <cart translate="label" module="lessfriction">
-                    <label>Cart</label>
+                    <label>Shopping Cart</label>
                     <sort_order>20</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_store>1</show_in_store>
                     <show_in_website>1</show_in_website>
                     <fields>
                         <include_cart translate="label">
-                            <label>Include cart on checkout page</label>
+                            <label>Include shopping cart</label>
                             <comment><![CDATA[]]></comment>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
@@ -48,7 +67,7 @@
                     </fields>
                 </cart>
                 <cross_sell translate="label" module="lessfriction">
-                    <label>Cross sell</label>
+                    <label>Cross Sell</label>
                     <sort_order>30</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_store>1</show_in_store>
@@ -98,12 +117,86 @@
                     </fields>
                 </shipping>
                 <review translate="label" module="lessfriction">
-                    <label>Review and Place Order</label>
+                    <label>Review</label>
                     <sort_order>70</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_store>1</show_in_store>
                     <show_in_website>1</show_in_website>
                 </review>
+                <layout translate="label">
+                    <label>Section Layout Options</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>90</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <comment><![CDATA[To segment the checkout steps in layout sections we use <a href="https://en.wikipedia.org/wiki/NATO_phonetic_alphabet">NATO phonetic alphabet</a>. You probably don't want to change these values without talking to your frontend guru.]]></comment>
+                    <fields>
+                        <login translate="label">
+                            <label>Login Step Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_sections</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </login>
+                        <cart translate="label">
+                            <label>Cart Step Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_sections</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cart>
+                        <billing translate="label">
+                            <label>Billing Step Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_sections</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </billing>
+                        <shipping translate="label">
+                            <label>Shipping Step Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_sections</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </shipping>
+                        <shipping_method translate="label">
+                            <label>Shipping Method Step Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_sections</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </shipping_method>
+                        <payment translate="label">
+                            <label>Payment Step Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_sections</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </payment>
+                        <review translate="label">
+                            <label>Review Step Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_sections</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </review>
+                    </fields>
+                </layout>
             </groups>
         </lessfriction>
     </sections>

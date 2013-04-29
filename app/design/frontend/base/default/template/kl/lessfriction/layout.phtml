@@ -1,9 +1,36 @@
+<?php
+    $_helper   = Mage::helper('lessfriction');
+    $_sections = $_helper->getSections($this->getSteps(), $this);
+?>
 <h1><?php echo $this->__('Less Friction Checkout'); ?></h1>
 
-<?php if ($this->helper('lessfriction')->includeCart()): ?>
-<div class="cart">
-    <h2><?php echo $this->__('Cart'); ?></h2>
-</div>
-<?php else: ?>
-    <!-- Cart disabled -->
-<?php endif; ?>
+<?php foreach ($_sections as $class => $steps): ?>
+    <?php if (count($steps) > 0 && $class != ''): ?>
+    <section class="<?php echo $class; ?>">
+        <?php foreach ($steps as $_stepId => $_stepInfo): ?>
+        <?php
+            $_step = $this->getChildHtml($_stepId);
+
+            if ($_step):
+        ?>
+        <div class="<?php echo $_stepId; ?>-section">
+            <?php echo $_step; ?>
+        </div>
+        <?php
+            endif;
+        ?>
+        <?php endforeach; ?>
+    </section>
+    <?php endif; ?>
+<?php endforeach; ?>
+
+<script>
+    document.observe('dom:loaded', function() {
+        checkout = new Checkout({
+            saveMethodUrl: "<?php echo $this->getUrl('checkout/onepage/saveMethod'); ?>"
+        });
+        <?php if (Mage::getIsDeveloperMode()): ?>
+        checkout.isDeveloperMode = true;
+        <?php endif; ?>
+    });
+</script>
