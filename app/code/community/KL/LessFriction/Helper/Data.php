@@ -78,11 +78,18 @@ class KL_LessFriction_Helper_Data extends Mage_Core_Helper_Abstract
                     }
                     break;
                 case 'cart':
-                        if ($this->includeCart()) {
-                            $sections[$xmlPath][$stepCode] = $stepInfo;
-                        } else {
-                            
-                        }
+                    if ($this->includeCart()) {
+                        $sections[$xmlPath][$stepCode] = $stepInfo;
+                    } else {
+                        
+                    }
+                    break;
+                case 'payment':
+                    if (Mage::helper('lessfriction/payment')->isVisible()) {
+                        $sections[$xmlPath][$stepCode] = $stepInfo;
+                    } else {
+
+                    }
                     break;
                 default:
                     $sections[$xmlPath][$stepCode] = $stepInfo;

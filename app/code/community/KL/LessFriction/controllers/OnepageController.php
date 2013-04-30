@@ -31,7 +31,9 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
          * If checkout is disabled
          **/
         if (!Mage::helper('checkout')->canOnepageCheckout()) {
-            Mage::getSingleton('checkout/session')->addError($this->__('The onepage checkout is disabled.'));
+            Mage::getSingleton('checkout/session')->addError(
+                $this->__('The onepage checkout is disabled.')
+            );
             $this->_redirect('checkout/cart');
             return;
         }

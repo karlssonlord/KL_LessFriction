@@ -1,5 +1,9 @@
 var Checkout, 
     checkout,
+    PaymentMethod,
+    payment,
+    Review,
+    review,
     ShippingMethod,
     shippingMethod;
 
@@ -233,7 +237,12 @@ var Checkout,
   });
 
   ShippingMethod  = Class.create(Section, {});
-  PaymentMethod   = Class.create(Section, {});
+  PaymentMethod   = Class.create(Section, {
+    switchMethod: function(method) {
+      checkout.log(method);
+      this.save();
+    }
+  });
 
   /**
    * Address
@@ -260,4 +269,6 @@ var Checkout,
   new ShippingAddress;
   var BillingAddress  = Class.create(Address, {});
   new BillingAddress;
+
+  Review = Class.create(Section, {});
 })();

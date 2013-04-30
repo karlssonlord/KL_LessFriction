@@ -4,8 +4,19 @@
 ?>
 <h1><?php echo $this->__('Less Friction Checkout'); ?></h1>
 
+<script>
+    document.observe('dom:loaded', function() {
+        checkout = new Checkout({
+            saveMethodUrl: "<?php echo $this->getUrl('checkout/onepage/saveMethod'); ?>"
+        });
+        <?php if (Mage::getIsDeveloperMode()): ?>
+        checkout.isDeveloperMode = true;
+        <?php endif; ?>
+    });
+</script>
+
 <?php foreach ($_sections as $class => $steps): ?>
-    <?php if (count($steps) > 0 && $class != ''): ?>
+    <?php if (count($steps) > 0): ?>
     <section class="<?php echo $class; ?>">
         <?php foreach ($steps as $_stepId => $_stepInfo): ?>
         <?php
@@ -20,17 +31,6 @@
             endif;
         ?>
         <?php endforeach; ?>
-    </section>
-    <?php endif; ?>
-<?php endforeach; ?>
-
-<script>
-    document.observe('dom:loaded', function() {
-        checkout = new Checkout({
-            saveMethodUrl: "<?php echo $this->getUrl('checkout/onepage/saveMethod'); ?>"
-        });
-        <?php if (Mage::getIsDeveloperMode()): ?>
-        checkout.isDeveloperMode = true;
         <?php endif; ?>
-    });
-</script>
+    </section>
+<?php endforeach; ?>
