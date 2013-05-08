@@ -13,14 +13,63 @@ var Checkout,
   Checkout.prototype = {
     initialize: function(config) {
       this.isDeveloperMode = false;
-      this.saveMethodUrl = config.saveMethodUrl;
+      this.saveMethodUrl   = config.saveMethodUrl;
+      this.available       = true;
+      this._interval        = false;
+      this._queue          = Array();
+
     },
 
     _onSectionClick: function(event) {
 
     },
 
-    ajaxFailure: function(){
+    queueRequest: function(url, options) {
+      this._queue.push($H({url: url, options: options, timstamp: +new Date()}));
+
+      if (!this._interval) {
+        this.ajaxRequest();
+      }
+    },
+
+    ajaxRequest: function() {
+      this.log("Set interval");
+      this._interval = setInterval(function() {
+          if (this.available && this._queue.length > 0) {
+              this.available = false;
+
+              var queueItem = this._queue.shift();
+              var url       = queueItem.get('url');
+              var options   = queueItem.get('options');
+
+              if (typeof options.onSuccess === 'undefined') {
+                options.onSuccess = function(result) {};
+              }
+
+              var that = this;
+
+              options.onSuccess = (function() {
+                  var cache = options.onSuccess;
+
+                  return function() {
+                      cache.apply(this, arguments);
+                      that.available = true;
+                  }.bind(that);
+              }(that));
+
+              var request = new Ajax.Request(url, options);
+          } else if (this._queue.length == 0) {
+            this.log('Clear interval')
+            clearInterval(this._interval);
+            this._interval = false;
+            return;
+          } else {
+              this.log("Pending AJAX request...");
+          }
+      }.bind(this), 250);
+    },
+
+    ajaxFailure: function() {
 
     },
 
@@ -43,7 +92,7 @@ var Checkout,
         // Element.show('register-customer-password');
       } 
 
-      var request = new Ajax.Request(
+      this.ajaxRequest(
         this.saveMethodUrl,
         {
           method:     'post',
@@ -240,6 +289,7 @@ var Checkout,
   PaymentMethod   = Class.create(Section, {
     switchMethod: function(method) {
       checkout.log(method);
+      checkout.queueRequest('/checkout/onepage/', {});
       this.save();
     }
   });
