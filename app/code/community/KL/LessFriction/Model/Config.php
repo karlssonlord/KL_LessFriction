@@ -20,4 +20,9 @@ class KL_LessFriction_Model_Config
     {
         
     }
+
+    public function preselectSingleShippingMethod()
+    {
+        return Mage::getStoreConfigFlag('lessfriction/shipping/preselect_single');
+    }
 }

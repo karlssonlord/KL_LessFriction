@@ -20,7 +20,23 @@ class KL_LessFriction_Model_Observer
                         ->save();
             } else if ($shippingAddress->getCountryId()) {
                 $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->save();
+            }
 
+            /**
+             * If there's only one shipping method available we might want to preselect
+             * it based on how the module is configured in admin
+             **/
+            if (Mage::getModel('lessfriction/config')->preselectSingleShippingMethod()) {
+                $groups = $shippingAddress->getGroupedAllShippingRates();
+
+                if (!empty($groups)) {
+                    foreach ($groups as $code => $groupItems) {
+                        if (count($groups) == 1 && count($groupItems) == 1) {
+                            $shippingMethod = $groupItems[0];
+                            $shippingAddress->setShippingMethod($shippingMethod->getCode());
+                        }
+                    }
+                }
             }
         }
 
