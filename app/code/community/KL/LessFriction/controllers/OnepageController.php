@@ -174,6 +174,12 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
             parent::saveShippingMethodAction();
             return;
         }
+
+        $data   = $this->getRequest()->getPost('shipping_method', '');
+        $result = $this->getOnepage()->saveShippingMethod($data);
+
+        $this->getOnepage()->getQuote()->collectTotals()->save();
+        $this->_jsonResponse($result);
     }
 
     /**
@@ -187,6 +193,36 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
             parent::savePaymentAction();
             return;
         }
+
+        try {
+            $data        = $this->getRequest()->getPost('payment', array());
+            $result      = $this->getOnepage()->savePayment($data);
+            $redirectUrl = $this->_getQuote()->getPayment()->getCheckoutRedirectUrl();
+
+            if ($redirectUrl) {
+                $result['redirect'] = $redirectUrl;
+            }
+        } catch (Mage_Payment_Exception $e) {
+            // Add exception to result data
+            if ($e->getFields()) {
+                $result['fields'] = $e->getFields();
+            }
+
+            $result['error'] = $e->getMessage();
+        } catch (Mage_Core_Exception $e) {
+            // Add exception to result data
+            $result['error'] = $e->getMessage();
+        } catch (Exception $e) {
+            /**
+             * Unable to set payment method, make sure
+             * to log the exception
+             **/
+            Mage::logException($e);
+            $result['error'] = $this->__('Unable to set payment method.');
+        }
+
+        $this->getOnepage()->getQuote()->collectTotals()->save();
+        $this->_jsonResponse($result);
     }
 
     /**
