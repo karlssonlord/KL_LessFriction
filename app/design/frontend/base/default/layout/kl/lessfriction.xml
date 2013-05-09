@@ -31,12 +31,8 @@
                         <action method="setMayBeInvisible"><value>1</value></action>
                     </block>
                 </block>
-                <block type="checkout/onepage_shipping_method" name="checkout.onepage.shipping_method" as="shipping_method" template="kl/lessfriction/shipping_method.phtml">
-                    <block type="checkout/onepage_shipping_method_available" name="checkout.onepage.shipping_method.available" as="available" template="kl/lessfriction/shipping_method/available.phtml"/>
-                    <block type="checkout/onepage_shipping_method_additional" name="checkout.onepage.shipping_method.additional" as="additional" template="checkout/onepage/shipping_method/additional.phtml"/>
-                </block>
-                <block type="checkout/onepage_payment" name="checkout.onepage.shipping_method" as="shipping_method" template="kl/lessfriction/shipping_method.phtml">
-                    <block type="checkout/onepage_shipping_method_available" name="checkout.onepage.shipping_method.available" as="available" template="kl/lessfriction/shipping_method/available.phtml"/>
+                <block type="lessfriction/shipping_method" name="checkout.onepage.shipping_method" as="shipping_method" template="kl/lessfriction/shipping_method.phtml">
+                    <block type="lessfriction/shipping_method_available" name="checkout.onepage.shipping_method.available" as="available" template="kl/lessfriction/shipping_method/available.phtml"/>
                     <block type="checkout/onepage_shipping_method_additional" name="checkout.onepage.shipping_method.additional" as="additional" template="checkout/onepage/shipping_method/additional.phtml"/>
                 </block>
                 <block type="lessfriction/payment" name="checkout.onepage.payment" as="payment" template="kl/lessfriction/payment.phtml">
