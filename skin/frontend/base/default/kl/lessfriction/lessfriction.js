@@ -157,7 +157,8 @@ var Checkout,
     /**
      * Initialize class
      */
-    initialize: function() {
+    initialize: function(config) {
+      this._config       = config;
       this.saveUrl       = false;
       this.form          = false;
       this.onComplete    = this.resetLoadWaiting.bindAsEventListener(this);
@@ -246,7 +247,7 @@ var Checkout,
      */
     save: function() {
       if (this.validate()) {
-        var params  = Form.serialize(this.form);
+        var params  = Form.serialize(this._config.form);
         var options = {
           method:     this.requestMethod,
           onComplete: this.onComplete,
@@ -255,7 +256,7 @@ var Checkout,
           parameters: params
         };
 
-        this.request(this.saveUrl, options);
+        checkout.queueRequest(this._config.saveUrl, options);
       }
     },
 
@@ -289,7 +290,6 @@ var Checkout,
   PaymentMethod   = Class.create(Section, {
     switchMethod: function(method) {
       checkout.log(method);
-      checkout.queueRequest('/checkout/onepage/', {});
       this.save();
     }
   });

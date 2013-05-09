@@ -5,7 +5,12 @@
     var lastPrice;
 
     document.observe('dom:loaded', function() {
-        payment = new PaymentMethod('co-payment-form', '<?php echo $this->getUrl('checkout/onepage/savePayment') ?>');
+        payment = new PaymentMethod(
+            {
+                form:    'co-payment-form',
+                saveUrl: '<?php echo $this->getUrl('checkout/onepage/savePayment') ?>'
+            }
+        );
         payment.currentMethod = "<?php echo $this->getChild('methods')->getSelectedMethodCode() ?>";
     });
 </script>
