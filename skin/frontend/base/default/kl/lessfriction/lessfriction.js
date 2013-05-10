@@ -301,7 +301,12 @@ var Checkout,
     }
   });
 
-  ShippingMethod  = Class.create(Section, {});
+  ShippingMethod  = Class.create(Section, {
+    validate: function() {
+      return true;
+    },
+  });
+
   PaymentMethod   = Class.create(Section, {
     switchMethod: function(method) {
       checkout.log(method);

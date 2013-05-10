@@ -21,6 +21,13 @@ class KL_LessFriction_Block_Shipping_Method
             return false;
         }
 
+        if (
+            Mage::getModel('lessfriction/config')->hideIfFreeShipping() &&
+            $_shippingAddress->getShippingMethod() == 'freeshipping_freeshipping'
+        ) {
+            return false;
+        }
+
         return true;
     }
 }

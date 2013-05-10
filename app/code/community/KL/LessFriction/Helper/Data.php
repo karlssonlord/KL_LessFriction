@@ -85,11 +85,7 @@ class KL_LessFriction_Helper_Data extends Mage_Core_Helper_Abstract
                     }
                     break;
                 case 'payment':
-                    if (Mage::helper('lessfriction/payment')->isVisible()) {
-                        $sections[$xmlPath][$stepCode] = $stepInfo;
-                    } else {
-
-                    }
+                    $sections[$xmlPath][$stepCode] = $stepInfo;
                     break;
                 default:
                     $sections[$xmlPath][$stepCode] = $stepInfo;

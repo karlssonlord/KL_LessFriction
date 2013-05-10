@@ -4,8 +4,10 @@ Module description.
 
 ## Features
 
+* Hide login prompt
 * Flexible layout
 * Skip shipping method step
+* Skip payment method step
 
 ## Install
 

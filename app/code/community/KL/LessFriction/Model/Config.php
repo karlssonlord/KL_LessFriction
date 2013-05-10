@@ -21,8 +21,23 @@ class KL_LessFriction_Model_Config
         
     }
 
+    public function preselectSinglePaymentMethod()
+    {
+        return Mage::getStoreConfigFlag('lessfriction/payment/preselect_single');
+    }
+
+    public function hideIfFreeShipping()
+    {
+        return Mage::getStoreConfigFlag('lessfriction/shipping/hide_if_freeshipping');
+    }
+
     public function preselectSingleShippingMethod()
     {
         return Mage::getStoreConfigFlag('lessfriction/shipping/preselect_single');
+    }
+
+    public function preselectCheapestShippingMethod()
+    {
+        return Mage::getStoreConfigFlag('lessfriction/shipping/preselect_cheapest');
     }
 }
