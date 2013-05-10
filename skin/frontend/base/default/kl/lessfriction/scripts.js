@@ -14,6 +14,11 @@ document.observe('dom:loaded', function() {
     $$('.setCheckoutMethod').invoke('observe', 'click', function(evt) {
         checkout.setMethod(this.value);
     });
+
+    $$('.btn-checkout').invoke('observe', 'click', function(evt) {
+        Event.stop(evt);
+        review.save();
+    });
 });
 
 function bindLoginPost(evt){

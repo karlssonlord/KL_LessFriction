@@ -225,17 +225,26 @@ var Checkout,
       this.execFunc('after', 'validate');
     },
 
+    validate: function() {
+      return true;
+    },
+
     /**
      * Validation
      */
-    validate: function() {
+    _validate: function() {
       var result = this.beforeValidate();
-      if (result) {
+      if (result === true) {
+        return true;
+      }
+
+      result = this.validate();
+      if (result === true) {
         return true;
       }
 
       result = this.afterValidate();
-      if (result) {
+      if (result === true) {
         return true;
       }
 
@@ -246,8 +255,14 @@ var Checkout,
      * Save
      */
     save: function() {
-      if (this.validate()) {
-        var params  = Form.serialize(this._config.form);
+      checkout.log('Save section');
+      if (this._validate()) {
+        if (this._config.form) {
+          var params  = Form.serialize(this._config.form);
+        } else {
+          var params  = false;
+        }
+        
         var options = {
           method:     this.requestMethod,
           onComplete: this.onComplete,
@@ -291,7 +306,25 @@ var Checkout,
     switchMethod: function(method) {
       checkout.log(method);
       this.save();
-    }
+    },
+
+    /**
+     * Validation
+     */
+    validate: function() {
+        var methods = document.getElementsByName('payment[method]');
+
+        if (methods.length == 0) {
+            checkout.setMessage((Translator.translate('Your order cannot be completed at this time as there is no payment methods available for it.').stripTags()), 'error');
+            return false;
+        }
+
+        for (var i = 0; i < methods.length; i++) {
+            if (methods[i].checked) {
+                return true;
+            }
+        }
+    },
   });
 
   /**

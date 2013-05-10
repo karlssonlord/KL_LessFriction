@@ -65,7 +65,7 @@
                             <label>Items After</label>
                         </block>
                         <block type="checkout/agreements" name="checkout.onepage.agreements" as="agreements" template="checkout/onepage/agreements.phtml"/>
-                        <block type="core/template" name="checkout.onepage.review.button" as="button" template="checkout/onepage/review/button.phtml"/>
+                        <block type="core/template" name="checkout.onepage.review.button" as="button" template="kl/lessfriction/review/button.phtml"/>
                     </block>
                 </block>
             </block>
