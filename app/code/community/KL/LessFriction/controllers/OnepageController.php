@@ -246,6 +246,20 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
             parent::saveOrderAction();
             return;
         }
+
+        try {
+            $result = array();
+            $this->getOnepage()->saveOrder();
+
+            if (isset($redirectUrl)) {
+                $result['redirect'] = $redirectUrl;
+            }
+        } catch (Exception $e) {
+            $result['error'] = $e->getMessage();
+        }
+
+        $this->getOnepage()->getQuote()->save();
+        $this->_jsonResponse($result);
     }
 
     /**
