@@ -4,9 +4,8 @@ Module description.
 
 ## Features
 
-* A
-* B
-* C
+* Flexible layout
+* Skip shipping method step
 
 ## Install
 
