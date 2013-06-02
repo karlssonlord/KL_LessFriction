@@ -462,7 +462,7 @@ var Checkout,
 
       var placeOrder = document.on(
           'click',
-          '[name="shipping:use_for_billing"]',
+          '[name="shipping[use_for_billing]"]',
           function(event, element) {
               var form = $('co-billing-form');
               if (form) {
