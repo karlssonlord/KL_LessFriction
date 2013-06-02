@@ -14,6 +14,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
 {
     const LAYOUT_HANDLE_BASE    = 'lessfriction_boilerplate';
     const LAYOUT_HANDLE_DEFAULT = 'lessfriction_default';
+    const LAYOUT_HANDLE_JSON    = 'lessfriction_json';
 
     /**
      * Index
@@ -128,6 +129,29 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
             parent::saveBillingAction();
             return;
         }
+
+        /**
+         * Try to save the address with the posted data
+         **/
+        $data      = $this->getRequest()->getPost('billing', array());
+        $addressId = $this->getRequest()->getPost('billing_address_id', false);
+
+        if (isset($data['email'])) {
+            $data['email'] = trim($data['email']);
+        }
+
+        $result = $this->getOnepage()->saveBilling($data, $addressId);
+
+        /**
+         * Get the block relations, load them as JSON and add them
+         * to the result
+         **/
+        $relations = $this->getRequest()->getPost('relations', '');
+        $relations = explode(',', $relations);
+
+        $result['blocks'] = $this->_getBlocksAsJson($relations);
+
+        $this->_jsonResponse($result);
     }
 
     /**
@@ -151,6 +175,32 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
             parent::saveShippingAction();
             return;
         }
+
+        /**
+         * Try to save the address with the posted data
+         **/
+        $data      = $this->getRequest()->getPost('shipping', array());
+        $addressId = $this->getRequest()->getPost('shipping_address_id', false);
+        $result    = $this->getOnepage()->saveShipping($data, $addressId);
+
+        /**
+         * Since shipping address might impact shipping
+         * methods we should collect the shipping rates
+         * anew
+         **/
+        $this->getOnepage()->getQuote()
+            ->getShippingAddress()->setCollectShippingRates(true);
+
+        /**
+         * Get the block relations, load them as JSON and add them
+         * to the result
+         **/
+        $relations = $this->getRequest()->getPost('relations', '');
+        $relations = explode(',', $relations);
+
+        $result['blocks'] = $this->_getBlocksAsJson($relations);
+
+        $this->_jsonResponse($result);
     }
 
     /**
@@ -179,6 +229,12 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
         $result = $this->getOnepage()->saveShippingMethod($data);
 
         $this->getOnepage()->getQuote()->collectTotals()->save();
+
+        $result['blocks'] = $this->_getBlocksAsJson(array(
+                'payment',
+                'review'
+            ));
+
         $this->_jsonResponse($result);
     }
 
@@ -220,6 +276,11 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
             Mage::logException($e);
             $result['error'] = $this->__('Unable to set payment method.');
         }
+
+        $relations = $this->getRequest()->getPost('relations', '');
+        $relations = explode(',', $relations);
+
+        $result['blocks'] = $this->_getBlocksAsJson($relations);
 
         $this->getOnepage()->getQuote()->collectTotals()->save();
         $this->_jsonResponse($result);
@@ -270,6 +331,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     protected function _jsonResponse($data = array())
     {
         $jsonData = Mage::helper('core')->jsonEncode($data);
+        $this->getResponse()->setHeader('Content-type', 'application/json');
         $this->getResponse()->setBody($jsonData);
     }
 
@@ -311,4 +373,23 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
 
         return $this;
     }
+
+    protected function _getBlocksAsJson($blockNames)
+    {
+        $response = array();
+        $layout  = $this->getLayout();
+        $update  = $layout->getUpdate();
+
+        $update->load('lessfriction_json');
+
+        $layout->generateXml();
+        $layout->generateBlocks();
+
+        foreach ($blockNames as $blockName) {
+            $response[$blockName] = $layout->getBlock($blockName)->toHtml();
+        }
+
+        return $response;
+    }
+
 }

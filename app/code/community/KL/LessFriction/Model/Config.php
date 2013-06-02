@@ -21,6 +21,12 @@ class KL_LessFriction_Model_Config
         
     }
 
+    public function showCrosssell()
+    {
+        $type = Mage::getStoreConfigFlag('lessfriction/crosssell/type');
+        return $type == 'none';
+    }
+
     public function preselectSinglePaymentMethod()
     {
         return Mage::getStoreConfigFlag('lessfriction/payment/preselect_single');

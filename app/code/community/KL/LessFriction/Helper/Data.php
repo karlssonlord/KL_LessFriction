@@ -68,12 +68,17 @@ class KL_LessFriction_Helper_Data extends Mage_Core_Helper_Abstract
 
         foreach ($steps as $stepCode => $stepInfo) {
             $xmlPath = Mage::getStoreConfig(sprintf('lessfriction/layout/%s', $stepCode));
-
+  
             switch ($stepCode) {
                 case 'login':
                     if ($this->hideLogin() === true) {
 
                     } else {
+                        $sections[$xmlPath][$stepCode] = $stepInfo;
+                    }
+                    break;
+                case 'crosssell':
+                    if (Mage::getModel('lessfriction/config')->showCrosssell()) {
                         $sections[$xmlPath][$stepCode] = $stepInfo;
                     }
                     break;
@@ -83,9 +88,6 @@ class KL_LessFriction_Helper_Data extends Mage_Core_Helper_Abstract
                     } else {
                         
                     }
-                    break;
-                case 'payment':
-                    $sections[$xmlPath][$stepCode] = $stepInfo;
                     break;
                 default:
                     $sections[$xmlPath][$stepCode] = $stepInfo;

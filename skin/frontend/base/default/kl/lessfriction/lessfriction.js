@@ -1,3 +1,7 @@
+/**
+ * We'll need a bunch of global variables thanks to
+ * how Magento is designed.
+ */
 var Checkout, 
     checkout,
     PaymentMethod,
@@ -5,9 +9,17 @@ var Checkout,
     Review,
     review,
     ShippingMethod,
-    shippingMethod;
+    shippingMethod,
+    ShippingAddress,
+    shippingAddress,
+    BillingAddress,
+    billingAddress;
 
 (function() {
+
+  /**
+   * Checkout
+   */
   Checkout = Class.create();
 
   Checkout.prototype = {
@@ -41,18 +53,32 @@ var Checkout,
               var queueItem = this._queue.shift();
               var url       = queueItem.get('url');
               var options   = queueItem.get('options');
+              var that      = this;
 
               if (typeof options.onSuccess === 'undefined') {
                 options.onSuccess = function(result) {};
               }
 
-              var that = this;
-
               options.onSuccess = (function() {
                   var cache = options.onSuccess;
 
-                  return function() {
+                  return function(result) {
                       cache.apply(this, arguments);
+
+                      console.log(result.responseJSON.blocks);
+
+                      for (var name in result.responseJSON.blocks) {
+                        $$('.' + name + '-section').invoke(
+                          'update',
+                          result.responseJSON.blocks[name]
+                        );
+                        $$('.' + name + '-section').each(function (el) {
+                          new Effect.Highlight(el, {
+                            duration: 0.5
+                          })
+                        });
+                      }
+
                       that.available = true;
                   }.bind(that);
               }(that));
@@ -115,6 +141,8 @@ var Checkout,
     }
   };
 
+
+
   /**
    * Section
    *
@@ -165,6 +193,8 @@ var Checkout,
       this.onSuccess     = this.nextStep.bindAsEventListener(this);;
       this.onFailure     = false;
       this.requestMethod = 'post';
+
+      this.init();
     },
 
     /**
@@ -234,6 +264,7 @@ var Checkout,
      */
     _validate: function() {
       var result = this.beforeValidate();
+
       if (result === true) {
         return true;
       }
@@ -262,7 +293,16 @@ var Checkout,
         } else {
           var params  = false;
         }
-        
+
+        if (this._config.relations) {
+          if (params) {
+            params += '&';
+          }
+
+          params += 'relations=' + this._config.relations.toString();
+        }
+        console.log(params);
+
         var options = {
           method:     this.requestMethod,
           onComplete: this.onComplete,
@@ -301,12 +341,26 @@ var Checkout,
     }
   });
 
+
+
+  /**
+   * Shipping Method
+   *
+   * Enter short description here...
+   */
   ShippingMethod  = Class.create(Section, {
     validate: function() {
       return true;
     },
   });
 
+
+
+  /**
+   * Payment Method
+   *
+   * Enter short description here...
+   */
   PaymentMethod   = Class.create(Section, {
     switchMethod: function(method) {
       checkout.log(method);
@@ -332,6 +386,8 @@ var Checkout,
     },
   });
 
+
+
   /**
    * Address
    *
@@ -340,6 +396,33 @@ var Checkout,
    * methods in one place.
    */
   var Address         = Class.create(Section, {
+    init: function() {
+      this.beforeInit();
+
+      $(this._config.form).getElements().invoke('observe', 'keyup', function(e) {
+          var element = Event.element(e);
+
+          if (this.keyTimeout) {
+            clearTimeout(this.keyTimeout);
+          }
+
+          this.keyTimeout = setTimeout(function() {
+            console.log('Try to save address');
+            this.save();
+          }.bind(this), 500);
+      }.bind(this));
+
+      this.afterInit();
+    },
+    validate: function() {
+      var validator      = new SectionValidation(this._config.form);
+
+      if (validator.validate()) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     toggleNewAddressForm: function(form, isNew) {
       if (isNew === true) {
         this.resetSelectedAddress();
@@ -353,10 +436,114 @@ var Checkout,
     }
   });
 
-  var ShippingAddress = Class.create(Address, {});
-  new ShippingAddress;
-  var BillingAddress  = Class.create(Address, {});
-  new BillingAddress;
 
+
+  /**
+   * Shipping Address
+   *
+   * Enter short description here...
+   */
+  ShippingAddress = Class.create(Address, {
+  });
+
+
+
+  /**
+   * Billing Address
+   *
+   * Enter short description here...
+   */
+  BillingAddress  = Class.create(Address, {});
+
+
+
+  /**
+   * Review
+   *
+   * Enter short description here...
+   */
   Review = Class.create(Section, {});
+
+
+
+  var SectionValidation       = Class.create();
+  SectionValidation.prototype = new Validation;
+  Object.extend(SectionValidation, Validation);
+
+  SectionValidation.prototype.validate = function() {
+    var result    = false;
+    var useTitles = this.options.useTitles;
+    var callback  = this.options.onElementValidate;
+
+    try {
+        if (this.options.stopOnFirst) {
+            result = Form.getElements(this.form).all(function(elm) {
+                if (elm.hasClassName('local-validation') && !this.isElementInForm(elm, this.form)) {
+                    return true;
+                }
+                return SectionValidation.validate(elm,{useTitle : useTitles, onElementValidate : callback});
+            }, this);
+        } else {
+            result = Form.getElements(this.form).collect(function(elm) {
+                if (elm.hasClassName('local-validation') && !this.isElementInForm(elm, this.form)) {
+                    return true;
+                }
+                return SectionValidation.validate(elm,{useTitle : useTitles, onElementValidate : callback});
+            }, this).all();
+        }
+    } catch (e) {
+        // Fail silently
+    }
+
+    if (!result && this.options.focusOnError) {
+        try{
+            Form.getElements(this.form).findAll(function(elm) {
+                return $(elm).hasClassName('validation-failed')
+            }).first().focus()
+        } catch(e) {
+            // Fail silently
+        }
+    }
+
+    this.options.onFormValidate(result, this.form);
+    return result;
+  }
+
+  Object.extend(SectionValidation, {
+      validate : function(elm, options){
+          options = Object.extend({
+              useTitle : false,
+              onElementValidate : function(result, elm) {}
+          }, options || {});
+          elm = $(elm);
+
+          var cn = $w(elm.className);
+          return result = cn.all(function(value) {
+              var test = SectionValidation.test(value,elm,options.useTitle);
+              options.onElementValidate(test, elm);
+              return test;
+          });
+      },
+      test: function(name, elm, useTitle) {
+          var v = Validation.get(name);
+          var prop = '__advice'+name.camelize();
+          try {
+              if(Validation.isVisible(elm) && !v.test($F(elm), elm)) {
+
+                  this.updateCallback(elm, 'failed');
+
+                  elm[prop] = 1;
+
+                  return false;
+              } else {
+                  this.updateCallback(elm, 'passed');
+                  elm[prop] = '';
+
+                  return true;
+              }
+          } catch(e) {
+              throw(e)
+          }
+      }
+  });
 })();

@@ -6,8 +6,9 @@
     document.observe('dom:loaded', function() {
         payment = new PaymentMethod(
             {
-                form:    'co-payment-form',
-                saveUrl: '<?php echo $this->getUrl('checkout/onepage/savePayment') ?>'
+                form:      'co-payment-form',
+                saveUrl:   '<?php echo $this->getUrl('checkout/onepage/savePayment') ?>',
+                relations: ['review']
             }
         );
         payment.currentMethod = "<?php echo $this->getChild('methods')->getSelectedMethodCode() ?>";
