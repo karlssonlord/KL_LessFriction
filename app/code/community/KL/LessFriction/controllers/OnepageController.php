@@ -181,7 +181,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
          **/
         $data      = $this->getRequest()->getPost('shipping', array());
         $addressId = $this->getRequest()->getPost('shipping_address_id', false);
-        $result    = $this->getOnepage()->saveShipping($data, $addressId);
+        $result    = Mage::getModel('lessfriction/type_lessfriction')->saveShipping($data, $addressId);
 
         /**
          * Since shipping address might impact shipping
@@ -308,18 +308,36 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
             return;
         }
 
+        $result = array();
+        $this->getOnepage()->getQuote()->collectTotals();
+
         try {
-            $result = array();
             $this->getOnepage()->saveOrder();
 
-            if (isset($redirectUrl)) {
-                $result['redirect'] = $redirectUrl;
-            }
+            $redirectUrl = $this->getOnepage()->getCheckout()->getRedirectUrl();
+            $result['success'] = true;
+            $result['error']   = false;
         } catch (Exception $e) {
             $result['error'] = $e->getMessage();
         }
 
         $this->getOnepage()->getQuote()->save();
+
+        /**
+         * Comment from original onepage checkout code:
+         *
+         * When there is redirect to third party, we don't want to save the order yet.
+         * We will save the order in return action.
+         *
+         * Our comment to that comment:
+         *
+         * This is bullshit, the order is saved above – but we wat to redirect
+         * the user with the javascript part.
+         */
+        if (isset($redirectUrl)) {
+            $result['redirect'] = $redirectUrl;
+        }
+
         $this->_jsonResponse($result);
     }
 

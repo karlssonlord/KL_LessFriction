@@ -19,4 +19,9 @@ class KL_LessFriction_Block_Address_Billing
 
         return $this->_address;
     }
+
+    public function isPrimaryAddress()
+    {
+        return false;
+    }
 }

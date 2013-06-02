@@ -17,7 +17,7 @@
 
     $_validationClass['streetAlt'] = trim(str_replace('required-entry', '', $_validationClass['street']));
 ?>
-<form action="" id="co-billing-form">
+<form action="" id="co-billing-form" class="address-form <?php if (!$this->isPrimaryAddress()): ?> primary<?php endif; ?>">
     <h2><?php echo $this->__('Billing Address'); ?></h2>
 
     <ul class="form-list">
@@ -71,7 +71,7 @@
                          * and the user is not logged in, show field
                          * for email address here
                          */
-                        if(!$this->isCustomerLoggedIn()):
+                        if(!$this->isCustomerLoggedIn() && $this->isPrimaryAddress()):
                     ?>
                     <li>
                         <label for="billing:email" class="required"><?php echo $this->__('Email Address') ?> <em>*</em></label>
@@ -209,6 +209,7 @@
                     </li>
                     <?php endif ?>
 
+                    <?php if ($this->isPrimaryAddress()): ?>
                     <li class="fields" id="register-customer-password">
                         <div class="field">
                             <label for="billing:customer_password" class="required"><?php echo $this->__('Password') ?> <em>*</em></label>
@@ -223,6 +224,7 @@
                             </div>
                         </div>
                     </li>
+                    <?php endif; ?>
                     <?php endif; ?>
 
                     <?php if ($this->isCustomerLoggedIn() && $this->customerHasAddresses()): ?>
@@ -261,16 +263,23 @@
             echo $this->getChildHtml('checkout.onepage.billing.extra');
         ?>
 
-        <?php /* if ($this->canShip()): ?>
+        <?php if ($this->canShip() && $this->isPrimaryAddress()): ?>
             <li class="control">
                 <input type="radio" name="billing[use_for_shipping]" id="billing:use_for_shipping_yes" value="1"<?php if ($this->isUseBillingAddressForShipping()) {?> checked="checked"<?php }?> title="<?php echo  $this->__('Ship to this address') ?>" onclick="$('shipping:same_as_billing').checked = true;" class="radio" /><label for="billing:use_for_shipping_yes"><?php echo  $this->__('Ship to this address') ?></label></li>
             <li class="control">
                 <input type="radio" name="billing[use_for_shipping]" id="billing:use_for_shipping_no" value="0"<?php if (!$this->isUseBillingAddressForShipping()) {?> checked="checked"<?php }?> title="<?php echo $this->__('Ship to different address') ?>" onclick="$('shipping:same_as_billing').checked = false;" class="radio" /><label for="billing:use_for_shipping_no"><?php echo $this->__('Ship to different address') ?></label>
             </li>
-        <?php endif; */ ?>
+        <?php endif; ?>
     </ul>
 
-    <?php if (!$this->canShip()): ?>
+    <?php
+        /**
+         * Quote contains virtual products, so shipping address
+         * won't be visible for customer – force it billing address
+         * to shipping address.
+         **/
+        if (!$this->canShip()):
+    ?>
     <input type="hidden" name="billing[use_for_shipping]" value="1" />
     <?php endif; ?>
 </form>
@@ -289,7 +298,8 @@
         billingAddress           = new BillingAddress({
             form:    'co-billing-form',
             test1:   '<?php echo $this->getUrl('checkout/onepage/getAddress') ?>address/',
-            saveUrl: '<?php echo $this->getUrl('checkout/onepage/saveBilling') ?>'
+            saveUrl: '<?php echo $this->getUrl('checkout/onepage/saveBilling') ?>',
+            relations: ['payment','review']
         });
         
         $('billing-address-select') && billingAddress.newAddress(!$('billing-address-select').value);

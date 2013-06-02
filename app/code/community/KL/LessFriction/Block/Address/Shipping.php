@@ -15,4 +15,9 @@ class KL_LessFriction_Block_Address_Shipping
 
         return $this->_address;
     }
+
+    public function isPrimaryAddress()
+    {
+        return true;
+    }
 }

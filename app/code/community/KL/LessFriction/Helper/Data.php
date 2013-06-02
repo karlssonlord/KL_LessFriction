@@ -89,6 +89,11 @@ class KL_LessFriction_Helper_Data extends Mage_Core_Helper_Abstract
                         
                     }
                     break;
+                case 'shipping':
+                    if (!Mage::getModel('checkout/session')->getQuote()->isVirtual()) {
+                        $sections[$xmlPath][$stepCode] = $stepInfo;
+                    }
+                    break;
                 default:
                     $sections[$xmlPath][$stepCode] = $stepInfo;
                     break;

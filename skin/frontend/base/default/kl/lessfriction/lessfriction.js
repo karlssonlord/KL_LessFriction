@@ -67,6 +67,11 @@ var Checkout,
 
                       console.log(result.responseJSON.blocks);
 
+                      if (result.responseJSON.redirect) {
+                        location.href = result.responseJSON.redirect;
+                        return;
+                      }
+
                       for (var name in result.responseJSON.blocks) {
                         $$('.' + name + '-section').invoke(
                           'update',
@@ -334,6 +339,11 @@ var Checkout,
         }
       }
 
+      if (transport.responseJSON.success) {
+        location.href = this._config.successUrl;
+        return;
+      }
+
       if (response.error) {
         alert(response.message);
         return false;
@@ -399,6 +409,10 @@ var Checkout,
     init: function() {
       this.beforeInit();
 
+      if ($(this._config.form).hasClassName('primary')) {
+        $(this._config.form).up(1).hide();
+      }
+
       $(this._config.form).getElements().invoke('observe', 'keyup', function(e) {
           var element = Event.element(e);
 
@@ -446,7 +460,16 @@ var Checkout,
   ShippingAddress = Class.create(Address, {
   });
 
-
+      var placeOrder = document.on(
+          'click',
+          '[name="shipping:use_for_billing"]',
+          function(event, element) {
+              var form = $('co-billing-form');
+              if (form) {
+                form.up(1).toggle();
+              }
+          }.bind(this)
+      );
 
   /**
    * Billing Address
@@ -462,7 +485,23 @@ var Checkout,
    *
    * Enter short description here...
    */
-  Review = Class.create(Section, {});
+  Review = Class.create(Section, {
+    init: function() {
+      /**
+       * Add event listener for clicking the
+       * place order button
+       */
+      var placeOrder = document.on(
+          'click',
+          '.btn-checkout',
+          function(event, element) {
+              element.disabled = true;
+              this.save();
+              Event.stop(event);
+          }.bind(this)
+      );
+    }
+  });
 
 
 

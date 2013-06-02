@@ -17,7 +17,7 @@
 
     $_validationClass['streetAlt'] = trim(str_replace('required-entry', '', $_validationClass['street']));
 ?>
-<form action="" id="co-shipping-form">
+<form action="" id="co-shipping-form" class="address-form <?php if (!$this->isPrimaryAddress()): ?> primary<?php endif; ?>">
     <h2><?php echo $this->__('Shipping Address'); ?></h2>
 
     <ul class="form-list">
@@ -65,6 +65,25 @@
                             title="<?php echo $this->__('Company') ?>"
                             class="input-text <?php echo $_validationClass['company'] ?>" />
                     </li>
+                    <?php 
+                        /**
+                         * If billing address is the primary address
+                         * and the user is not logged in, show field
+                         * for email address here
+                         */
+                        if(!$this->isCustomerLoggedIn() && $this->isPrimaryAddress()):
+                    ?>
+                    <li>
+                        <label for="shipping:email" class="required"><?php echo $this->__('Email Address') ?> <em>*</em></label>
+                        <input
+                            type="text"
+                            name="shipping[email]"
+                            id="shipping:email"
+                            value="<?php echo $this->escapeHtml($this->getAddress()->getEmail()) ?>"
+                            title="<?php echo $this->__('Email Address') ?>"
+                            class="input-text validate-email required-entry" />
+                    </li>
+                    <?php endif; ?>
                     <li>
                         <label for="shipping:street1" class="required"><?php echo $this->__('Address') ?> <em>*</em></label>
                         <input
@@ -162,6 +181,23 @@
                             class="input-text <?php echo $_validationClass['telephone'] ?>"
                             id="shipping:telephone" />
                     </li>
+                    <?php if(!$this->isCustomerLoggedIn() && $this->isPrimaryAddress()): ?>
+                    <li class="fields" id="register-customer-password">
+                        <div class="field">
+                            <label for="shipping:customer_password" class="required"><?php echo $this->__('Password') ?> <em>*</em></label>
+                            <div class="input-box">
+                                <input type="password" name="shipping[customer_password]" id="shipping:customer_password" title="<?php echo $this->__('Password') ?>" class="input-text required-entry validate-password" />
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="shipping:confirm_password" class="required"><?php echo $this->__('Confirm Password') ?> <em>*</em></label>
+                            <div class="input-box">
+                                <input type="password" name="shipping[confirm_password]" title="<?php echo $this->__('Confirm Password') ?>" id="shipping:confirm_password" class="input-text required-entry validate-cpassword" />
+                            </div>
+                        </div>
+                    </li>
+                    <?php endif; ?>
+
                     <?php if ($this->isCustomerLoggedIn() && $this->customerHasAddresses()): ?>
                     <li>
                         <label for="shipping:save_in_address_book">
@@ -180,6 +216,9 @@
                     </li>
                 </ul>
                     <?php else: ?>
+                    <?php if ($this->isPrimaryAddress()): ?>
+                    <li><label for="shipping:use_for_billing"><input type="checkbox" id="shipping:use_for_billing" name="shipping[use_for_billing]" checked="checked" value="1" /> <?php echo $this->__('Use this address for billing'); ?></label></li>
+                    <?php endif; ?>
                 </ul>
 
                 <input type="hidden" name="shipping[save_in_address_book]" value="1" />
