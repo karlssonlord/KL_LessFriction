@@ -18,6 +18,8 @@ class KL_LessFriction_Block_Address_Shipping
 
     public function isPrimaryAddress()
     {
-        return true;
+        $type = Mage::getModel('lessfriction/config')->getPrimaryAddressType();
+
+        return ($type == 'shipping');
     }
 }

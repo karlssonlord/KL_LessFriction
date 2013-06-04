@@ -22,6 +22,8 @@ class KL_LessFriction_Block_Address_Billing
 
     public function isPrimaryAddress()
     {
-        return false;
+        $type = Mage::getModel('lessfriction/config')->getPrimaryAddressType();
+
+        return ($type == 'billing');
     }
 }

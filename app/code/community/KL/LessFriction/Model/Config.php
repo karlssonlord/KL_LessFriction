@@ -46,4 +46,15 @@ class KL_LessFriction_Model_Config
     {
         return Mage::getStoreConfigFlag('lessfriction/shipping/preselect_cheapest');
     }
+
+    public function getPrimaryAddressType()
+    {
+        $type = Mage::getStoreConfig('lessfriction/addresses/primary');
+
+        if (!$type) {
+            $type = 'billing';
+        }
+
+        return $type;
+    }
 }
