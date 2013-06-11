@@ -386,7 +386,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     {
         parent::addActionLayoutHandles();
 
-        if ($this->_getHelper()->isActive() == true && !"checkout_onepage_success") {
+        if ($this->_getHelper()->isActive() == true && $this->getFullActionName() != "checkout_onepage_success") {
             $this->getLayout()->getUpdate()->addHandle(self::LAYOUT_HANDLE_BASE);
             $this->getLayout()->getUpdate()->addHandle(self::LAYOUT_HANDLE_DEFAULT);
         }
