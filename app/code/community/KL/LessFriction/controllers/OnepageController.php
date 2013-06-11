@@ -379,12 +379,14 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
      * Adds checkitout layout handles if it is enabled
      *
      * @return Mage_Core_Controller_Varien_Action
+     *
+     * @todo Handle succes page in a better way
      */
     public function addActionLayoutHandles()
     {
         parent::addActionLayoutHandles();
 
-        if ($this->_getHelper()->isActive() == true) {
+        if ($this->_getHelper()->isActive() == true && !"checkout_onepage_success") {
             $this->getLayout()->getUpdate()->addHandle(self::LAYOUT_HANDLE_BASE);
             $this->getLayout()->getUpdate()->addHandle(self::LAYOUT_HANDLE_DEFAULT);
         }
