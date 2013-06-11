@@ -4,7 +4,9 @@
         <update handle="page_one_column" />
 
         <remove name="left" />
-        <remove name="right" />
+        <reference name="right">
+            <action method="unsetChildren"></action>
+        </reference>
 
         <reference name="content">
             <action method="unsetChild"><alias>checkout.onepage</alias></action>
