@@ -31,10 +31,12 @@ var Checkout,
             this.available       = true;
             this._interval       = false;
             this._queue          = Array();
-            this.defaultMethod   = 'register';
+            this.defaultMethod   = config.defaultMethod;
 
             if ($$('.login-section').length == 0) {
-                this.setMethod('register');
+                if (this.defaultMethod !== false) {
+                    this.setMethod(this.defaultMethod);
+                }
             }
         },
 
@@ -541,6 +543,9 @@ var Checkout,
         },
         resetSelectedAddress: function(form) {
             this.selectAddressElement.invoke('setValue', '');
+        },
+        newAddress: function(value) {
+            return;
         }
     });
 

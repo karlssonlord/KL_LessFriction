@@ -7,7 +7,8 @@
 <script>
     document.observe('dom:loaded', function() {
         checkout = new Checkout({
-            saveMethodUrl: "<?php echo $this->getUrl('checkout/onepage/saveMethod'); ?>"
+            saveMethodUrl: "<?php echo $this->getUrl('checkout/onepage/saveMethod'); ?>",
+            defaultMethod: <?php if (!$this->helper('customer')->isLoggedIn()): ?>'register'<?php else: ?>false,<?php endif; ?>
         });
         <?php if (Mage::getIsDeveloperMode()): ?>
         checkout.isDeveloperMode = true;
