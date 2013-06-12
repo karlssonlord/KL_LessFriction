@@ -2,7 +2,7 @@
  * We'll need a bunch of global variables thanks to
  * how Magento is designed.
  */
-var Checkout, 
+var Checkout,
     checkout,
     PaymentMethod,
     payment,
@@ -81,6 +81,7 @@ var Checkout,
 
                             for (var name in result.responseJSON.blocks) {
                                 var sectionContainers = $$('.' + name + '-section');
+                                result.responseJSON.blocks[name] += '<div class="overlay" style="display:none"></div>';
 
                                 sectionContainers.invoke(
                                     'update',
@@ -119,7 +120,7 @@ var Checkout,
         },
 
         ajaxFailure: function() {
-
+            // TODO: Unset all spinners/overlays
         },
 
         reloadProgressBlock: function(toStep) {
@@ -139,7 +140,7 @@ var Checkout,
                 Element.hide('register-customer-password');
             } else if(method == 'register') {
                 Element.show('register-customer-password');
-            } 
+            }
 
             this.ajaxRequest(
                 this.saveMethodUrl,
@@ -324,6 +325,7 @@ var Checkout,
                         params += '&';
                     }
 
+                    this.setLoadingBlocks();
                     params += 'relations=' + this._config.relations.toString();
                 }
 
@@ -341,11 +343,32 @@ var Checkout,
             }
         },
 
+        setLoadingBlocks: function() {
+            for (var i = 0; i < this._config.relations.length; i++) {
+                console.log('.' + this._config.relations[i] + '-section');
+                $$('.' + this._config.relations[i] + '-section').each(function(section) {
+                    var overlay = section.addClassName('loading').down('.overlay');
+                    if (overlay) overlay.show();
+                });
+            }
+        },
+
+        resetLoadingBlocks: function() {
+            // TODO: Make sure no ajax-request is running
+            for (var i = 0; i < this._config.relations.length; i++) {
+                $$('.' + this._config.relations[i] + '-section').each(function(section) {
+                    var overlay = section.removeClassName('loading').down('.overlay');
+                    if (overlay) overlay.hide();
+                });
+            }
+        },
+
         /**
          * Reset load waiting
          */
         resetLoadWaiting: function(transport) {
             console.log('resetLoadWaiting');
+            this.resetLoadingBlocks();
         },
 
         /**

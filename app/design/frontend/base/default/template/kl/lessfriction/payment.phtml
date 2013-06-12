@@ -14,11 +14,11 @@
         payment.currentMethod = "<?php echo $this->getChild('methods')->getSelectedMethodCode() ?>";
     });
 </script>
-<?php if ($this->isVisible()): ?>
-<h2><?php echo $this->__('Payment Method'); ?></h2>
-<form action="" id="co-payment-form">
-    <fieldset>
-        <?php echo $this->getChildHtml('methods') ?>
-    </fieldset>
-</form>
+<?php if ($this->isVisible()) : ?>
+    <h2><?php echo $this->__('Payment Method'); ?></h2>
+    <form action="" id="co-payment-form">
+        <fieldset>
+            <?php echo $this->getChildHtml('methods') ?>
+        </fieldset>
+    </form>
 <?php endif; ?>
