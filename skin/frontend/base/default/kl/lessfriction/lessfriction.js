@@ -522,6 +522,19 @@ var Checkout,
                 }.bind(this), 500);
             }.bind(this));
 
+            $(this._config.form).getElements().invoke('observe', 'change', function(e) {
+                var element = Event.element(e);
+
+                if (this.keyTimeout) {
+                    clearTimeout(this.keyTimeout);
+                }
+
+                this.keyTimeout = setTimeout(function() {
+                    checkout.log('Try to save address');
+                    this.save();
+                }.bind(this), 500);
+            }.bind(this));
+
             this.afterInit();
         },
         validate: function() {
