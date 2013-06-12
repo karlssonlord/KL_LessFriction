@@ -541,12 +541,6 @@ var Checkout,
                 form.hide();
             }
         },
-        resetSelectedAddress: function(form) {
-            this.selectAddressElement.invoke('setValue', '');
-        },
-        newAddress: function(value) {
-            return;
-        }
     });
 
 
@@ -557,6 +551,22 @@ var Checkout,
      * Enter short description here...
      */
     ShippingAddress = Class.create(Address, {
+        resetSelectedAddress: function(form) {
+            var selectElement = $('shipping-address-select')
+            if (selectElement) {
+                selectElement.value = '';
+            }
+        },
+        newAddress: function(value) {
+            if (value) {
+                this.resetSelectedAddress();
+                Element.show('shipping-new-address-form');
+                checkout.log('Reset selected address and show form.');
+            } else {
+                Element.hide('shipping-new-address-form');
+                checkout.log('Hide form.');
+            }
+        }
     });
 
     var useForBilling = document.on(
@@ -575,7 +585,24 @@ var Checkout,
      *
      * Enter short description here...
      */
-    BillingAddress  = Class.create(Address, {});
+    BillingAddress  = Class.create(Address, {
+        resetSelectedAddress: function(form) {
+            var selectElement = $('billing-address-select')
+            if (selectElement) {
+                selectElement.value = '';
+            }
+        },
+        newAddress: function(value) {
+            if (value) {
+                this.resetSelectedAddress();
+                Element.show('billing-new-address-form');
+                checkout.log('Reset selected address and show form.');
+            } else {
+                Element.hide('billing-new-address-form');
+                checkout.log('Hide form.');
+            }
+        }
+    });
 
     var useForBilling = document.on(
         'click',
