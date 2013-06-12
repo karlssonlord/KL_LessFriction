@@ -407,6 +407,19 @@ var Checkout,
             if ($('payment_form_'+method)){
                 this.changeVisible(method, false);
                 $('payment_form_'+method).fire('payment-method:switched', {method_code : method});
+
+                $(this._config.form).getElements().invoke('observe', 'keyup', function(e) {
+                    var element = Event.element(e);
+
+                    if (this.keyTimeout) {
+                        clearTimeout(this.keyTimeout);
+                    }
+
+                    this.keyTimeout = setTimeout(function() {
+                        console.log('Try to save address');
+                        this.save();
+                    }.bind(this), 500);
+                }.bind(this));
             } else {
                 // Event fix for payment methods without form like "Check / Money order"
                 document.body.fire('payment-method:switched', {method_code : method});
@@ -438,14 +451,25 @@ var Checkout,
         validate: function() {
             var methods   = document.getElementsByName('payment[method]');
 
+            var silentValidator = new SectionValidation(this._config.form);
             var validator = new Validation(this._config.form);
+
+            if (!silentValidator.validate()) {
+                return false;
+            }
+
             validator.reset();
+
             if (!validator.validate()) {
                 return false;
             }
 
             if (methods.length == 0) {
-                checkout.setMessage((Translator.translate('Your order cannot be completed at this time as there is no payment methods available for it.').stripTags()), 'error');
+                checkout.setMessage(
+                    Translator.translate('Your order cannot be completed at this time as there is no payment methods available for it.').stripTags(),
+                    'error'
+                );
+
                 return false;
             }
 
@@ -486,7 +510,7 @@ var Checkout,
                 }
 
                 this.keyTimeout = setTimeout(function() {
-                    console.log('Try to save address');
+                    checkout.log('Try to save address');
                     this.save();
                 }.bind(this), 500);
             }.bind(this));
@@ -554,109 +578,108 @@ var Checkout,
         }.bind(this)
     );
 
-  /**
-   * Review
-   *
-   * Enter short description here...
-   */
-  Review = Class.create(Section, {
-    init: function() {
-      /**
-       * Add event listener for clicking the
-       * place order button
-       */
-      var placeOrder = document.on(
-          'click',
-          '.btn-checkout',
-          function(event, element) {
-              element.disabled = true;
-              this.save();
-              Event.stop(event);
-          }.bind(this)
-      );
-    }
-  });
-
-
-
-  var SectionValidation       = Class.create();
-  SectionValidation.prototype = new Validation;
-  Object.extend(SectionValidation, Validation);
-
-  SectionValidation.prototype.validate = function() {
-    var result    = false;
-    var useTitles = this.options.useTitles;
-    var callback  = this.options.onElementValidate;
-
-    try {
-        if (this.options.stopOnFirst) {
-            result = Form.getElements(this.form).all(function(elm) {
-                if (elm.hasClassName('local-validation') && !this.isElementInForm(elm, this.form)) {
-                    return true;
-                }
-                return SectionValidation.validate(elm,{useTitle : useTitles, onElementValidate : callback});
-            }, this);
-        } else {
-            result = Form.getElements(this.form).collect(function(elm) {
-                if (elm.hasClassName('local-validation') && !this.isElementInForm(elm, this.form)) {
-                    return true;
-                }
-                return SectionValidation.validate(elm,{useTitle : useTitles, onElementValidate : callback});
-            }, this).all();
+    /**
+     * Review
+     *
+     * Enter short description here...
+     */
+    Review = Class.create(Section, {
+        init: function() {
+            /**
+             * Add event listener for clicking the
+             * place order button
+             */
+            var placeOrder = document.on(
+                'click',
+                '.btn-checkout',
+                function(event, element) {
+                    element.disabled = true;
+                    this.save();
+                    Event.stop(event);
+            }.bind(this));
         }
-    } catch (e) {
-        // Fail silently
-    }
+    });
 
-    if (!result && this.options.focusOnError) {
-        try{
-            Form.getElements(this.form).findAll(function(elm) {
-                return $(elm).hasClassName('validation-failed')
-            }).first().focus()
-        } catch(e) {
+
+
+    var SectionValidation       = Class.create();
+    SectionValidation.prototype = new Validation;
+    Object.extend(SectionValidation, Validation);
+
+    SectionValidation.prototype.validate = function() {
+        var result    = false;
+        var useTitles = this.options.useTitles;
+        var callback  = this.options.onElementValidate;
+
+        try {
+            if (this.options.stopOnFirst) {
+                result = Form.getElements(this.form).all(function(elm) {
+                    if (elm.hasClassName('local-validation') && !this.isElementInForm(elm, this.form)) {
+                        return true;
+                    }
+                    return SectionValidation.validate(elm,{useTitle : useTitles, onElementValidate : callback});
+                }, this);
+            } else {
+                result = Form.getElements(this.form).collect(function(elm) {
+                    if (elm.hasClassName('local-validation') && !this.isElementInForm(elm, this.form)) {
+                        return true;
+                    }
+                    return SectionValidation.validate(elm,{useTitle : useTitles, onElementValidate : callback});
+                }, this).all();
+            }
+        } catch (e) {
             // Fail silently
         }
+
+        if (!result && this.options.focusOnError) {
+            try{
+                Form.getElements(this.form).findAll(function(elm) {
+                    return $(elm).hasClassName('validation-failed')
+                }).first().focus()
+            } catch(e) {
+                // Fail silently
+            }
+        }
+
+        this.options.onFormValidate(result, this.form);
+        return result;
     }
 
-    this.options.onFormValidate(result, this.form);
-    return result;
-  }
+    Object.extend(SectionValidation, {
+        validate : function(elm, options){
+            options = Object.extend({
+                useTitle : false,
+                onElementValidate : function(result, elm) {}
+            }, options || {});
+            elm = $(elm);
 
-  Object.extend(SectionValidation, {
-      validate : function(elm, options){
-          options = Object.extend({
-              useTitle : false,
-              onElementValidate : function(result, elm) {}
-          }, options || {});
-          elm = $(elm);
+            var cn = $w(elm.className);
+            return result = cn.all(function(value) {
+                var test = SectionValidation.test(value,elm,options.useTitle);
+                options.onElementValidate(test, elm);
+                return test;
+            });
+        },
+        test: function(name, elm, useTitle) {
+            var v = Validation.get(name);
+            var prop = '__advice'+name.camelize();
+            try {
+                if(Validation.isVisible(elm) && !v.test($F(elm), elm)) {
 
-          var cn = $w(elm.className);
-          return result = cn.all(function(value) {
-              var test = SectionValidation.test(value,elm,options.useTitle);
-              options.onElementValidate(test, elm);
-              return test;
-          });
-      },
-      test: function(name, elm, useTitle) {
-          var v = Validation.get(name);
-          var prop = '__advice'+name.camelize();
-          try {
-              if(Validation.isVisible(elm) && !v.test($F(elm), elm)) {
+                    this.updateCallback(elm, 'failed');
 
-                  this.updateCallback(elm, 'failed');
+                    elm[prop] = 1;
 
-                  elm[prop] = 1;
+                    return false;
+                } else {
+                    this.updateCallback(elm, 'passed');
+                    elm[prop] = '';
 
-                  return false;
-              } else {
-                  this.updateCallback(elm, 'passed');
-                  elm[prop] = '';
-
-                  return true;
-              }
-          } catch(e) {
-              throw(e)
-          }
-      }
-  });
+                    return true;
+                }
+            } catch(e) {
+                throw(e)
+            }
+        }
+    });
 })();
