@@ -31,6 +31,11 @@ var Checkout,
             this.available       = true;
             this._interval       = false;
             this._queue          = Array();
+            this.defaultMethod   = 'register';
+
+            if ($$('.login-section').length == 0) {
+                this.setMethod('register');
+            }
         },
 
         _onSectionClick: function(event) {
@@ -141,14 +146,14 @@ var Checkout,
                 Element.show('register-customer-password');
             } 
 
-            this.ajaxRequest(
+            this.queueRequest(
                 this.saveMethodUrl,
                 {
                     method:     'post',
                     // onFailure: this.ajaxFailure.bind(this),
                     parameters: { method: method },
                     onSuccess:  function() {
-                        $$('.login-section').invoke('hide')
+                        $$('.login-section').invoke('hide');
                     }
                 }
             );
