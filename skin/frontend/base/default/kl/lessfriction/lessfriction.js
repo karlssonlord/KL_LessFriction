@@ -31,6 +31,13 @@ var Checkout,
             this.available       = true;
             this._interval       = false;
             this._queue          = Array();
+            this.defaultMethod   = config.defaultMethod;
+
+            if ($$('.login-section').length == 0) {
+                if (this.defaultMethod !== false) {
+                    this.setMethod(this.defaultMethod);
+                }
+            }
         },
 
         _onSectionClick: function(event) {
@@ -142,14 +149,14 @@ var Checkout,
                 Element.show('register-customer-password');
             }
 
-            this.ajaxRequest(
+            this.queueRequest(
                 this.saveMethodUrl,
                 {
                     method:     'post',
                     // onFailure: this.ajaxFailure.bind(this),
                     parameters: { method: method },
                     onSuccess:  function() {
-                        $$('.login-section').invoke('hide')
+                        $$('.login-section').invoke('hide');
                     }
                 }
             );
@@ -389,7 +396,11 @@ var Checkout,
             }
 
             if (response.error) {
-                alert(response.message);
+                if (response.message) {
+                    alert(response.message);
+                } else {
+                    alert(response.error);
+                }
                 return false;
             }
         }
@@ -397,236 +408,351 @@ var Checkout,
 
 
 
-  /**
-   * Shipping Method
-   *
-   * Enter short description here...
-   */
-  ShippingMethod  = Class.create(Section, {
-    validate: function() {
-      return true;
-    },
-  });
+    /**
+     * Shipping Method
+     *
+     * Enter short description here...
+     */
+    ShippingMethod  = Class.create(Section, {
+        validate: function() {
+            return true;
+        },
+    });
 
 
-
-  /**
-   * Payment Method
-   *
-   * Enter short description here...
-   */
-  PaymentMethod   = Class.create(Section, {
-    switchMethod: function(method) {
-      checkout.log(method);
-      this.save();
-    },
 
     /**
-     * Validation
+     * Payment Method
+     *
+     * Enter short description here...
      */
-    validate: function() {
-        var methods = document.getElementsByName('payment[method]');
+    PaymentMethod   = Class.create(Section, {
+        switchMethod: function(method) {
+            checkout.log(method);
 
-        if (methods.length == 0) {
-            checkout.setMessage((Translator.translate('Your order cannot be completed at this time as there is no payment methods available for it.').stripTags()), 'error');
-            return false;
-        }
+            if (this.currentMethod && $('payment_form_'+this.currentMethod)) {
+                this.changeVisible(this.currentMethod, true);
+                $('payment_form_'+this.currentMethod).fire('payment-method:switched-off', {method_code : this.currentMethod});
+            }
+            if ($('payment_form_'+method)){
+                this.changeVisible(method, false);
+                $('payment_form_'+method).fire('payment-method:switched', {method_code : method});
 
-        for (var i = 0; i < methods.length; i++) {
-            if (methods[i].checked) {
+                $(this._config.form).getElements().invoke('observe', 'keyup', function(e) {
+                    var element = Event.element(e);
+
+                    if (this.keyTimeout) {
+                        clearTimeout(this.keyTimeout);
+                    }
+
+                    this.keyTimeout = setTimeout(function() {
+                        console.log('Try to save address');
+                        this.save();
+                    }.bind(this), 500);
+                }.bind(this));
+            } else {
+                // Event fix for payment methods without form like "Check / Money order"
+                document.body.fire('payment-method:switched', {method_code : method});
+            }
+            if (method) {
+                this.lastUsedMethod = method;
+            }
+
+            this.currentMethod = method;
+            this.save();
+        },
+
+        changeVisible: function(method, mode) {
+            var block = 'payment_form_' + method;
+            [block + '_before', block, block + '_after'].each(function(el) {
+                element = $(el);
+                if (element) {
+                    element.style.display = (mode) ? 'none' : '';
+                    element.select('input', 'select', 'textarea', 'button').each(function(field) {
+                        field.disabled = mode;
+                    });
+                }
+            });
+        },
+
+        /**
+         * Validation
+         */
+        validate: function() {
+            var methods   = document.getElementsByName('payment[method]');
+
+            var silentValidator = new SectionValidation(this._config.form);
+            var validator = new Validation(this._config.form);
+
+            if (!silentValidator.validate()) {
+                return false;
+            }
+
+            validator.reset();
+
+            if (!validator.validate()) {
+                return false;
+            }
+
+            if (methods.length == 0) {
+                checkout.setMessage(
+                    Translator.translate('Your order cannot be completed at this time as there is no payment methods available for it.').stripTags(),
+                    'error'
+                );
+
+                return false;
+            }
+
+            for (var i = 0; i < methods.length; i++) {
+                if (methods[i].checked) {
+                    return true;
+                }
+            }
+        },
+    });
+
+
+
+    /**
+     * Address
+     *
+     * Since the checkout consists of two types of addresses,
+     * we create a general address class to keep the shared
+     * methods in one place.
+     */
+    var Address         = Class.create(Section, {
+        init: function() {
+            this.beforeInit();
+
+            /**
+             * This solution is naive and expects that the adresses
+             * are alone in separate sections
+             */
+            if ($(this._config.form).hasClassName('primary')) {
+                $(this._config.form).up(1).hide();
+            }
+
+            $(this._config.form).getElements().invoke('observe', 'keyup', function(e) {
+                var element = Event.element(e);
+
+                if (this.keyTimeout) {
+                    clearTimeout(this.keyTimeout);
+                }
+
+                this.keyTimeout = setTimeout(function() {
+                    checkout.log('Try to save address');
+                    this.save();
+                }.bind(this), 500);
+            }.bind(this));
+
+            $(this._config.form).getElements().invoke('observe', 'change', function(e) {
+                var element = Event.element(e);
+
+                if (this.keyTimeout) {
+                    clearTimeout(this.keyTimeout);
+                }
+
+                this.keyTimeout = setTimeout(function() {
+                    checkout.log('Try to save address');
+                    this.save();
+                }.bind(this), 500);
+            }.bind(this));
+
+            this.afterInit();
+        },
+        validate: function() {
+            var validator      = new SectionValidation(this._config.form);
+
+            if (validator.validate()) {
                 return true;
+            } else {
+                return false;
+            }
+        },
+        toggleNewAddressForm: function(form, isNew) {
+            if (isNew === true) {
+                this.resetSelectedAddress();
+                form.show();
+            } else {
+                form.hide();
+            }
+        },
+    });
+
+
+
+    /**
+     * Shipping Address
+     *
+     * Enter short description here...
+     */
+    ShippingAddress = Class.create(Address, {
+        resetSelectedAddress: function(form) {
+            var selectElement = $('shipping-address-select')
+            if (selectElement) {
+                selectElement.value = '';
+            }
+        },
+        newAddress: function(value) {
+            if (value) {
+                this.resetSelectedAddress();
+                Element.show('shipping-new-address-form');
+                checkout.log('Reset selected address and show form.');
+            } else {
+                Element.hide('shipping-new-address-form');
+                checkout.log('Hide form.');
             }
         }
-    },
-  });
+    });
 
-
-
-  /**
-   * Address
-   *
-   * Since the checkout consists of two types of addresses,
-   * we create a general address class to keep the shared
-   * methods in one place.
-   */
-  var Address         = Class.create(Section, {
-    init: function() {
-      this.beforeInit();
-
-      if ($(this._config.form).hasClassName('primary')) {
-        $(this._config.form).up(1).hide();
-      }
-
-      $(this._config.form).getElements().invoke('observe', 'keyup', function(e) {
-          var element = Event.element(e);
-
-          if (this.keyTimeout) {
-            clearTimeout(this.keyTimeout);
-          }
-
-          this.keyTimeout = setTimeout(function() {
-            console.log('Try to save address');
-            this.save();
-          }.bind(this), 500);
-      }.bind(this));
-
-      this.afterInit();
-    },
-    validate: function() {
-      var validator      = new SectionValidation(this._config.form);
-
-      if (validator.validate()) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    toggleNewAddressForm: function(form, isNew) {
-      if (isNew === true) {
-        this.resetSelectedAddress();
-        form.show();
-      } else {
-        form.hide();
-      }
-    },
-    resetSelectedAddress: function(form) {
-      this.selectAddressElement.invoke('setValue', '');
-    }
-  });
-
-
-
-  /**
-   * Shipping Address
-   *
-   * Enter short description here...
-   */
-  ShippingAddress = Class.create(Address, {
-  });
-
-      var placeOrder = document.on(
-          'click',
-          '[name="shipping[use_for_billing]"]',
-          function(event, element) {
-              var form = $('co-billing-form');
-              if (form) {
+    var useForBilling = document.on(
+        'click',
+        '[name="shipping[use_for_billing]"]',
+        function(event, element) {
+            var form = $('co-billing-form');
+            if (form) {
                 form.up(1).toggle();
-              }
-          }.bind(this)
-      );
+            }
+        }.bind(this)
+    );
 
-  /**
-   * Billing Address
-   *
-   * Enter short description here...
-   */
-  BillingAddress  = Class.create(Address, {});
-
-
-
-  /**
-   * Review
-   *
-   * Enter short description here...
-   */
-  Review = Class.create(Section, {
-    init: function() {
-      /**
-       * Add event listener for clicking the
-       * place order button
-       */
-      var placeOrder = document.on(
-          'click',
-          '.btn-checkout',
-          function(event, element) {
-              element.disabled = true;
-              this.save();
-              Event.stop(event);
-          }.bind(this)
-      );
-    }
-  });
-
-
-
-  var SectionValidation       = Class.create();
-  SectionValidation.prototype = new Validation;
-  Object.extend(SectionValidation, Validation);
-
-  SectionValidation.prototype.validate = function() {
-    var result    = false;
-    var useTitles = this.options.useTitles;
-    var callback  = this.options.onElementValidate;
-
-    try {
-        if (this.options.stopOnFirst) {
-            result = Form.getElements(this.form).all(function(elm) {
-                if (elm.hasClassName('local-validation') && !this.isElementInForm(elm, this.form)) {
-                    return true;
-                }
-                return SectionValidation.validate(elm,{useTitle : useTitles, onElementValidate : callback});
-            }, this);
-        } else {
-            result = Form.getElements(this.form).collect(function(elm) {
-                if (elm.hasClassName('local-validation') && !this.isElementInForm(elm, this.form)) {
-                    return true;
-                }
-                return SectionValidation.validate(elm,{useTitle : useTitles, onElementValidate : callback});
-            }, this).all();
+    /**
+     * Billing Address
+     *
+     * Enter short description here...
+     */
+    BillingAddress  = Class.create(Address, {
+        resetSelectedAddress: function(form) {
+            var selectElement = $('billing-address-select')
+            if (selectElement) {
+                selectElement.value = '';
+            }
+        },
+        newAddress: function(value) {
+            if (value) {
+                this.resetSelectedAddress();
+                Element.show('billing-new-address-form');
+                checkout.log('Reset selected address and show form.');
+            } else {
+                Element.hide('billing-new-address-form');
+                checkout.log('Hide form.');
+            }
         }
-    } catch (e) {
-        // Fail silently
-    }
+    });
 
-    if (!result && this.options.focusOnError) {
-        try{
-            Form.getElements(this.form).findAll(function(elm) {
-                return $(elm).hasClassName('validation-failed')
-            }).first().focus()
-        } catch(e) {
+    var useForBilling = document.on(
+        'click',
+        '[name="billing[use_for_shipping]"]',
+        function(event, element) {
+            var form = $('co-shipping-form');
+            if (form) {
+                form.up(1).toggle();
+            }
+        }.bind(this)
+    );
+
+    /**
+     * Review
+     *
+     * Enter short description here...
+     */
+    Review = Class.create(Section, {
+        init: function() {
+            /**
+             * Add event listener for clicking the
+             * place order button
+             */
+            var placeOrder = document.on(
+                'click',
+                '.btn-checkout',
+                function(event, element) {
+                    element.disabled = true;
+                    this.save();
+                    Event.stop(event);
+            }.bind(this));
+        }
+    });
+
+
+
+    var SectionValidation       = Class.create();
+    SectionValidation.prototype = new Validation;
+    Object.extend(SectionValidation, Validation);
+
+    SectionValidation.prototype.validate = function() {
+        var result    = false;
+        var useTitles = this.options.useTitles;
+        var callback  = this.options.onElementValidate;
+
+        try {
+            if (this.options.stopOnFirst) {
+                result = Form.getElements(this.form).all(function(elm) {
+                    if (elm.hasClassName('local-validation') && !this.isElementInForm(elm, this.form)) {
+                        return true;
+                    }
+                    return SectionValidation.validate(elm,{useTitle : useTitles, onElementValidate : callback});
+                }, this);
+            } else {
+                result = Form.getElements(this.form).collect(function(elm) {
+                    if (elm.hasClassName('local-validation') && !this.isElementInForm(elm, this.form)) {
+                        return true;
+                    }
+                    return SectionValidation.validate(elm,{useTitle : useTitles, onElementValidate : callback});
+                }, this).all();
+            }
+        } catch (e) {
             // Fail silently
         }
+
+        if (!result && this.options.focusOnError) {
+            try{
+                Form.getElements(this.form).findAll(function(elm) {
+                    return $(elm).hasClassName('validation-failed')
+                }).first().focus()
+            } catch(e) {
+                // Fail silently
+            }
+        }
+
+        this.options.onFormValidate(result, this.form);
+        return result;
     }
 
-    this.options.onFormValidate(result, this.form);
-    return result;
-  }
+    Object.extend(SectionValidation, {
+        validate : function(elm, options){
+            options = Object.extend({
+                useTitle : false,
+                onElementValidate : function(result, elm) {}
+            }, options || {});
+            elm = $(elm);
 
-  Object.extend(SectionValidation, {
-      validate : function(elm, options){
-          options = Object.extend({
-              useTitle : false,
-              onElementValidate : function(result, elm) {}
-          }, options || {});
-          elm = $(elm);
+            var cn = $w(elm.className);
+            return result = cn.all(function(value) {
+                var test = SectionValidation.test(value,elm,options.useTitle);
+                options.onElementValidate(test, elm);
+                return test;
+            });
+        },
+        test: function(name, elm, useTitle) {
+            var v = Validation.get(name);
+            var prop = '__advice'+name.camelize();
+            try {
+                if(Validation.isVisible(elm) && !v.test($F(elm), elm)) {
 
-          var cn = $w(elm.className);
-          return result = cn.all(function(value) {
-              var test = SectionValidation.test(value,elm,options.useTitle);
-              options.onElementValidate(test, elm);
-              return test;
-          });
-      },
-      test: function(name, elm, useTitle) {
-          var v = Validation.get(name);
-          var prop = '__advice'+name.camelize();
-          try {
-              if(Validation.isVisible(elm) && !v.test($F(elm), elm)) {
+                    this.updateCallback(elm, 'failed');
 
-                  this.updateCallback(elm, 'failed');
+                    elm[prop] = 1;
 
-                  elm[prop] = 1;
+                    return false;
+                } else {
+                    this.updateCallback(elm, 'passed');
+                    elm[prop] = '';
 
-                  return false;
-              } else {
-                  this.updateCallback(elm, 'passed');
-                  elm[prop] = '';
-
-                  return true;
-              }
-          } catch(e) {
-              throw(e)
-          }
-      }
-  });
+                    return true;
+                }
+            } catch(e) {
+                throw(e)
+            }
+        }
+    });
 })();
