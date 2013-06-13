@@ -8,6 +8,7 @@ Module description.
 * Flexible layout
 * Skip shipping method step
 * Skip payment method step
+* Newsletter signup checkbox
 
 ## Install
 
