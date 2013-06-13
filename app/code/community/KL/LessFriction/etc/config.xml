@@ -20,7 +20,32 @@
             <lessfriction>
                 <class>KL_LessFriction_Model</class>
             </lessfriction>
+            <checkout>
+                <rewrite>
+                    <type_onepage>KL_LessFriction_Model_Type_Onepage</type_onepage>
+                </rewrite>
+            </checkout>
         </models>
+        <resources>
+            <lessfriction_setup>
+                <setup>
+                    <module>KL_LessFriction</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </lessfriction_setup>
+            <lessfriction_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </lessfriction_write>
+            <lessfriction_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </lessfriction_read>
+        </resources>
     </global>
     <frontend>
         <translate>
@@ -58,6 +83,15 @@
                     </lessfriction>
                 </observers>
             </controller_action_predispatch_checkout_onepage_index>
+            <checkout_type_onepage_save_order>
+                <observers>
+                    <setCustomerIsSubscribed>
+                        <type>singleton</type>
+                        <class>lessfriction/observer</class>
+                        <method>setCustomerIsSubscribed</method>
+                    </setCustomerIsSubscribed>
+                </observers>
+            </checkout_type_onepage_save_order>
         </events>
     </frontend>
     <adminhtml>
@@ -87,6 +121,14 @@
                 <hide>1</hide>
             </login>
         </lessfriction>
+        <newsletter>
+            <lessfriction>
+                <enable>1</enable>
+                <checked>1</checked>
+                <visible_guest>1</visible_guest>
+                <visible_register>1</visible_register>
+            </lessfriction>
+        </newsletter>
     </default>
     <phpunit>
         <suite>
