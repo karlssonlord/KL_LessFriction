@@ -60,7 +60,7 @@
 
                 <!-- Billing address -->
                 <block type="lessfriction/address_billing" name="checkout.onepage.billing" as="billing" template="kl/lessfriction/address/billing.phtml">
-                    <block type="lessfriction/newsletter" name="checkout.onepage.billing.newsletter" template="kl/checkout/newsletter.phtml" />
+                    <block type="lessfriction/newsletter" name="checkout.onepage.billing.newsletter" template="kl/lessfriction/address/newsletter.phtml" />
                 </block>
 
                 <!-- Review -->
