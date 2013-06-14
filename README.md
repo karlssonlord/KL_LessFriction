@@ -10,6 +10,11 @@ Module description.
 * Skip payment method step
 * Newsletter signup checkbox
 
+### Options
+
+* System -> Configuration -> Less Friction
+* System -> Configuration -> Newsletter -> Checkout
+
 ## Install
 
 The easiest way to install the module is by using [modman](https://github.com/karlssonlord/modman):
