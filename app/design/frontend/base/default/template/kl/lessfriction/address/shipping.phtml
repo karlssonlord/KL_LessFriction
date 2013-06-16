@@ -21,7 +21,97 @@
     <h2><?php echo $this->__('Shipping Address'); ?></h2>
 
     <ul class="form-list">
+    <?php if ($this->isPrimaryAddress()): ?>
+    <li>
+        <label for="getAddress"><?php echo $this->__('Personal identity number'); ?></label>
+        <input type="text" id="klarna_pno" name="pno" class="input-text klarna-validate-text" value="" />
+        <button onclick="getA(); return false;"><?php echo $this->__('Search'); ?></button>
+        <div class="address-injection-select"></div>
+        <script>
+            function getA() {
+                Klarna.Ajax({
+                    method: 'post',
+                    type: 'json',
+                    url: '<?php echo $this->getUrl('klarna/address/dispatch'); ?>',
+                    data: {
+                        action: 'getAddress',
+                        country: 'se',
+                        pno: $("klarna_pno").value
+                    },
+                    success: function (resp) {
+                        console.log(resp);
 
+                        if (resp.error) {
+                            alert(resp.error.message);
+                        } else {
+                            $$('[name="payment[invoice_pno]"]').first().setValue($("klarna_pno").value);
+
+                            if (resp.length > 1) {
+                                var ha = $H({});
+
+                                resp.each(function(address) {
+                                    ha.set(address.key, $H({
+                                        'shipping[city]':       address.city,
+                                        'shipping[company]':    address.company_name,
+                                        'shipping[country_id]': address.country_code,
+                                        'shipping[street][]':   address.street,
+                                        'shipping[postcode]':   address.zip,
+                                        'shipping[firstname]':  address.first_name,
+                                        'shipping[lastname]':   address.last_name,
+                                    }));
+                                });
+
+                                $$('.address-injection-select').each(function(el) {
+                                    var select = new Element('select', {'class': 'address-injection-options'});
+
+                                    select.options[select.options.length] = new Option('<?php echo $this->__("Select an address"); ?>', '');
+
+                                    resp.each(function(address) {
+                                        var text  = address.company_name + ', ' + address.street;
+                                        var value = address.key;
+                                        select.options[select.options.length] = new Option(text, value);
+                                    });
+
+                                    select.observe('change', function(e) {
+                                        $$('[name="payment[invoice_address_key]"]').first().setValue(e.target.value);
+                                        shippingAddress.inject(ha.get(e.target.value));
+                                    });
+
+                                    el.update(select);
+                                });
+                            } else {
+                                shippingAddress.inject(
+                                    $H({
+                                        'shipping[city]':       resp.first().city,
+                                        'shipping[company]':    resp.first().company_name,
+                                        'shipping[country_id]': resp.first().country_code,
+                                        'shipping[street][]':   resp.first().street,
+                                        'shipping[postcode]':   resp.first().zip,
+                                        'shipping[firstname]':  resp.first().first_name,
+                                        'shipping[lastname]':   resp.first().last_name,
+                                    })
+                                );
+
+                                $$('[name="payment[invoice_address_key]"]').first().setValue(resp.first().key);
+                                payment.save();
+                            }
+                        }
+                    },
+                    error: function (resp) {
+                        var response = {};
+                        if (resp.responseText !== "") {
+                            response = resp.responseText.evalJSON(true);
+                        }
+                        if (response.error && response.error.message) {
+                            console.log(response.error.message);
+                        }
+                    }
+                });
+            }
+
+        </script>
+    </li>
+    <?php endif; ?>
         <?php
             /**
              * If customer has adresses 
