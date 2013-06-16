@@ -317,6 +317,33 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
         $this->getOnepage()->getQuote()->collectTotals();
 
         try {
+            /**
+             * Assure that the terms and conditions hav been read
+             */
+            $requiredAgreements = Mage::helper('checkout')->getRequiredAgreementIds();
+
+            if ($requiredAgreements) {
+                $postedAgreements = array_keys($this->getRequest()->getPost('agreement', array()));
+                $diff             = array_diff($requiredAgreements, $postedAgreements);
+
+                if ($diff) {
+                    $result['success']        = false;
+                    $result['error']          = true;
+                    $result['error_messages'] = $this->__('Please agree to all the terms and conditions before placing the order.');
+                    $this->_jsonResponse($result);
+                    return;
+                }
+            }
+
+            /**
+             * Import payment data to quote
+             */
+            $paymentData = $this->getRequest()->getPost('payment', false);
+
+            if ($paymentData) {
+                $this->getOnepage()->getQuote()->getPayment()->importData($paymentData);
+            }
+
             $this->getOnepage()->saveOrder();
 
             $redirectUrl = $this->getOnepage()->getCheckout()->getRedirectUrl();
