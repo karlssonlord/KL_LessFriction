@@ -577,6 +577,11 @@ var Checkout,
                 form.hide();
             }
         },
+        inject: function(data, clone) {
+            data.each(function (pair) {
+                $$('[name="' + pair.key + '"]').first().setValue(pair.value);
+            });
+        }
     });
 
 
