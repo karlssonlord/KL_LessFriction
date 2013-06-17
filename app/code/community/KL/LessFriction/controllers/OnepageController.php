@@ -186,7 +186,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
             $data['email'] = trim($data['email']);
         }
 
-        $result    = Mage::getModel('lessfriction/type_lessfriction')->saveShipping($data, $addressId);
+        $result    = Mage::getModel('lessfriction/Type_LessFriction')->saveShipping($data, $addressId);
 
         /**
          * Since shipping address might impact shipping
