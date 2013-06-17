@@ -21,7 +21,9 @@
     <h2><?php echo $this->__('Shipping Address'); ?></h2>
 
     <ul class="form-list">
-
+        <?php if ($this->isPrimaryAddress()): ?>
+            <?php echo $this->getChildHtml('get_address'); ?>
+        <?php endif; ?>
         <?php
             /**
              * If customer has adresses 

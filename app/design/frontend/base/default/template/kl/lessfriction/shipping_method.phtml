@@ -1,22 +1,22 @@
 <?php if ($this->isVisible()): ?>
-<h2><?php echo $this->__('Shipping Method'); ?></h2>
+    <h2><?php echo $this->__('Shipping Method'); ?></h2>
 
-<form id="co-shipping-method-form" action="">
-    <div id="checkout-shipping-method-load">
-        <?php echo $this->getChildHtml('available') ?>
-    </div>
-    <div id="onepage-checkout-shipping-method-additional-load">
-        <?php echo $this->getChildHtml('additional') ?>
-    </div>
-</form>
-<script>
-    document.observe('dom:loaded', function() {
-        shippingMethod = new ShippingMethod(
-            {
-                form: 'co-shipping-method-form',
-                saveUrl: "<?php echo $this->getUrl('checkout/onepage/saveShippingMethod') ?>"
-            }
-        );
-    });
-</script>
+    <form id="co-shipping-method-form" action="">
+        <div id="checkout-shipping-method-load">
+            <?php echo $this->getChildHtml('available') ?>
+        </div>
+        <div id="onepage-checkout-shipping-method-additional-load">
+            <?php echo $this->getChildHtml('additional') ?>
+        </div>
+    </form>
+    <script>
+        document.observe('dom:loaded', function() {
+            shippingMethod = new ShippingMethod(
+                {
+                    form: 'co-shipping-method-form',
+                    saveUrl: "<?php echo $this->getUrl('checkout/onepage/saveShippingMethod') ?>"
+                }
+            );
+        });
+    </script>
 <?php endif; ?>

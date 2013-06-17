@@ -6,6 +6,7 @@
             <codePool>community</codePool>
             <depends>
                 <Mage_Checkout />
+                <Mage_Newsletter />
             </depends>
         </KL_LessFriction>
     </modules>

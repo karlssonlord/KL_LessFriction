@@ -1,0 +1,24 @@
+<?php
+$helper = Mage::helper('lessfriction');
+if (Mage::helper('lessfriction')->isNewsletterEnabled()) : ?>
+    <?php // TODO: Move this logic to block
+    $hidden = false;
+    if($this->helper('customer')->isLoggedIn()) {
+        if(!$helper->isNewsletterVisibleRegister()) {
+            $hidden = true;
+        }
+    }
+    else { // Not logged in
+        if(!$helper->isNewsletterVisibleGuest()) {
+            $hidden = true;
+        }
+    }
+    $checked = $helper->isNewsletterChecked() ? ' checked="checked"' : '';
+    ?>
+    <div class="newsletter-subscribe<?php echo $hidden ? ' hidden': ''; ?>">
+        <label for="billing:is_subscribed">
+            <input type="checkbox"<?php echo $checked; ?> name="billing[is_subscribed]" value="1" title="<?php echo Mage::helper('customer')->__('Sign Up for Newsletter') ?>" id="billing:is_subscribed" />
+            <?php echo Mage::helper('customer')->__('Sign Up for Newsletter') ?>
+        </label>
+    </div>
+<?php endif; ?>

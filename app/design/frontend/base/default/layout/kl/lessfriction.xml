@@ -59,7 +59,9 @@
                 <block type="lessfriction/address_shipping" name="checkout.onepage.shipping" as="shipping" template="kl/lessfriction/address/shipping.phtml"/>
 
                 <!-- Billing address -->
-                <block type="lessfriction/address_billing" name="checkout.onepage.billing" as="billing" template="kl/lessfriction/address/billing.phtml"/>
+                <block type="lessfriction/address_billing" name="checkout.onepage.billing" as="billing" template="kl/lessfriction/address/billing.phtml">
+                    <block type="lessfriction/newsletter" name="checkout.onepage.billing.newsletter" template="kl/lessfriction/address/newsletter.phtml" />
+                </block>
 
                 <!-- Review -->
                 <block type="checkout/onepage_review" name="checkout.onepage.review" as="review" template="checkout/onepage/review.phtml">

@@ -19,7 +19,7 @@ class KL_LessFriction_Helper_Data extends Mage_Core_Helper_Abstract
         } else {
             $setting = Mage::getStoreConfig($xmlPath);
         }
-        
+
         return $setting;
     }
 
@@ -68,7 +68,7 @@ class KL_LessFriction_Helper_Data extends Mage_Core_Helper_Abstract
 
         foreach ($steps as $stepCode => $stepInfo) {
             $xmlPath = Mage::getStoreConfig(sprintf('lessfriction/layout/%s', $stepCode));
-  
+
             switch ($stepCode) {
                 case 'login':
                     if ($this->hideLogin() === true) {
@@ -86,7 +86,7 @@ class KL_LessFriction_Helper_Data extends Mage_Core_Helper_Abstract
                     if ($this->includeCart()) {
                         $sections[$xmlPath][$stepCode] = $stepInfo;
                     } else {
-                        
+
                     }
                     break;
                 case 'shipping':
@@ -101,5 +101,26 @@ class KL_LessFriction_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         return $sections;
+    }
+
+    /**
+     * Newsletter helper methods
+     *
+     */
+    public function isNewsletterEnabled()
+    {
+        return Mage::getStoreConfigFlag('newsletter/lessfriction/enable');
+    }
+    public function isNewsletterChecked()
+    {
+        return Mage::getStoreConfigFlag('newsletter/lessfriction/checked');
+    }
+    public function isNewsletterVisibleGuest()
+    {
+        return Mage::getStoreConfigFlag('newsletter/lessfriction/visible_guest');
+    }
+    public function isNewsletterVisibleRegister()
+    {
+        return Mage::getStoreConfigFlag('newsletter/lessfriction/visible_register');
     }
 }
