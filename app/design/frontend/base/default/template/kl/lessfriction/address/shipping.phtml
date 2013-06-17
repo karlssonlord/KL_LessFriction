@@ -55,6 +55,39 @@
                                 ->toHtml();
                         ?>
                     </li>
+                    <li class="contacts">
+                    <?php 
+                        /**
+                         * If billing address is the primary address
+                         * and the user is not logged in, show field
+                         * for email address here
+                         */
+                        if(!$this->isCustomerLoggedIn() && $this->isPrimaryAddress()):
+                    ?>
+                        <div class="field">
+                            <label for="shipping:email" class="required"><?php echo $this->__('Email Address') ?> <em>*</em></label>
+                            <input
+                                type="text"
+                                name="shipping[email]"
+                                id="shipping:email"
+                                value="<?php echo $this->escapeHtml($this->getAddress()->getEmail()) ?>"
+                                title="<?php echo $this->__('Email Address') ?>"
+                                class="input-text validate-email required-entry" />
+                        </div>
+                    <?php endif; ?>
+                        <div class="field">
+                            <label for="shipping:telephone" class="required">
+                                <?php echo $this->__('Telephone') ?> <em>*</em>
+                            </label>
+                            <input
+                                type="text"
+                                name="shipping[telephone]"
+                                value="<?php echo $this->escapeHtml($this->getAddress()->getTelephone()) ?>"
+                                title="<?php echo $this->__('Telephone') ?>"
+                                class="input-text <?php echo $_validationClass['telephone'] ?>"
+                                id="shipping:telephone" />
+                        </div>
+                    </li>
                     <li>
                         <label for="shipping:company"><?php echo $this->__('Company') ?></label>
                         <input
@@ -65,42 +98,27 @@
                             title="<?php echo $this->__('Company') ?>"
                             class="input-text <?php echo $_validationClass['company'] ?>" />
                     </li>
-                    <?php 
-                        /**
-                         * If billing address is the primary address
-                         * and the user is not logged in, show field
-                         * for email address here
-                         */
-                        if(!$this->isCustomerLoggedIn() && $this->isPrimaryAddress()):
-                    ?>
-                    <li>
-                        <label for="shipping:email" class="required"><?php echo $this->__('Email Address') ?> <em>*</em></label>
-                        <input
-                            type="text"
-                            name="shipping[email]"
-                            id="shipping:email"
-                            value="<?php echo $this->escapeHtml($this->getAddress()->getEmail()) ?>"
-                            title="<?php echo $this->__('Email Address') ?>"
-                            class="input-text validate-email required-entry" />
-                    </li>
-                    <?php endif; ?>
-                    <li>
+                    <li class="street">
                         <label for="shipping:street1" class="required"><?php echo $this->__('Address') ?> <em>*</em></label>
-                        <input
-                            type="text"
-                            title="<?php echo $this->__('Street Address') ?>"
-                            name="shipping[street][]"
-                            id="shipping:street1"
-                            value="<?php echo $this->escapeHtml($this->getAddress()->getStreet(1)) ?>"
-                            class="input-text <?php echo $_validationClass['street'] ?>" />
+                        <div class="field">
+                            <input
+                                type="text"
+                                title="<?php echo $this->__('Street Address') ?>"
+                                name="shipping[street][]"
+                                id="shipping:street1"
+                                value="<?php echo $this->escapeHtml($this->getAddress()->getStreet(1)) ?>"
+                                class="input-text <?php echo $_validationClass['street'] ?>" />
+                        </div>
                         <?php for ($_i = 2, $_n = $_streetLines; $_i <= $_n; $_i++): ?>
-                        <input
-                            type="text"
-                            title="<?php echo $this->__('Street Address %s', $_i) ?>"
-                            name="shipping[street][]"
-                            id="shipping:street<?php echo $_i ?>"
-                            value="<?php echo $this->escapeHtml($this->getAddress()->getStreet($_i)) ?>"
-                            class="input-text <?php echo $_validationClass['streetAlt'] ?>" />
+                        <div class="field">
+                            <input
+                                type="text"
+                                title="<?php echo $this->__('Street Address %s', $_i) ?>"
+                                name="shipping[street][]"
+                                id="shipping:street<?php echo $_i ?>"
+                                value="<?php echo $this->escapeHtml($this->getAddress()->getStreet($_i)) ?>"
+                                class="input-text <?php echo $_validationClass['streetAlt'] ?>" />
+                        </div>
                         <?php endfor; ?>
                     </li>
                     <?php
@@ -120,7 +138,20 @@
                             class="input-text <?php echo $_validationClass['vat'] ?>" />
                     </li>
                     <?php endif; ?>
-                    <li>
+                    <li class="postaddress">
+                        <div class="field">
+                        <label for="shipping:postcode" class="required">
+                            <?php echo $this->__('Zip/Postal Code') ?> <em>*</em>
+                        </label>
+                        <input
+                            type="text"
+                            title="<?php echo $this->__('Zip/Postal Code') ?>"
+                            name="shipping[postcode]"
+                            id="shipping:postcode"
+                            value="<?php echo $this->escapeHtml($this->getAddress()->getPostcode()) ?>"
+                            class="input-text validate-zip-international <?php echo $_validationClass['postcode'] ?>" />
+                        </div>
+                        <div class="field">
                         <label for="shipping:city" class="required"><?php echo $this->__('City') ?> <em>*</em></label>
                         <input
                             type="text"
@@ -129,8 +160,9 @@
                             value="<?php echo $this->escapeHtml($this->getAddress()->getCity()) ?>"
                             class="input-text <?php echo $_validationClass['city'] ?>"
                             id="shipping:city" />
+                        </div>
                     </li>
-                    <li>
+                    <li class="region">
                         <label for="shipping:region" class="required">
                             <?php echo $this->__('State/Province') ?> <em>*</em>
                         </label>
@@ -151,35 +183,10 @@
                             style="display:none;" />
                     </li>
                     <li>
-                        <label for="shipping:postcode" class="required">
-                            <?php echo $this->__('Zip/Postal Code') ?> <em>*</em>
-                        </label>
-                        <input
-                            type="text"
-                            title="<?php echo $this->__('Zip/Postal Code') ?>"
-                            name="shipping[postcode]"
-                            id="shipping:postcode"
-                            value="<?php echo $this->escapeHtml($this->getAddress()->getPostcode()) ?>"
-                            class="input-text validate-zip-international <?php echo $_validationClass['postcode'] ?>" />
-
-                    </li>
-                    <li>
                         <label for="shipping:country_id" class="required">
                             <?php echo $this->__('Country') ?> <em>*</em>
                         </label>
                         <?php echo $this->getCountryHtmlSelect('shipping') ?>
-                    </li>
-                    <li>
-                        <label for="shipping:telephone" class="required">
-                            <?php echo $this->__('Telephone') ?> <em>*</em>
-                        </label>
-                        <input
-                            type="text"
-                            name="shipping[telephone]"
-                            value="<?php echo $this->escapeHtml($this->getAddress()->getTelephone()) ?>"
-                            title="<?php echo $this->__('Telephone') ?>"
-                            class="input-text <?php echo $_validationClass['telephone'] ?>"
-                            id="shipping:telephone" />
                     </li>
                     <?php if(!$this->isCustomerLoggedIn() && $this->isPrimaryAddress()): ?>
                     <li class="fields" id="register-customer-password">
