@@ -238,6 +238,8 @@
 </form>
 
 <script>
+    new Validation('co-shipping-form');
+
     document.observe('dom:loaded', function() {
         var shippingForm          = new VarienForm('co-shipping-form');
         var shippingRegionUpdater = new RegionUpdater(
