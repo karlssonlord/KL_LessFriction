@@ -399,8 +399,15 @@ var Checkout,
                 if (response.message) {
                     alert(response.message);
                 } else {
-                    alert(response.error);
+                    if (response.error_messages) {
+                        alert(response.error_messages);
+                    } else {
+                        alert(response.error);
+                    }
                 }
+
+                $$('.btn-checkout').invoke('removeAttribute', 'disabled');
+
                 return false;
             }
         }
