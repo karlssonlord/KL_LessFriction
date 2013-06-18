@@ -562,10 +562,11 @@ var Checkout,
         },
         validate: function() {
             var validator      = new SectionValidation(this._config.form);
-
             if (validator.validate()) {
+                delete validator;
                 return true;
             } else {
+                delete validator;
                 return false;
             }
         },
@@ -675,7 +676,39 @@ var Checkout,
                     this.save();
                     Event.stop(event);
             }.bind(this));
-        }
+        },
+        save: function(){
+            checkout.log('Save section');
+            var params = '';
+            if (this._validate()) {
+                if (this._config.relations) {
+                    if (params) {
+                        params += '&';
+                    }
+
+                    this.setLoadingBlocks();
+                    params += 'relations=' + this._config.relations.toString();
+                }
+
+                if (this._config.agreements) {
+                    if (params) {
+                        params += '&';
+                    }
+
+                    params += Form.serialize(this._config.agreements);
+                }
+
+                var options = {
+                    method:     this.requestMethod,
+                    onComplete: this.onComplete,
+                    onSuccess:  this.onSuccess,
+                    onFailure:  this.onFailure,
+                    parameters: params
+                };
+
+                checkout.queueRequest(this._config.saveUrl, options);
+            }           
+        },
     });
 
 
