@@ -610,9 +610,11 @@ var Checkout,
             if (value) {
                 this.resetSelectedAddress();
                 Element.show('shipping-new-address-form');
+                document.body.fire('shipping-address:show', {});
                 checkout.log('Reset selected address and show form.');
             } else {
                 Element.hide('shipping-new-address-form');
+                document.body.fire('shipping-address:hide', {});
                 checkout.log('Hide form.');
             }
         }
