@@ -145,7 +145,7 @@ var Checkout,
 
             if (method == 'guest') {
                 Element.hide('register-customer-password');
-            } else if(method == 'register') {
+            } else if(method == 'register') {z
                 Element.show('register-customer-password');
             }
 
@@ -335,8 +335,7 @@ var Checkout,
                     this.setLoadingBlocks();
                     params += 'relations=' + this._config.relations.toString();
                 }
-
-                if (this.isDeveloperMode && window.console){
+                if (this.isDeveloperMode && window.console) {
                     console.log(params);
                 }
 
@@ -354,7 +353,7 @@ var Checkout,
 
         setLoadingBlocks: function() {
             for (var i = 0; i < this._config.relations.length; i++) {
-                if (this.isDeveloperMode && window.console){
+                if (this.isDeveloperMode && window.console) {
                     console.log('.' + this._config.relations[i] + '-section');
                 }
                 $$('.' + this._config.relations[i] + '-section').each(function(section) {
@@ -378,7 +377,7 @@ var Checkout,
          * Reset load waiting
          */
         resetLoadWaiting: function(transport) {
-            if (this.isDeveloperMode && window.console){
+            if (this.isDeveloperMode && window.console) {
                 console.log('resetLoadWaiting');
             }
             this.resetLoadingBlocks();
@@ -459,7 +458,7 @@ var Checkout,
                     }
 
                     this.keyTimeout = setTimeout(function() {
-                        if (this.isDeveloperMode && window.console){
+                        if (this.isDeveloperMode && window.console) {
                             console.log('Try to save address');
                         }
                         this.save();
