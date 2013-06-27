@@ -222,7 +222,7 @@ var Checkout,
             this.saveUrl       = false;
             this.form          = false;
             this.onComplete    = this.resetLoadWaiting.bindAsEventListener(this);
-            this.onSuccess     = this.nextStep.bindAsEventListener(this);;
+            this.onSuccess     = this.nextStep.bindAsEventListener(this);
             this.onFailure     = false;
             this.requestMethod = 'post';
 
@@ -338,7 +338,6 @@ var Checkout,
                 if (this.isDeveloperMode && window.console) {
                     console.log(params);
                 }
-                console.log(params);
                 var options = {
                     method:     this.requestMethod,
                     onComplete: this.onComplete,
@@ -356,7 +355,6 @@ var Checkout,
                 if (this.isDeveloperMode && window.console) {
                     console.log('.' + this._config.relations[i] + '-section');
                 }
-                console.log('.' + this._config.relations[i] + '-section');
                 $$('.' + this._config.relations[i] + '-section').each(function(section) {
                     var overlay = section.addClassName('loading').down('.overlay');
                     if (overlay) overlay.show();
