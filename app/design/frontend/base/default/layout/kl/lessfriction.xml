@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<layout>
+    <lessfriction_boilerplate>
+        <update handle="page_one_column" />
+
+        <remove name="left" />
+        <reference name="right">
+            <action method="unsetChildren"></action>
+        </reference>
+
+        <reference name="content">
+            <action method="unsetChild"><alias>checkout.onepage</alias></action>
+        </reference>
+
+        <reference name="foot">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>kl/lessfriction/lessfriction.js</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>kl/lessfriction/scripts.js</name>
+            </action>
+        </reference>
+    </lessfriction_boilerplate>
+
+    <!-- Used for full page load -->
+    <lessfriction_default>
+        <reference name="content">
+            <block name="checkout.layout" type="lessfriction/layout" template="kl/lessfriction/layout.phtml">
+
+                <!-- Login -->
+                <block type="checkout/onepage_login" name="checkout.onepage.login" as="login" template="kl/lessfriction/login.phtml">
+                    <block type="page/html_wrapper" name="checkout.onepage.login.before" as="login_before" translate="label">
+                        <label>Login/Registration Before</label>
+                        <action method="setMayBeInvisible"><value>1</value></action>
+                    </block>
+                </block>
+
+                <!-- Shipping method -->
+                <block type="lessfriction/shipping_method" name="checkout.onepage.shipping_method" as="shipping_method" template="kl/lessfriction/shipping_method.phtml">
+                    <block type="lessfriction/shipping_method_available" name="checkout.onepage.shipping_method.available" as="available" template="kl/lessfriction/shipping_method/available.phtml"/>
+                    <block type="checkout/onepage_shipping_method_additional" name="checkout.onepage.shipping_method.additional" as="additional" template="checkout/onepage/shipping_method/additional.phtml"/>
+                </block>
+
+                <!-- Payment method -->
+                <block type="lessfriction/payment" name="checkout.onepage.payment" as="payment" template="kl/lessfriction/payment.phtml">
+                    <block type="lessfriction/payment_methods" name="checkout.payment.methods" as="methods" template="kl/lessfriction/payment/methods.phtml">
+                        <action method="setMethodFormTemplate"><method>purchaseorder</method><template>payment/form/purchaseorder.phtml</template></action>
+                    </block>
+                </block>
+
+                <!-- Crosssell -->
+                <block type="lessfriction/cart_crosssell" name="checkout.onepage.crosssell.layout" as="crosssell" template="kl/lessfriction/crosssell.phtml">
+                    <block type="checkout/cart_crosssell" name="checkout.onepage.crosssell" as="list" template="kl/lessfriction/crosssell/list.phtml"/>
+                </block>
+
+                <!-- Shipping address -->
+                <block type="lessfriction/address_shipping" name="checkout.onepage.shipping" as="shipping" template="kl/lessfriction/address/shipping.phtml"/>
+
+                <!-- Billing address -->
+                <block type="lessfriction/address_billing" name="checkout.onepage.billing" as="billing" template="kl/lessfriction/address/billing.phtml">
+                    <block type="lessfriction/newsletter" name="checkout.onepage.billing.newsletter" template="kl/lessfriction/address/newsletter.phtml" />
+                </block>
+
+                <!-- Review -->
+                <block type="checkout/onepage_review" name="checkout.onepage.review" as="review" template="checkout/onepage/review.phtml">
+                    <block type="checkout/onepage_review_info" name="checkout.onepage.review.info" as="info" template="kl/lessfriction/review/info.phtml">
+                        <action method="addItemRender">
+                            <type>default</type>
+                            <block>checkout/cart_item_renderer</block>
+                            <template>checkout/onepage/review/item.phtml</template>
+                        </action>
+                        <action method="addItemRender">
+                            <type>grouped</type>
+                            <block>checkout/cart_item_renderer_grouped</block>
+                            <template>checkout/onepage/review/item.phtml</template>
+                        </action>
+                        <action method="addItemRender">
+                            <type>configurable</type>
+                            <block>checkout/cart_item_renderer_configurable</block>
+                            <template>checkout/onepage/review/item.phtml</template>
+                        </action>
+                        <block type="checkout/cart_totals" name="checkout.onepage.review.info.totals" as="totals" template="checkout/onepage/review/totals.phtml"/>
+                        <block type="core/text_list" name="checkout.onepage.review.info.items.before" as="items_before" translate="label">
+                            <label>Items Before</label>
+                        </block>
+                        <block type="core/text_list" name="checkout.onepage.review.info.items.after" as="items_after" translate="label">
+                            <label>Items After</label>
+                        </block>
+                        <block type="checkout/agreements" name="checkout.onepage.agreements" as="agreements" template="checkout/onepage/agreements.phtml"/>
+                        <block type="core/template" name="checkout.onepage.review.button" as="button" template="kl/lessfriction/review/button.phtml"/>
+                    </block>
+                </block>
+            </block>
+        </reference>
+    </lessfriction_default>
+
+    <!-- Used for JSON responses -->
+    <lessfriction_json>
+        <remove name="right"/>
+        <remove name="left"/>
+
+        <reference name="root">
+            <block type="checkout/onepage_login" name="checkout.onepage.login" as="login" template="kl/lessfriction/login.phtml">
+                <block type="page/html_wrapper" name="checkout.onepage.login.before" as="login_before" translate="label">
+                    <label>Login/Registration Before</label>
+                    <action method="setMayBeInvisible"><value>1</value></action>
+                </block>
+            </block>
+            <block type="lessfriction/shipping_method" name="shipping_method" as="shipping_method" template="kl/lessfriction/shipping_method.phtml">
+                <block type="lessfriction/shipping_method_available" name="checkout.onepage.shipping_method.available" as="available" template="kl/lessfriction/shipping_method/available.phtml"/>
+                <block type="checkout/onepage_shipping_method_additional" name="checkout.onepage.shipping_method.additional" as="additional" template="checkout/onepage/shipping_method/additional.phtml"/>
+            </block>
+            <block type="lessfriction/payment" name="payment" as="payment" template="kl/lessfriction/payment.phtml">
+                <block type="lessfriction/payment_methods" name="checkout.payment.methods" as="methods" template="kl/lessfriction/payment/methods.phtml">
+                    <action method="setMethodFormTemplate"><method>purchaseorder</method><template>payment/form/purchaseorder.phtml</template></action>
+                </block>
+            </block>
+            <block type="lessfriction/cart_crosssell" name="checkout.onepage.crosssell.layout" as="crosssell" template="kl/lessfriction/crosssell.phtml">
+                <block type="checkout/cart_crosssell" name="checkout.onepage.crosssell" as="list" template="kl/lessfriction/crosssell/list.phtml"/>
+            </block>
+            <block type="checkout/onepage_review" name="review" as="review" template="checkout/onepage/review.phtml">
+                <block type="checkout/onepage_review_info" name="checkout.onepage.review.info" as="info" template="kl/lessfriction/review/info.phtml">
+                    <action method="addItemRender">
+                        <type>default</type>
+                        <block>checkout/cart_item_renderer</block>
+                        <template>checkout/onepage/review/item.phtml</template>
+                    </action>
+                    <action method="addItemRender">
+                        <type>grouped</type>
+                        <block>checkout/cart_item_renderer_grouped</block>
+                        <template>checkout/onepage/review/item.phtml</template>
+                    </action>
+                    <action method="addItemRender">
+                        <type>configurable</type>
+                        <block>checkout/cart_item_renderer_configurable</block>
+                        <template>checkout/onepage/review/item.phtml</template>
+                    </action>
+                    <block type="checkout/cart_totals" name="checkout.onepage.review.info.totals" as="totals" template="checkout/onepage/review/totals.phtml"/>
+                    <block type="core/text_list" name="checkout.onepage.review.info.items.before" as="items_before" translate="label">
+                        <label>Items Before</label>
+                    </block>
+                    <block type="core/text_list" name="checkout.onepage.review.info.items.after" as="items_after" translate="label">
+                        <label>Items After</label>
+                    </block>
+                    <block type="checkout/agreements" name="checkout.onepage.agreements" as="agreements" template="checkout/onepage/agreements.phtml"/>
+                    <block type="core/template" name="checkout.onepage.review.button" as="button" template="kl/lessfriction/review/button.phtml"/>
+                </block>
+            </block>
+        </reference>
+    </lessfriction_json>
+</layout>

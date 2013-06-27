@@ -1,0 +1,38 @@
+<?php
+    $_helper   = Mage::helper('lessfriction');
+    $_sections = $_helper->getSections($this->getSteps(), $this);
+?>
+<h1><?php echo $this->__('Less Friction Checkout'); ?></h1>
+
+<script>
+    document.observe('dom:loaded', function() {
+        checkout = new Checkout({
+            saveMethodUrl: "<?php echo $this->getUrl('checkout/onepage/saveMethod'); ?>",
+            defaultMethod: <?php if (!$this->helper('customer')->isLoggedIn()): ?>'register'<?php else: ?>false,<?php endif; ?>
+        });
+        <?php if (Mage::getIsDeveloperMode()): ?>
+        checkout.isDeveloperMode = true;
+        <?php endif; ?>
+    });
+</script>
+
+<?php foreach ($_sections as $class => $steps): ?>
+    <?php if (count($steps) > 0): ?>
+    <section class="<?php echo $class; ?>">
+        <?php foreach ($steps as $_stepId => $_stepInfo): ?>
+        <?php
+            $_step = $this->getChildHtml($_stepId);
+
+            if ($_step):
+        ?>
+        <div class="<?php echo $_stepId; ?>-section">
+            <?php echo $_step; ?>
+            <div class="overlay" style="display:none"></div>
+        </div>
+        <?php
+            endif;
+        ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
+    </section>
+<?php endforeach; ?>

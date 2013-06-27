@@ -145,7 +145,11 @@ var Checkout,
 
             if (method == 'guest') {
                 Element.hide('register-customer-password');
+<<<<<<< HEAD
             } else if(method == 'register') {z
+=======
+            } else if(method == 'register') {
+>>>>>>> origin/master
                 Element.show('register-customer-password');
             }
 
@@ -338,7 +342,7 @@ var Checkout,
                 if (this.isDeveloperMode && window.console) {
                     console.log(params);
                 }
-
+                console.log(params);
                 var options = {
                     method:     this.requestMethod,
                     onComplete: this.onComplete,
@@ -356,6 +360,7 @@ var Checkout,
                 if (this.isDeveloperMode && window.console) {
                     console.log('.' + this._config.relations[i] + '-section');
                 }
+                console.log('.' + this._config.relations[i] + '-section');
                 $$('.' + this._config.relations[i] + '-section').each(function(section) {
                     var overlay = section.addClassName('loading').down('.overlay');
                     if (overlay) overlay.show();
@@ -723,7 +728,11 @@ var Checkout,
                 };
 
                 checkout.queueRequest(this._config.saveUrl, options);
+<<<<<<< HEAD
             }
+=======
+            }
+>>>>>>> origin/master
         },
     });
 

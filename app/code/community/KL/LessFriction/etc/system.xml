@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <sections>
+        <lessfriction translate="label" module="lessfriction">
+            <label>Less Friction</label>
+            <tab>sales</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>310</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label" module="lessfriction">
+                    <label>General</label>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_store>1</show_in_store>
+                    <show_in_website>1</show_in_website>
+                    <fields>
+                        <active translate="label">
+                            <label>Enable LessFriction Checkout</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>101</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+                    </fields>
+                </general>
+                <login translate="label" module="lessfriction">
+                    <label>Login</label>
+                    <sort_order>15</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_store>1</show_in_store>
+                    <show_in_website>1</show_in_website>
+                    <fields>
+                        <hide translate="label">
+                            <label>Hide login prompt</label>
+                            <comment><![CDATA[]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>101</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </hide>
+                    </fields>
+                </login>
+                <cart translate="label" module="lessfriction">
+                    <label>Shopping Cart</label>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_store>1</show_in_store>
+                    <show_in_website>1</show_in_website>
+                    <fields>
+                        <include_cart translate="label">
+                            <label>Include shopping cart</label>
+                            <comment><![CDATA[]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>101</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </include_cart>
+                    </fields>
+                </cart>
+                <cross_sell translate="label" module="lessfriction">
+                    <label>Cross Sell</label>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_store>1</show_in_store>
+                    <show_in_website>1</show_in_website>
+                    <fields>
+                        <type>
+                            <label>Type</label>
+                            <comment><![CDATA[]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_crosssell</source_model>
+                            <sort_order>101</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </type>
+                        <block>
+                            <label>CMS Block</label>
+                            <comment><![CDATA[]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_blocks</source_model>
+                            <sort_order>102</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </block>
+                    </fields>
+                </cross_sell>
+                <addresses translate="label" module="lessfriction">
+                    <label>Addresses</label>
+                    <sort_order>40</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_store>1</show_in_store>
+                    <show_in_website>1</show_in_website>
+                    <fields>
+                        <primary>
+                            <label>Primary Address</label>
+                            <comment><![CDATA[Should billing or shipping address be treated as the primary address type.]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_addresses</source_model>
+                            <sort_order>102</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </primary>
+                    </fields>
+                </addresses>
+                <payment translate="label" module="lessfriction">
+                    <label>Payment Methods</label>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_store>1</show_in_store>
+                    <show_in_website>1</show_in_website>
+                    <fields>
+                        <preselect_single translate="label">
+                            <label>Hide step if single option</label>
+                            <comment><![CDATA[If activated, the payment method step will be hidden if there's only one single option to choose.]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>101</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </preselect_single>
+                    </fields>
+                </payment>
+                <shipping translate="label" module="lessfriction">
+                    <label>Shipping Methods</label>
+                    <sort_order>60</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_store>1</show_in_store>
+                    <show_in_website>1</show_in_website>
+                    <fields>
+                        <preselect_single translate="label">
+                            <label>Hide step if single option</label>
+                            <comment><![CDATA[If activated, the shipping method step will be hidden if there's only one single option to choose.]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>101</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </preselect_single>
+                        <hide_if_freeshipping translate="label">
+                            <label>Hide step if free shipping is available</label>
+                            <comment><![CDATA[If activated, free shipping will automatically be selected when available and the shipping method step will then not show up in the checkout process.]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>102</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </hide_if_freeshipping>
+                        <preselect_cheapest translate="label">
+                            <label>Preselect shipping method</label>
+                            <comment><![CDATA[Preselect cheapest available shipping method on page load.]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>103</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </preselect_cheapest>
+                    </fields>
+                </shipping>
+                <review translate="label" module="lessfriction">
+                    <label>Review</label>
+                    <sort_order>70</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_store>1</show_in_store>
+                    <show_in_website>1</show_in_website>
+                </review>
+                <layout translate="label">
+                    <label>Section Layout Options</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>90</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <comment><![CDATA[To segment the checkout steps in layout sections we use <a href="https://en.wikipedia.org/wiki/NATO_phonetic_alphabet">NATO phonetic alphabet</a>. You probably don't want to change these values without talking to your frontend guru.]]></comment>
+                    <fields>
+                        <login translate="label">
+                            <label>Login Step Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_sections</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </login>
+                        <cart translate="label">
+                            <label>Cart Step Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_sections</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cart>
+                        <crosssell translate="label">
+                            <label>Cross Sell Step Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_sections</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </crosssell>
+                        <billing translate="label">
+                            <label>Billing Step Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_sections</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </billing>
+                        <shipping translate="label">
+                            <label>Shipping Step Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_sections</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </shipping>
+                        <shipping_method translate="label">
+                            <label>Shipping Method Step Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_sections</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </shipping_method>
+                        <payment translate="label">
+                            <label>Payment Step Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_sections</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </payment>
+                        <review translate="label">
+                            <label>Review Step Position</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>lessfriction/source_sections</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </review>
+                    </fields>
+                </layout>
+            </groups>
+        </lessfriction>
+        <newsletter>
+            <groups>
+                <lessfriction translate="label" module="lessfriction">
+                    <label>Checkout</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>3</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Enable subscription checkbox</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <checked translate="label">
+                            <label>Checked by default</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </checked>
+                        <visible_guest translate="label">
+                            <label>Visible to guest</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </visible_guest>
+                        <visible_register translate="label">
+                            <label>Visible to registrant</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </visible_register>
+                    </fields>
+                </lessfriction>
+            </groups>
+        </newsletter>
+    </sections>
+</config>

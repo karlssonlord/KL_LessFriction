@@ -1,3 +1,6 @@
-app/etc/modules/*.xml                   app/etc/modules/
-app/code/community/KL/*                 app/code/community/KL/
-skin/frontend/base/default/kl/*         skin/frontend/base/default/kl/
+app/etc/modules/*.xml                          app/etc/modules/
+app/code/community/KL/*                        app/code/community/KL/
+app/design/frontend/base/default/layout/kl/*   app/design/frontend/base/default/layout/kl/
+app/design/frontend/base/default/template/kl/* app/design/frontend/base/default/template/kl/
+skin/frontend/base/default/kl/*                skin/frontend/base/default/kl/
+app/locale/sv_SE/*.csv                         app/locale/sv_SE/

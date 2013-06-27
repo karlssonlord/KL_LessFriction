@@ -21,7 +21,7 @@ class KL_LessFriction_Test_Config_Main extends EcomDev_PHPUnit_Test_Case_Config 
     }
 
     public function testLayoutFile() {
-        $this->assertLayoutFileDefined('frontend', 'kl/checkout.xml');
-        $this->assertLayoutFileExistsInTheme('frontend', 'kl/checkout.xml', 'default', 'base');
+        $this->assertLayoutFileDefined('frontend', 'kl/lessfriction.xml');
+        $this->assertLayoutFileExistsInTheme('frontend', 'kl/lessfriction.xml', 'default', 'base');
     }
 }
