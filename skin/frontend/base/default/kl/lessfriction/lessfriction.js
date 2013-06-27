@@ -145,11 +145,7 @@ var Checkout,
 
             if (method == 'guest') {
                 Element.hide('register-customer-password');
-<<<<<<< HEAD
-            } else if(method == 'register') {z
-=======
             } else if(method == 'register') {
->>>>>>> origin/master
                 Element.show('register-customer-password');
             }
 
@@ -728,11 +724,7 @@ var Checkout,
                 };
 
                 checkout.queueRequest(this._config.saveUrl, options);
-<<<<<<< HEAD
             }
-=======
-            }
->>>>>>> origin/master
         },
     });
 
