@@ -1,7 +1,7 @@
 <div class="cart">
     <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
     <?php echo $this->getChildHtml('form_before') ?>
-    <form action="<?php echo $this->getUrl('checkout/cart/updatePost') ?>" method="post">
+    <form id="co-shopping-cart" action="<?php echo $this->getUrl('checkout/cart/updatePost') ?>" method="post">
         <table id="shopping-cart-table" class="data-table cart-table">
             <thead>
                 <tr>
@@ -67,3 +67,11 @@
     </form>
     <?php echo $this->getChildHtml('shopping.cart.table.after'); ?>
 </div>
+<script>
+document.on('dom:loaded', function() {
+    cart = new Cart({
+        saveUrl: '<?php echo $this->getUrl('checkout/cart/updatePostJson') ?>',
+        form:    'co-shopping-cart'
+    });
+});
+</script>

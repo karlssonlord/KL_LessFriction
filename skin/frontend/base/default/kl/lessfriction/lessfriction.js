@@ -4,6 +4,8 @@
  */
 var Checkout,
     checkout,
+    Cart,
+    cart,
     PaymentMethod,
     payment,
     Review,
@@ -68,7 +70,9 @@ var Checkout,
                     var url       = queueItem.get('url');
                     var options   = queueItem.get('options');
                     var that      = this;
-
+                    if (typeof options === 'undefined') {
+                        options = {};
+                    }
                     if (typeof options.onSuccess === 'undefined') {
                         options.onSuccess = function(result) {};
                     }
@@ -417,7 +421,47 @@ var Checkout,
         }
     });
 
+    Cart = Class.create(Section, {
+        init: function() {
+            this.beforeInit();
 
+            var increaseOrDecreaseQty = document.on(
+                'click',
+                '.increaseQty,.decreaseQty',
+                function(event, element) {
+                    checkout.queueRequest(element.href);
+                    Event.stop(event);
+                }.bind(this)
+            );
+            increaseOrDecreaseQty.stop();
+            increaseOrDecreaseQty.start();
+
+            var updateProductQty = document.on(
+                'change',
+                'input.qty',
+                function(event, element) {
+                    this.save();
+                    Event.stop(event);
+                }.bind(this)
+            );
+            updateProductQty.stop();
+            updateProductQty.start();
+
+            var removeProduct = document.on(
+                'click',
+                '#shopping-cart-table .btn-remove',
+                function(event, element) {
+                    checkout.queueRequest(element.href);
+                    element.up('tr').remove();
+                    Event.stop(event);
+                }.bind(this)
+            );
+            removeProduct.stop();
+            removeProduct.start();
+
+            this.afterInit();
+        },
+    });
 
     /**
      * Shipping Method
