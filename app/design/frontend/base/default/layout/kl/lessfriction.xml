@@ -40,7 +40,7 @@
                 <!-- Add cart to checkout -->
                 <block type="checkout/cart" name="checkout.cart" as="cart">
                     <!-- Set template -->
-                    <action method="setCartTemplate"><value>checkout/cart.phtml</value></action>
+                    <action method="setCartTemplate"><value>kl/lessfriction/cart.phtml</value></action>
                     <!-- This template should never be used -->
                     <action method="setEmptyTemplate"><value>checkout/cart/noItems.phtml</value></action>
                     <action method="chooseTemplate"/>
@@ -55,10 +55,6 @@
                     </block>
                     <!-- Discount codes -->
                     <block type="checkout/cart_coupon" name="checkout.cart.coupon" as="coupon" template="checkout/cart/coupon.phtml"/>
-                    <!--block type="enterprise_giftcardaccount/checkout_cart_giftcardaccount" template="kl_checkout/cart/giftcard.phtml" name="checkout.cart.giftcardaccount" as="giftcards" /-->
-                    <!-- Cross sells -->
-                    <!-- block type="checkout/cart_crosssell" name="checkout.cart.crosssell" as="crosssell" template="kl_checkout/cart/crosssell.phtml"/ -->
-                    <!--block type="enterprise_targetrule/checkout_cart_crosssell" name="checkout.cart.crosssell" as="crosssell" template="kl_checkout/cart/crosssell.phtml" /-->
                     <!-- Totals -->
                     <block type="checkout/cart_totals" name="checkout.cart.totals" as="totals" template="checkout/cart/totals.phtml"/>
                 </block>
@@ -137,7 +133,7 @@
             <!-- Add cart to checkout -->
             <block type="checkout/cart" name="checkout.cart" as="cart">
                 <!-- Set template -->
-                <action method="setCartTemplate"><value>checkout/cart.phtml</value></action>
+                <action method="setCartTemplate"><value>kl/lessfriction/cart.phtml</value></action>
                 <!-- This template should never be used -->
                 <action method="setEmptyTemplate"><value>checkout/cart/noItems.phtml</value></action>
                 <action method="chooseTemplate"/>
@@ -152,10 +148,6 @@
                 </block>
                 <!-- Discount codes -->
                 <block type="checkout/cart_coupon" name="checkout.cart.coupon" as="coupon" template="checkout/cart/coupon.phtml"/>
-                <!--block type="enterprise_giftcardaccount/checkout_cart_giftcardaccount" template="kl_checkout/cart/giftcard.phtml" name="checkout.cart.giftcardaccount" as="giftcards" /-->
-                <!-- Cross sells -->
-                <!-- block type="checkout/cart_crosssell" name="checkout.cart.crosssell" as="crosssell" template="kl_checkout/cart/crosssell.phtml"/ -->
-                <!--block type="enterprise_targetrule/checkout_cart_crosssell" name="checkout.cart.crosssell" as="crosssell" template="kl_checkout/cart/crosssell.phtml" /-->
                 <!-- Totals -->
                 <block type="checkout/cart_totals" name="checkout.cart.totals" as="totals" template="checkout/cart/totals.phtml"/>
             </block>
