@@ -335,9 +335,9 @@ var Checkout,
                     this.setLoadingBlocks();
                     params += 'relations=' + this._config.relations.toString();
                 }
-                if (this.isDeveloperMode && window.console) {
-                    console.log(params);
-                }
+
+                checkout.log(params);
+
                 var options = {
                     method:     this.requestMethod,
                     onComplete: this.onComplete,
@@ -352,9 +352,9 @@ var Checkout,
 
         setLoadingBlocks: function() {
             for (var i = 0; i < this._config.relations.length; i++) {
-                if (this.isDeveloperMode && window.console) {
-                    console.log('.' + this._config.relations[i] + '-section');
-                }
+
+                checkout.log('.' + this._config.relations[i] + '-section');
+
                 $$('.' + this._config.relations[i] + '-section').each(function(section) {
                     var overlay = section.addClassName('loading').down('.overlay');
                     if (overlay) overlay.show();
@@ -376,9 +376,9 @@ var Checkout,
          * Reset load waiting
          */
         resetLoadWaiting: function(transport) {
-            if (this.isDeveloperMode && window.console) {
-                console.log('resetLoadWaiting');
-            }
+
+            checkout.log('resetLoadWaiting');
+
             this.resetLoadingBlocks();
         },
 
@@ -457,9 +457,9 @@ var Checkout,
                     }
 
                     this.keyTimeout = setTimeout(function() {
-                        if (this.isDeveloperMode && window.console) {
-                            console.log('Try to save address');
-                        }
+
+                        checkout.log('Try to save address');
+
                         this.save();
                     }.bind(this), 500);
                 }.bind(this));
