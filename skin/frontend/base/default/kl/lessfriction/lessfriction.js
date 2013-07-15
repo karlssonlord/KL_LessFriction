@@ -222,7 +222,7 @@ var Checkout,
             this.saveUrl       = false;
             this.form          = false;
             this.onComplete    = this.resetLoadWaiting.bindAsEventListener(this);
-            this.onSuccess     = this.nextStep.bindAsEventListener(this);;
+            this.onSuccess     = this.nextStep.bindAsEventListener(this);
             this.onFailure     = false;
             this.requestMethod = 'post';
 
@@ -336,7 +336,7 @@ var Checkout,
                     params += 'relations=' + this._config.relations.toString();
                 }
 
-                console.log(params);
+                checkout.log(params);
 
                 var options = {
                     method:     this.requestMethod,
@@ -352,7 +352,9 @@ var Checkout,
 
         setLoadingBlocks: function() {
             for (var i = 0; i < this._config.relations.length; i++) {
-                console.log('.' + this._config.relations[i] + '-section');
+
+                checkout.log('.' + this._config.relations[i] + '-section');
+
                 $$('.' + this._config.relations[i] + '-section').each(function(section) {
                     var overlay = section.addClassName('loading').down('.overlay');
                     if (overlay) overlay.show();
@@ -374,7 +376,9 @@ var Checkout,
          * Reset load waiting
          */
         resetLoadWaiting: function(transport) {
-            console.log('resetLoadWaiting');
+
+            checkout.log('resetLoadWaiting');
+
             this.resetLoadingBlocks();
         },
 
@@ -453,7 +457,9 @@ var Checkout,
                     }
 
                     this.keyTimeout = setTimeout(function() {
-                        console.log('Try to save address');
+
+                        checkout.log('Try to save address');
+
                         this.save();
                     }.bind(this), 500);
                 }.bind(this));
@@ -716,7 +722,7 @@ var Checkout,
                 };
 
                 checkout.queueRequest(this._config.saveUrl, options);
-            }           
+            }
         },
     });
 

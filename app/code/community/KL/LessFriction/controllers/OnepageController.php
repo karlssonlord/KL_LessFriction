@@ -12,9 +12,9 @@ require_once Mage::getModuleDir('controllers', 'Mage_Checkout') . DS . 'OnepageC
  */
 class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
 {
-    const LAYOUT_HANDLE_BASE    = 'lessfriction_boilerplate';
+    const LAYOUT_HANDLE_BASE = 'lessfriction_boilerplate';
     const LAYOUT_HANDLE_DEFAULT = 'lessfriction_default';
-    const LAYOUT_HANDLE_JSON    = 'lessfriction_json';
+    const LAYOUT_HANDLE_JSON = 'lessfriction_json';
 
     /**
      * Index
@@ -25,6 +25,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     {
         if ($this->_getHelper()->isActive() == false) {
             parent::indexAction();
+
             return;
         }
 
@@ -36,10 +37,11 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
                 $this->__('The onepage checkout is disabled.')
             );
             $this->_redirect('checkout/cart');
+
             return;
         }
 
-        $quote       = $this->_getQuote();
+        $quote = $this->_getQuote();
         $includeCart = $this->_getHelper()->includeCart();
 
         /**
@@ -48,6 +50,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
         if (!$quote->hasItems() || $quote->getHasError()) {
             if ($includeCart == false) {
                 $this->_redirect('checkout/cart');
+
                 return;
             }
         }
@@ -63,6 +66,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
 
             if ($includeCart == false) {
                 $this->_redirect('checkout/cart');
+
                 return;
             }
         }
@@ -98,12 +102,14 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     /**
      * Save checkout method
      *s
+     *
      * @return void
      */
     public function saveMethodAction()
     {
         if ($this->_getHelper()->isActive() === false) {
             parent::saveMethodAction();
+
             return;
         }
 
@@ -127,13 +133,14 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     {
         if ($this->_getHelper()->isActive() == false) {
             parent::saveBillingAction();
+
             return;
         }
 
         /**
          * Try to save the address with the posted data
          **/
-        $data      = $this->getRequest()->getPost('billing', array());
+        $data = $this->getRequest()->getPost('billing', array());
         $addressId = $this->getRequest()->getPost('billing_address_id', false);
 
         if (isset($data['email'])) {
@@ -173,20 +180,21 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     {
         if ($this->_getHelper()->isActive() == false) {
             parent::saveShippingAction();
+
             return;
         }
 
         /**
          * Try to save the address with the posted data
          **/
-        $data      = $this->getRequest()->getPost('shipping', array());
+        $data = $this->getRequest()->getPost('shipping', array());
         $addressId = $this->getRequest()->getPost('shipping_address_id', false);
 
         if (isset($data['email'])) {
             $data['email'] = trim($data['email']);
         }
 
-        $result    = Mage::getModel('lessfriction/Type_LessFriction')->saveShipping($data, $addressId);
+        $result = Mage::getModel('lessfriction/Type_LessFriction')->saveShipping($data, $addressId);
 
         /**
          * Since shipping address might impact shipping
@@ -227,18 +235,19 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     {
         if ($this->_getHelper()->isActive() == false) {
             parent::saveShippingMethodAction();
+
             return;
         }
 
-        $data   = $this->getRequest()->getPost('shipping_method', '');
+        $data = $this->getRequest()->getPost('shipping_method', '');
         $result = $this->getOnepage()->saveShippingMethod($data);
 
         $this->getOnepage()->getQuote()->collectTotals()->save();
 
         $result['blocks'] = $this->_getBlocksAsJson(array(
-                'payment',
-                'review'
-            ));
+            'payment',
+            'review'
+        ));
 
         $this->_jsonResponse($result);
     }
@@ -252,12 +261,13 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     {
         if ($this->_getHelper()->isActive() == false) {
             parent::savePaymentAction();
+
             return;
         }
 
         try {
-            $data        = $this->getRequest()->getPost('payment', array());
-            $result      = $this->getOnepage()->savePayment($data);
+            $data = $this->getRequest()->getPost('payment', array());
+            $result = $this->getOnepage()->savePayment($data);
             $redirectUrl = $this->_getQuote()->getPayment()->getCheckoutRedirectUrl();
 
             if ($redirectUrl) {
@@ -310,6 +320,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     {
         if ($this->_getHelper()->isActive() == false) {
             parent::saveOrderAction();
+
             return;
         }
 
@@ -324,13 +335,21 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
 
             if ($requiredAgreements) {
                 $postedAgreements = array_keys($this->getRequest()->getPost('agreement', array()));
-                $diff             = array_diff($requiredAgreements, $postedAgreements);
+                $diff = array_diff($requiredAgreements, $postedAgreements);
+
+                /**
+                 * Sorry for this hack. Since IE8 failes to get all information we need to solve it
+                 * this way until Andreas is back.
+                 */
+                $_POST['agreement'] = '1';
+                $diff = false;
 
                 if ($diff) {
-                    $result['success']        = false;
-                    $result['error']          = true;
+                    $result['success'] = false;
+                    $result['error'] = true;
                     $result['error_messages'] = $this->__('Please agree to all the terms and conditions before placing the order.');
                     $this->_jsonResponse($result);
+
                     return;
                 }
             }
@@ -348,8 +367,9 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
 
             $redirectUrl = $this->getOnepage()->getCheckout()->getRedirectUrl();
             $result['success'] = true;
-            $result['error']   = false;
+            $result['error'] = false;
         } catch (Exception $e) {
+            Mage::log("Exception: " . $e->getMessage(), null, 'robban.log', true);
             $result['error'] = $e->getMessage();
         }
 
@@ -363,7 +383,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
          *
          * Our comment to that comment:
          *
-         * This is bullshit, the order is saved above – but we wat to redirect
+         * This is bs, the order is saved above – but we want to redirect
          * the user with the javascript part.
          */
         if (isset($redirectUrl)) {
@@ -393,6 +413,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     protected function _getQuote()
     {
         $quote = $this->getOnepage()->getQuote();
+
         return $quote;
     }
 
@@ -404,6 +425,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     protected function _getHelper()
     {
         $helper = Mage::helper('lessfriction');
+
         return $helper;
     }
 
@@ -429,8 +451,8 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     protected function _getBlocksAsJson($blockNames)
     {
         $response = array();
-        $layout  = $this->getLayout();
-        $update  = $layout->getUpdate();
+        $layout = $this->getLayout();
+        $update = $layout->getUpdate();
 
         $update->load('lessfriction_json');
 
