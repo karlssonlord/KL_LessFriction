@@ -14,6 +14,66 @@ require_once Mage::getModuleDir('controllers', 'Mage_Checkout') . DS . 'CartCont
 class KL_LessFriction_CartController extends Mage_Checkout_CartController
 {
     /**
+     * Initialize coupon
+     */
+    public function couponPostJsonAction()
+    {
+        $result = array();
+
+        /**
+         * No reason continue with empty shopping cart
+         */
+        if (!$this->_getCart()->getQuote()->getItemsCount()) {
+            $result['redirect'] = Mage::helper('checkout/url')->getCheckoutUrl();
+            return $this->_jsonResponse($result);
+        }
+
+        $couponCode = (string) $this->getRequest()->getParam('coupon_code');
+        if ($this->getRequest()->getParam('remove') == 1) {
+            $couponCode = '';
+        }
+        $oldCouponCode = $this->_getQuote()->getCouponCode();
+$error = false;
+        if (!strlen($couponCode) && !strlen($oldCouponCode)) {
+            // $result['redirect'] = Mage::helper('checkout/url')->getCheckoutUrl();
+            // return $this->_jsonResponse($result);
+        } else {
+            try {
+                $this->_getQuote()->getShippingAddress()->setCollectShippingRates(true);
+                $this->_getQuote()->setCouponCode(strlen($couponCode) ? $couponCode : '')
+                    ->collectTotals()
+                    ->save();
+
+                if (strlen($couponCode)) {
+                    if ($couponCode == $this->_getQuote()->getCouponCode()) {
+                        $result['messages'][] = array('type' => 'success', 'text' => $this->__('Coupon code "%s" was applied.', Mage::helper('core')->htmlEscape($couponCode)));
+                    } else {
+                        $error = true;
+                        $result['messages'][] = array('type' => 'error', 'text' => $this->__('Coupon code "%s" is not valid.', Mage::helper('core')->htmlEscape($couponCode)));
+                    }
+                } else {
+                    $result['messages'][] = array('type' => 'success', 'text' => $this->__('Coupon code was canceled.'));
+                }
+
+            } catch (Mage_Core_Exception $e) {
+                $error = true;
+                $result['messages'][] = array('type' => 'error', 'text' => $e->getMessage());
+            } catch (Exception $e) {
+                $error = true;
+                $this->_getSession()->addError();
+                $result['messages'][] = array('type' => 'error', 'text' => $this->__('Cannot apply the coupon code.'));
+                Mage::logException($e);
+            }
+        }
+
+        if (!$error) {
+            $result['blocks'] = $this->_getBlocksAsJson(array('cart','shipping_method','review'));
+        }
+
+        return $this->_jsonResponse($result);
+    }
+
+    /**
      * Delete shoping cart item action
      *
      * @see Mage_Checkout_CartController::deleteAction()

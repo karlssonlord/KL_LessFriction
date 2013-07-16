@@ -153,7 +153,7 @@ $canApplyMsrp = Mage::helper('catalog')->canApplyMsrp($_item->getProduct(), Mage
         <?php endif; ?>
     <?php endif; ?>
     <td class="a-center"><a href="<?php echo $this->helper('lessfriction/cart')->getSubtractUrl($_item) ?>" class="decreaseQty">-</a>
-        <input name="cart[<?php echo $_item->getId() ?>][qty]" value="<?php echo $this->getQty() ?>" size="2" title="<?php echo $this->__('Qty') ?>" class="input-text qty" maxlength="12" /><a href="<?php echo $this->helper('lessfriction/cart')->increaseQtyUrl($_item) ?>" class="increaseQty">+</a>
+        <input name="cart[<?php echo $_item->getId() ?>][qty]" value="<?php echo $this->getQty() ?>" size="3" title="<?php echo $this->__('Qty') ?>" class="input-text qty" maxlength="12" type="text" /><a href="<?php echo $this->helper('lessfriction/cart')->increaseQtyUrl($_item) ?>" class="increaseQty">+</a>
     </td>
     <?php if (($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()) && !$_item->getNoSubtotal()): ?>
     <td class="a-right">

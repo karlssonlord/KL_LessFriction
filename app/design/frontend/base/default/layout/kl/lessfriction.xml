@@ -54,7 +54,7 @@
                         <label>Shopping Cart Form Before</label>
                     </block>
                     <!-- Discount codes -->
-                    <block type="checkout/cart_coupon" name="checkout.cart.coupon" as="coupon" template="checkout/cart/coupon.phtml"/>
+                    <block type="checkout/cart_coupon" name="checkout.cart.coupon" as="coupon" template="kl/lessfriction/cart/coupon.phtml"/>
                     <!-- Totals -->
                     <block type="checkout/cart_totals" name="checkout.cart.totals" as="totals" template="checkout/cart/totals.phtml"/>
                 </block>
@@ -147,7 +147,7 @@
                     <label>Shopping Cart Form Before</label>
                 </block>
                 <!-- Discount codes -->
-                <block type="checkout/cart_coupon" name="checkout.cart.coupon" as="coupon" template="checkout/cart/coupon.phtml"/>
+                <block type="checkout/cart_coupon" name="checkout.cart.coupon" as="coupon" template="kl/lessfriction/cart/coupon.phtml"/>
                 <!-- Totals -->
                 <block type="checkout/cart_totals" name="checkout.cart.totals" as="totals" template="checkout/cart/totals.phtml"/>
             </block>

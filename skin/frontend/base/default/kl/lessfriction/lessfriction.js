@@ -84,6 +84,7 @@ var Checkout,
                             cache.apply(this, arguments);
 
                             this.log(result.responseJSON.blocks);
+                            this.log(result.responseJSON);
 
                             if (result.responseJSON.redirect) {
                                 location.href = result.responseJSON.redirect;
@@ -167,6 +168,11 @@ var Checkout,
 
             this.method = method;
             document.body.fire('login:setMethod', {method : this.method});
+        },
+
+        setMessage: function(text, type) {
+            var messageHtml = "<ul><li class=\"" + type + "-msg\"><ul><li><span>" + text + "</span></li></ul></li></ul>";
+            $('co-messages').update(messageHtml);
         },
 
         log: function(message) {
@@ -403,6 +409,16 @@ var Checkout,
                 return;
             }
 
+            /**
+             * These messages are currently only used by the coupon handling
+             * as far as I know.
+             */
+            if (response.messages) {
+                response.messages.each(function(message) {
+                    checkout.setMessage(message.text, message.type);
+                });
+            }
+
             if (response.error) {
                 if (response.message) {
                     alert(response.message);
@@ -459,7 +475,34 @@ var Checkout,
             removeProduct.stop();
             removeProduct.start();
 
+            var addDiscount = document.on(
+                'submit',
+                '#discount-coupon-form',
+                function(event, element) {
+                    this.handleCoupon();
+                    Event.stop(event);
+                }.bind(this)
+            );
+            addDiscount.stop();
+            addDiscount.start();
+
             this.afterInit();
+        },
+        handleCoupon: function() {
+            var form      = $('discount-coupon-form');
+            var validator = new Validation(this._config.form);
+
+            if (validator.validate()) {
+                var params = Form.serialize(form);
+
+                checkout.queueRequest(
+                    this._config.couponUrl,
+                    {
+                        parameters: params,
+                        onSuccess: this.nextStep.bindAsEventListener(this)
+                    }
+                );
+            }
         },
     });
 

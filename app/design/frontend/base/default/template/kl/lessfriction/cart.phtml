@@ -1,7 +1,17 @@
 <div class="cart">
     <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
     <?php echo $this->getChildHtml('form_before') ?>
-    <form id="co-shopping-cart" action="<?php echo $this->getUrl('checkout/cart/updatePost') ?>" method="post">
+
+    <p id="deals-toggler"><a href="#deals" onclick="$('deals').show(); $('deals-toggler').hide(); return false;"><?php echo $this->__('Do you have a gift card or discount code?') ?></a></p>
+
+    <div id="deals" style="display: none">
+        <?php /* Discounts */ ?>
+        <?php echo $this->getChildHtml('coupon') ?>
+
+        <p><a href="#deals" onclick="$('deals').hide(); $('deals-toggler').show(); return false;"><?php echo $this->__('Close') ?></a></p>
+    </div>
+
+    <form id="co-cart-form" action="<?php echo $this->getUrl('checkout/cart/updatePost') ?>" method="post">
         <table id="shopping-cart-table" class="data-table cart-table">
             <thead>
                 <tr>
@@ -31,47 +41,16 @@
                 <?php endforeach ?>
             </tbody>
         </table>
-        <?php /*
-        <table>
-            <tbody>
-                <tr>
-                    <td valign="bottom">
-                        <button type="submit"
-                            name="update_cart_action"
-                            value="update_qty"
-                            title="<?php echo $this->__('Update Shopping Cart'); ?>"
-                            class="button btn-update"><span><?php echo $this->__('Update Shopping Cart'); ?></span></button>
-                        <button type="submit"
-                            name="update_cart_action"
-                            value="empty_cart"
-                            title="<?php echo $this->__('Clear Shopping Cart'); ?>"
-                            class="button btn-empty"
-                            id="empty_cart_button"><span><?php echo $this->__('Clear Shopping Cart'); ?></span></button>
-                            <?php if (!$this->hasError()): ?>
-                            <ul class="checkout-types">
-                                <?php foreach ($this->getMethods('methods') as $method): ?>
-                                    <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
-                                        <li><?php echo $methodHtml; ?></li>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
-                    </td>
-                    <td class="totals">
-                    <?php echo $this->getChildHtml('totals'); ?>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        */ ?>
+        <?php echo $this->getChildHtml('totals'); ?>
     </form>
     <?php echo $this->getChildHtml('shopping.cart.table.after'); ?>
 </div>
 <script>
 document.on('dom:loaded', function() {
     cart = new Cart({
-        saveUrl: '<?php echo $this->getUrl('checkout/cart/updatePostJson') ?>',
-        form:    'co-shopping-cart'
+        form:      'co-cart-form',
+        saveUrl:   '<?php echo $this->getUrl('checkout/cart/updatePostJson') ?>',
+        couponUrl: '<?php echo $this->getUrl('checkout/cart/couponPostJson') ?>'
     });
 });
 </script>
