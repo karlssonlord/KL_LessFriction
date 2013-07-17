@@ -11,6 +11,7 @@
         <p><a href="#deals" onclick="$('deals').hide(); $('deals-toggler').show(); return false;"><?php echo $this->__('Close') ?></a></p>
     </div>
 
+    <?php $mergedCells = ($this->helper('tax')->displayCartBothPrices() ? 2 : 1); ?>
     <form id="co-cart-form" action="<?php echo $this->getUrl('checkout/cart/updatePost') ?>" method="post">
         <table id="shopping-cart-table" class="data-table cart-table">
             <thead>

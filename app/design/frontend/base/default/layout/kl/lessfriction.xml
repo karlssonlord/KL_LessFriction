@@ -86,7 +86,7 @@
                 </block>
 
                 <!-- Review -->
-                <block type="checkout/onepage_review" name="checkout.onepage.review" as="review" template="checkout/onepage/review.phtml">
+                <block type="checkout/onepage_review" name="checkout.onepage.review" as="review" template="kl/lessfriction/review.phtml">
                     <block type="checkout/onepage_review_info" name="checkout.onepage.review.info" as="info" template="kl/lessfriction/review/info.phtml">
                         <action method="addItemRender">
                             <type>default</type>
