@@ -1,0 +1,57 @@
+<div class="cart">
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+    <?php echo $this->getChildHtml('form_before') ?>
+
+    <p id="deals-toggler"><a href="#deals" onclick="$('deals').show(); $('deals-toggler').hide(); return false;"><?php echo $this->__('Do you have a gift card or discount code?') ?></a></p>
+
+    <div id="deals" style="display: none">
+        <?php /* Discounts */ ?>
+        <?php echo $this->getChildHtml('coupon') ?>
+
+        <p><a href="#deals" onclick="$('deals').hide(); $('deals-toggler').show(); return false;"><?php echo $this->__('Close') ?></a></p>
+    </div>
+
+    <?php $mergedCells = ($this->helper('tax')->displayCartBothPrices() ? 2 : 1); ?>
+    <form id="co-cart-form" action="<?php echo $this->getUrl('checkout/cart/updatePost') ?>" method="post">
+        <table id="shopping-cart-table" class="data-table cart-table">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th> <!-- Product Image -->
+                    <th><span class="nobr"><?php echo $this->__('Product Name') ?></span></th>
+                    <th></th>  <!-- Edit -->
+                    <?php if ($this->helper('wishlist')->isAllowInCart()) : ?>
+                        <th rowspan="<?php echo $mergedCells; ?>" class="a-center"><span class="nobr"><?php echo $this->__('Move to Wishlist') ?></span></th>
+                    <?php endif ?>
+                    <th><span class="nobr"><?php echo $this->__('Unit Price') ?></span></th>
+                    <th><?php echo $this->__('Qty') ?></th>
+                    <th><?php echo $this->__('Subtotal') ?></th>
+                    <th><?php echo $this->__('Remove') ?></th>
+                </tr>
+                <?php if ($this->helper('tax')->displayCartBothPrices()): ?>
+                    <tr>
+                        <th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+                        <th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+                        <th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+                        <th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+                    </tr>
+                <?php endif; ?>
+            </thead>
+            <tbody>
+                <?php foreach($this->getItems() as $_item): ?>
+                    <?php echo $this->getItemHtml($_item) ?>
+                <?php endforeach ?>
+            </tbody>
+        </table>
+        <?php echo $this->getChildHtml('totals'); ?>
+    </form>
+    <?php echo $this->getChildHtml('shopping.cart.table.after'); ?>
+</div>
+<script>
+document.on('dom:loaded', function() {
+    cart = new Cart({
+        form:      'co-cart-form',
+        saveUrl:   '<?php echo $this->getUrl('checkout/cart/updatePostJson') ?>',
+        couponUrl: '<?php echo $this->getUrl('checkout/cart/couponPostJson') ?>'
+    });
+});
+</script>

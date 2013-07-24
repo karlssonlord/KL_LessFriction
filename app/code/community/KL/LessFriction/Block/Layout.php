@@ -11,6 +11,7 @@ class KL_LessFriction_Block_Layout extends Mage_Checkout_Block_Onepage
         $steps       = array();
         $stepCodes   = $this->_getStepCodes();
         $stepCodes[] = 'crosssell';
+        $stepCodes[] = 'cart';
         $checkout    = $this->getCheckout();
 
         if ($this->isCustomerLoggedIn()) {

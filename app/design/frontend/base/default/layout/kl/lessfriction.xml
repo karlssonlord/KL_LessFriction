@@ -37,6 +37,28 @@
                     </block>
                 </block>
 
+                <!-- Add cart to checkout -->
+                <block type="checkout/cart" name="checkout.cart" as="cart">
+                    <!-- Set template -->
+                    <action method="setCartTemplate"><value>kl/lessfriction/cart.phtml</value></action>
+                    <!-- This template should never be used -->
+                    <action method="setEmptyTemplate"><value>checkout/cart/noItems.phtml</value></action>
+                    <action method="chooseTemplate"/>
+                    <!-- Add item renderers -->
+                    <action method="addItemRender"><type>simple</type><block>checkout/cart_item_renderer</block><template>kl/lessfriction/cart/item/default.phtml</template></action>
+                    <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>checkout/cart/item/default.phtml</template></action>
+                    <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>checkout/cart/item/default.phtml</template></action>
+                    <action method="addItemRender"><type>bundle</type><block>bundle/checkout_cart_item_renderer</block><template>checkout/cart/item/default.phtml</template></action>
+                    <!-- Update this block to a custom one -->
+                    <block type="page/html_wrapper" name="checkout.cart.form.before" as="form_before" translate="label">
+                        <label>Shopping Cart Form Before</label>
+                    </block>
+                    <!-- Discount codes -->
+                    <block type="checkout/cart_coupon" name="checkout.cart.coupon" as="coupon" template="kl/lessfriction/cart/coupon.phtml"/>
+                    <!-- Totals -->
+                    <block type="checkout/cart_totals" name="checkout.cart.totals" as="totals" template="checkout/cart/totals.phtml"/>
+                </block>
+
                 <!-- Shipping method -->
                 <block type="lessfriction/shipping_method" name="checkout.onepage.shipping_method" as="shipping_method" template="kl/lessfriction/shipping_method.phtml">
                     <block type="lessfriction/shipping_method_available" name="checkout.onepage.shipping_method.available" as="available" template="kl/lessfriction/shipping_method/available.phtml"/>
@@ -64,7 +86,7 @@
                 </block>
 
                 <!-- Review -->
-                <block type="checkout/onepage_review" name="checkout.onepage.review" as="review" template="checkout/onepage/review.phtml">
+                <block type="checkout/onepage_review" name="checkout.onepage.review" as="review" template="kl/lessfriction/review.phtml">
                     <block type="checkout/onepage_review_info" name="checkout.onepage.review.info" as="info" template="kl/lessfriction/review/info.phtml">
                         <action method="addItemRender">
                             <type>default</type>
@@ -107,6 +129,27 @@
                     <label>Login/Registration Before</label>
                     <action method="setMayBeInvisible"><value>1</value></action>
                 </block>
+            </block>
+            <!-- Add cart to checkout -->
+            <block type="checkout/cart" name="cart" as="cart">
+                <!-- Set template -->
+                <action method="setCartTemplate"><value>kl/lessfriction/cart.phtml</value></action>
+                <!-- This template should never be used -->
+                <action method="setEmptyTemplate"><value>checkout/cart/noItems.phtml</value></action>
+                <action method="chooseTemplate"/>
+                <!-- Add item renderers -->
+                <action method="addItemRender"><type>simple</type><block>checkout/cart_item_renderer</block><template>kl/lessfriction/cart/item/default.phtml</template></action>
+                <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>checkout/cart/item/default.phtml</template></action>
+                <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>checkout/cart/item/default.phtml</template></action>
+                <action method="addItemRender"><type>bundle</type><block>bundle/checkout_cart_item_renderer</block><template>checkout/cart/item/default.phtml</template></action>
+                <!-- Update this block to a custom one -->
+                <block type="page/html_wrapper" name="checkout.cart.form.before" as="form_before" translate="label">
+                    <label>Shopping Cart Form Before</label>
+                </block>
+                <!-- Discount codes -->
+                <block type="checkout/cart_coupon" name="checkout.cart.coupon" as="coupon" template="kl/lessfriction/cart/coupon.phtml"/>
+                <!-- Totals -->
+                <block type="checkout/cart_totals" name="checkout.cart.totals" as="totals" template="checkout/cart/totals.phtml"/>
             </block>
             <block type="lessfriction/shipping_method" name="shipping_method" as="shipping_method" template="kl/lessfriction/shipping_method.phtml">
                 <block type="lessfriction/shipping_method_available" name="checkout.onepage.shipping_method.available" as="available" template="kl/lessfriction/shipping_method/available.phtml"/>

@@ -14,7 +14,8 @@
             shippingMethod = new ShippingMethod(
                 {
                     form: 'co-shipping-method-form',
-                    saveUrl: "<?php echo $this->getUrl('checkout/onepage/saveShippingMethod') ?>"
+                    saveUrl: "<?php echo $this->getUrl('checkout/onepage/saveShippingMethod') ?>",
+                    relations: ['review', 'cart']
                 }
             );
         });
