@@ -244,10 +244,9 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
 
         $this->getOnepage()->getQuote()->collectTotals()->save();
 
-        $result['blocks'] = $this->_getBlocksAsJson(array(
-            'payment',
-            'review'
-        ));
+        $relations = $this->getRequest()->getPost('relations', '');
+        $relations = explode(',', $relations);
+        $result['blocks'] = $this->_getBlocksAsJson($relations);
 
         $this->_jsonResponse($result);
     }
