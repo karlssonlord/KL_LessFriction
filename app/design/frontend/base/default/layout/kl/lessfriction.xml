@@ -163,7 +163,7 @@
             <block type="lessfriction/cart_crosssell" name="checkout.onepage.crosssell.layout" as="crosssell" template="kl/lessfriction/crosssell.phtml">
                 <block type="checkout/cart_crosssell" name="checkout.onepage.crosssell" as="list" template="kl/lessfriction/crosssell/list.phtml"/>
             </block>
-            <block type="checkout/onepage_review" name="review" as="review" template="checkout/onepage/review.phtml">
+            <block type="checkout/onepage_review" name="review" as="review" template="kl/lessfriction/review.phtml">
                 <block type="checkout/onepage_review_info" name="checkout.onepage.review.info" as="info" template="kl/lessfriction/review/info.phtml">
                     <action method="addItemRender">
                         <type>default</type>

@@ -66,7 +66,7 @@
                          */
                         if(!$this->isCustomerLoggedIn() && $this->isPrimaryAddress()):
                     ?>
-                        <div class="field">
+                        <div class="field input-box">
                             <label for="shipping:email" class="required"><?php echo $this->__('Email Address') ?> <em>*</em></label>
                             <input
                                 type="text"
@@ -223,6 +223,9 @@
                             <?php echo $this->__('Save in address book') ?>
                         </label>
                     </li>
+                    <?php if ($this->isPrimaryAddress()): ?>
+                    <li><label for="shipping:use_for_billing"><input type="checkbox" id="shipping:use_for_billing" name="shipping[use_for_billing]" checked="checked" value="1" /> <?php echo $this->__('Use this address for billing'); ?></label></li>
+                    <?php endif; ?>
                 </ul>
                     <?php else: ?>
                     <?php if ($this->isPrimaryAddress()): ?>
@@ -240,9 +243,13 @@
 <script>
     new Validation('co-shipping-form');
 
+    var shippingForm,
+        shippingRegionUpdater,
+        shipping;
+
     document.observe('dom:loaded', function() {
-        var shippingForm          = new VarienForm('co-shipping-form');
-        var shippingRegionUpdater = new RegionUpdater(
+
+        shippingRegionUpdater = new RegionUpdater(
                                         'shipping:country_id',
                                         'shipping:region',
                                         'shipping:region_id',
@@ -257,7 +264,7 @@
             test3: '<?php echo $this->getUrl('checkout/onepage/shippingMethod') ?>',
             relations: ['payment','shipping_method','review']
         });
-
+        shippingForm          = new VarienForm('co-shipping-form');
         $('shipping:region_id').setAttribute(
             'defaultValue', 
             "<?php echo $this->getAddress()->getRegionId() ?>"
