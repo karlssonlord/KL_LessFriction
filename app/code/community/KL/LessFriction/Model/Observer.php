@@ -1,17 +1,40 @@
 <?php
+/**
+ * Observer model
+ *
+ * @category   KL
+ * @package    KL_LessFriction
+ * @subpackage Model
+ * @author     Andreas Karlsson <andreas@karlssonlord.com>
+ * @author     Erik Eng <erik@karlssonlord.com>
+ * @copyright  2013 Karlsson & Lord AB
+ * @license    GPL v2 http://choosealicense.com/licenses/gpl-v2/
+ */
 class KL_LessFriction_Model_Observer
 {
-
+    /**
+     * Shipping method code for free shipping
+     *
+     * @var string
+     */
     const LESSFRICTION_FREESHIPPING = 'freeshipping';
 
-    var $_defaultCountry = null;
+    /**
+     * Default country
+     *
+     * @var mixed
+     */
+    public $defaultCountry = null;
 
     /**
      * Pre dispatch
      *
+     * @param Varien_Event_Observer $observer Observer object
+     *
      * @return void
      */
-    public function preDispatch(Varien_Event_Observer $observer) {
+    public function preDispatch(Varien_Event_Observer $observer)
+    {
         /* @var $quote Mage_Sales_Model_Quote */
         $quote = $this->_getQuote();
 
@@ -30,23 +53,16 @@ class KL_LessFriction_Model_Observer
         if ($shippingAddress) {
             if (!$shippingAddress->getCountryId() || $shippingAddress->getShippingRatesCollection()->count() == 1) {
                 $shippingAddress->setCountryId($this->_getDefaultCountry()->getCountryId())
-                        ->setCollectShippingRates(true)
-                        ->collectShippingRates()
-                        ->save();
-            } else if ($shippingAddress->getCountryId()) {
+                    ->setCollectShippingRates(true)
+                    ->collectShippingRates()
+                    ->save();
+            } elseif ($shippingAddress->getCountryId()) {
                 $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->save();
             }
         }
 
         if ($billingAddress && $shippingAddress) {
-            /**
-             * Try setting payment method
-             **/
             $this->_setPaymentMethod();
-
-            /**
-             * Try setting shipping method
-             **/
             $this->_setShippingMethod();
         }
     }
@@ -58,15 +74,15 @@ class KL_LessFriction_Model_Observer
      */
     protected function _getDefaultCountry()
     {
-        if ($this->_defaultCountry === null) {
+        if ($this->defaultCountry === null) {
             $countryId = Mage::registry('client_country_id') ?
                             Mage::registry('client_country_id') :
                             Mage::helper('core')->getDefaultCountry();
 
-            $this->_defaultCountry = new Varien_Object(array('country_id' => $countryId));
+            $this->defaultCountry = new Varien_Object(array('country_id' => $countryId));
         }
 
-        return $this->_defaultCountry;
+        return $this->defaultCountry;
     }
 
     /**
@@ -87,8 +103,9 @@ class KL_LessFriction_Model_Observer
             foreach ($methods as $key => $method) {
                 if ($this->_canUsePaymentMethod($method)
                     && ($total != 0
-                        || $method->getCode() == 'free'
-                        || ($quote->hasRecurringItems() && $method->canManageRecurringProfiles()))) {
+                    || $method->getCode() == 'free'
+                    || ($quote->hasRecurringItems() && $method->canManageRecurringProfiles()))
+                ) {
                     $availablePaymentMethods[] = $method->getCode();
                 } else {
                     unset($methods[$key]);
@@ -105,9 +122,9 @@ class KL_LessFriction_Model_Observer
     /**
      * Check if customer can use payment method
      *
-     * @param object
+     * @param object $method Payment method
      *
-     * @return bool
+     * @return boolean
      */
     protected function _canUsePaymentMethod($method)
     {
@@ -129,7 +146,7 @@ class KL_LessFriction_Model_Observer
         $minTotal = $method->getConfigData('min_order_total');
         $maxTotal = $method->getConfigData('max_order_total');
 
-        if((!empty($minTotal) && ($total < $minTotal)) || (!empty($maxTotal) && ($total > $maxTotal))) {
+        if ((!empty($minTotal) && ($total < $minTotal)) || (!empty($maxTotal) && ($total > $maxTotal))) {
             return false;
         }
 
@@ -150,8 +167,9 @@ class KL_LessFriction_Model_Observer
          * it based on how the module is configured in admin
          **/
         if ($config->preselectSingleShippingMethod()
-                || $config->preselectCheapestShippingMethod()
-                || $config->hideIfFreeShipping()) {
+            || $config->preselectCheapestShippingMethod()
+            || $config->hideIfFreeShipping()
+        ) {
 
             /* @var $quote Mage_Sales_Model_Quote */
             $quote  = $this->_getQuote();
@@ -165,7 +183,8 @@ class KL_LessFriction_Model_Observer
                     if ($config->preselectCheapestShippingMethod()) {
                         foreach ($groupItems as $item) {
                             if (!isset($shippingMethod)
-                                || $shippingMethod->getPrice() > $item->getPrice()) {
+                                || $shippingMethod->getPrice() > $item->getPrice()
+                            ) {
 
                                 $shippingMethod = $item;
                             }
@@ -175,13 +194,15 @@ class KL_LessFriction_Model_Observer
                             if (count($groupItems) == 1) {
                                 $shippingMethod = $groupItems[0];
                             }
-                        } else if (count($groups) == 1 && count($groupItems) == 1) {
+                        } elseif (count($groups) == 1 && count($groupItems) == 1) {
                             $shippingMethod = $groupItems[0];
                         }
                     }
                 }
 
-                $quote->getShippingAddress()->setShippingMethod($shippingMethod->getCode());
+                $quote->getShippingAddress()->setShippingMethod(
+                    $shippingMethod->getCode()
+                );
             }
         }
     }
@@ -209,17 +230,17 @@ class KL_LessFriction_Model_Observer
     /**
      * Set customer is subscribed
      *
-     * @param  object $observer
-     * @author Erik Eng <erik@karlssonlord.com>
+     * @param object $observer Observer object
      *
      * @return void
      */
     public function setCustomerIsSubscribed($observer)
     {
-        if ((bool) Mage::getSingleton('checkout/session')->getCustomerIsSubscribed()){
-            $quote = $observer->getEvent()->getQuote();
+        if (Mage::getSingleton('checkout/session')->getCustomerIsSubscribed()) {
+            $quote    = $observer->getEvent()->getQuote();
             $customer = $quote->getCustomer();
-            switch ($quote->getCheckoutMethod()){
+
+            switch ($quote->getCheckoutMethod()) {
                 case Mage_Sales_Model_Quote::CHECKOUT_METHOD_REGISTER:
                     $customer->setIsSubscribed(1);
                     break;
@@ -228,20 +249,23 @@ class KL_LessFriction_Model_Observer
                     break;
                 case Mage_Sales_Model_Quote::CHECKOUT_METHOD_GUEST:
                     $session = Mage::getSingleton('core/session');
+
                     try {
-                        $status = Mage::getModel('newsletter/subscriber')->subscribe($quote->getBillingAddress()->getEmail());
-                        if ($status == Mage_Newsletter_Model_Subscriber::STATUS_NOT_ACTIVE){
+                        $status = Mage::getModel('newsletter/subscriber')
+                            ->subscribe($quote->getBillingAddress()->getEmail());
+
+                        if ($status == Mage_Newsletter_Model_Subscriber::STATUS_NOT_ACTIVE) {
                             $session->addSuccess(Mage::helper('lessfriction')->__('Confirmation request has been sent regarding your newsletter subscription'));
                         }
-                    }
-                    catch (Mage_Core_Exception $e) {
+                    } catch (Mage_Core_Exception $e) {
                         $session->addException($e, Mage::helper('lessfriction')->__('There was a problem with the newsletter subscription: %s', $e->getMessage()));
-                    }
-                    catch (Exception $e) {
+                    } catch (Exception $e) {
                         $session->addException($e, Mage::helper('lessfriction')->__('There was a problem with the newsletter subscription'));
                     }
+
                     break;
             }
+
             Mage::getSingleton('checkout/session')->setCustomerIsSubscribed(0);
         }
     }

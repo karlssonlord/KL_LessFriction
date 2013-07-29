@@ -1,20 +1,22 @@
 <?php
-/**
- * Require KL_Checkout_OnepageController that is being extended by
- * Mage_Checkout_OnepageController.
- */
-require_once Mage::getModuleDir('controllers', 'Mage_Checkout') . DS . 'OnepageController.php';
+require_once Mage::getModuleDir('controllers', 'Mage_Checkout')
+    . DS . 'OnepageController.php';
 
 /**
  * Onepage Checkout Controller
  *
- * @package default
+ * @category   KL
+ * @package    KL_LessFriction
+ * @subpackage Controllers
+ * @author     Andreas Karlsson <andreas@karlssonlord.com>
+ * @copyright  2013 Karlsson & Lord AB
+ * @license    GPL v2 http://choosealicense.com/licenses/gpl-v2/
  */
 class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
 {
-    const LAYOUT_HANDLE_BASE = 'lessfriction_boilerplate';
+    const LAYOUT_HANDLE_BASE    = 'lessfriction_boilerplate';
     const LAYOUT_HANDLE_DEFAULT = 'lessfriction_default';
-    const LAYOUT_HANDLE_JSON = 'lessfriction_json';
+    const LAYOUT_HANDLE_JSON    = 'lessfriction_json';
 
     /**
      * Index
@@ -244,10 +246,12 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
 
         $this->getOnepage()->getQuote()->collectTotals()->save();
 
-        $result['blocks'] = $this->_getBlocksAsJson(array(
-            'payment',
-            'review'
-        ));
+        $result['blocks'] = $this->_getBlocksAsJson(
+            array(
+                'payment',
+                'review'
+            )
+        );
 
         $this->_jsonResponse($result);
     }
@@ -347,7 +351,10 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
                 if ($diff) {
                     $result['success'] = false;
                     $result['error'] = true;
-                    $result['error_messages'] = $this->__('Please agree to all the terms and conditions before placing the order.');
+                    $result['error_messages'] = $this->__(
+                        'Please agree to all the terms and conditions before'
+                        . ' placing the order.'
+                    );
                     $this->_jsonResponse($result);
 
                     return;
@@ -396,6 +403,8 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     /**
      * Genereate JSON response
      *
+     * @param array $data Block informtion
+     *
      * @return void
      */
     protected function _jsonResponse($data = array())
@@ -440,14 +449,25 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     {
         parent::addActionLayoutHandles();
 
-        if ($this->_getHelper()->isActive() == true && $this->getFullActionName() != "checkout_onepage_success") {
-            $this->getLayout()->getUpdate()->addHandle(self::LAYOUT_HANDLE_BASE);
-            $this->getLayout()->getUpdate()->addHandle(self::LAYOUT_HANDLE_DEFAULT);
+        if ($this->_getHelper()->isActive() == true
+            && $this->getFullActionName() != "checkout_onepage_success"
+        ) {
+            $layoutUpdate = $this->getLayout()->getUpdate();
+
+            $layoutUpdate->addHandle(self::LAYOUT_HANDLE_BASE);
+            $layoutUpdate->addHandle(self::LAYOUT_HANDLE_DEFAULT);
         }
 
         return $this;
     }
 
+    /**
+     * Get blocks as JSON
+     *
+     * @param array $blockNames Array with block names
+     *
+     * @return array
+     */
     protected function _getBlocksAsJson($blockNames)
     {
         $response = array();
@@ -465,5 +485,4 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
 
         return $response;
     }
-
 }

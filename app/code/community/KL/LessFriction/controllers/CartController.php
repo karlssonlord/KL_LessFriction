@@ -1,20 +1,23 @@
 <?php
-/**
- * Require Mage_Checkout_CartController that is being extended by
- * KL_Checkout_CartController.
- */
-require_once Mage::getModuleDir('controllers', 'Mage_Checkout') . DS . 'CartController.php';
+require_once Mage::getModuleDir('controllers', 'Mage_Checkout')
+    . DS . 'CartController.php';
 
 /**
  * Cart controller
  *
- * @package KL_Checkout
- * @author  Andreas Karlsson <andreas@karlssonlord.com>
+ * @category   KL
+ * @package    KL_LessFriction
+ * @subpackage Controllers
+ * @author     Andreas Karlsson <andreas@karlssonlord.com>
+ * @copyright  2013 Karlsson & Lord AB
+ * @license    GPL v2 http://choosealicense.com/licenses/gpl-v2/
  */
 class KL_LessFriction_CartController extends Mage_Checkout_CartController
 {
     /**
      * Initialize coupon
+     *
+     * @return string
      */
     public function couponPostJsonAction()
     {
@@ -25,6 +28,7 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
          */
         if (!$this->_getCart()->getQuote()->getItemsCount()) {
             $result['redirect'] = Mage::helper('checkout/url')->getCheckoutUrl();
+
             return $this->_jsonResponse($result);
         }
 
@@ -32,42 +36,73 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
         if ($this->getRequest()->getParam('remove') == 1) {
             $couponCode = '';
         }
+
         $oldCouponCode = $this->_getQuote()->getCouponCode();
-$error = false;
+        $error = false;
+
         if (!strlen($couponCode) && !strlen($oldCouponCode)) {
             // $result['redirect'] = Mage::helper('checkout/url')->getCheckoutUrl();
             // return $this->_jsonResponse($result);
         } else {
             try {
-                $this->_getQuote()->getShippingAddress()->setCollectShippingRates(true);
-                $this->_getQuote()->setCouponCode(strlen($couponCode) ? $couponCode : '')
-                    ->collectTotals()
-                    ->save();
+                $this->_getQuote()->getShippingAddress()
+                    ->setCollectShippingRates(true);
+
+                $this->_getQuote()->setCouponCode(
+                    strlen($couponCode) ? $couponCode : ''
+                )->collectTotals()->save();
 
                 if (strlen($couponCode)) {
                     if ($couponCode == $this->_getQuote()->getCouponCode()) {
-                        $result['messages'][] = array('type' => 'success', 'text' => $this->__('Coupon code "%s" was applied.', Mage::helper('core')->htmlEscape($couponCode)));
+                        $result['messages'][] = array(
+                            'type' => 'success',
+                            'text' => $this->__(
+                                'Coupon code "%s" was applied.',
+                                Mage::helper('core')->htmlEscape($couponCode)
+                            )
+                        );
                     } else {
                         $error = true;
-                        $result['messages'][] = array('type' => 'error', 'text' => $this->__('Coupon code "%s" is not valid.', Mage::helper('core')->htmlEscape($couponCode)));
+                        $result['messages'][] = array(
+                            'type' => 'error',
+                            'text' => $this->__(
+                                'Coupon code "%s" is not valid.',
+                                Mage::helper('core')->htmlEscape($couponCode)
+                            )
+                        );
                     }
                 } else {
-                    $result['messages'][] = array('type' => 'success', 'text' => $this->__('Coupon code was canceled.'));
+                    $result['messages'][] = array(
+                        'type' => 'success',
+                        'text' => $this->__('Coupon code was canceled.')
+                    );
                 }
 
             } catch (Mage_Core_Exception $e) {
                 $error = true;
-                $result['messages'][] = array('type' => 'error', 'text' => $e->getMessage());
+                $result['messages'][] = array(
+                    'type' => 'error',
+                    'text' => $e->getMessage()
+                );
             } catch (Exception $e) {
                 $error = true;
                 $this->_getSession()->addError();
-                $result['messages'][] = array('type' => 'error', 'text' => $this->__('Cannot apply the coupon code.'));
+                $result['messages'][] = array(
+                    'type' => 'error',
+                    'text' => $this->__('Cannot apply the coupon code.')
+                );
                 Mage::logException($e);
             }
         }
 
         if (!$error) {
-            $result['blocks'] = $this->_getBlocksAsJson(array('cart','shipping_method','review'));
+            $result['blocks'] = $this->_getBlocksAsJson(
+                array(
+                    'cart',
+                    'shipping_method',
+                    'review'
+                )
+            );
         }
 
         return $this->_jsonResponse($result);
@@ -76,19 +111,24 @@ $error = false;
     /**
      * Delete shoping cart item action
      *
+     * @return string
+     *
      * @see Mage_Checkout_CartController::deleteAction()
      */
     public function deleteJsonAction()
     {
         $result = array();
 
-        $id = (int) $this->getRequest()->getParam('id');
-        if ($id) {
+        $itemId = (int) $this->getRequest()->getParam('id');
+
+        if ($itemId) {
             try {
-                $this->_getCart()->removeItem($id)
-                  ->save();
+                $this->_getCart()->removeItem($itemId)->save();
             } catch (Exception $e) {
-                $this->_getSession()->addError($this->__('Cannot remove the item.'));
+                $this->_getSession()->addError(
+                    $this->__('Cannot remove the item.')
+                );
+
                 Mage::logException($e);
             }
         }
@@ -105,12 +145,14 @@ $error = false;
     /**
      * Update product configuration for a cart item
      *
+     * @return string
+     *
      * @see Mage_Checkout_CartController::updateItemOptionsAction()
      */
     public function updateItemOptionsJsonAction()
     {
         $cart   = $this->_getCart();
-        $id     = (int) $this->getRequest()->getParam('id');
+        $itemId = (int) $this->getRequest()->getParam('id');
         $params = $this->getRequest()->getParams();
         $result = array();
 
@@ -126,7 +168,7 @@ $error = false;
                 $params['qty'] = $filter->filter($params['qty']);
             }
 
-            $quoteItem = $cart->getQuote()->getItemById($id);
+            $quoteItem = $cart->getQuote()->getItemById($itemId);
 
             if (!$quoteItem) {
                 Mage::throwException($this->__('Quote item is not found.'));
@@ -138,13 +180,17 @@ $error = false;
             $this->_getSession()->setCartWasUpdated(false);
 
             if ($quoteItem->getHasError()) {
-                Mage::throwException($item->getMessage());
+                Mage::throwException($quoteItem->getMessage());
             }
-            
-            Mage::dispatchEvent('checkout_cart_update_item_complete',
-                array('item' => $quoteItem, 'request' => $this->getRequest(), 'response' => $this->getResponse())
-            );
 
+            Mage::dispatchEvent(
+                'checkout_cart_update_item_complete',
+                array(
+                    'item'     => $quoteItem,
+                    'request'  => $this->getRequest(),
+                    'response' => $this->getResponse()
+                )
+            );
         } catch (Mage_Core_Exception $e) {
             if ($this->_getSession()->getUseNotice(true)) {
                 $this->_getSession()->addNotice($e->getMessage());
@@ -163,24 +209,35 @@ $error = false;
             $this->_getSession()->addException($e, $this->__('Cannot update the item.'));
             Mage::logException($e);
 
-            $result['error'] = 1;
-            $result['messages'] = array('type' => 'error', 'text' => $this->__('Cannot update the item.'));
+            $result['error']    = 1;
+            $result['messages'] = array(
+                'type' => 'error',
+                'text' => $this->__('Cannot update the item.')
+            );
         }
 
-        $messages = $this->_getQuoteItemMessages($quoteItem);
+        $messages           = $this->_getQuoteItemMessages($quoteItem);
         $result['messages'] = $messages;
 
         if ($result['messages']) {
             $result['error'] = 1;
         }
 
-        $result['blocks'] = $this->_getBlocksAsJson(array('cart','shipping_method','review'));
+        $result['blocks'] = $this->_getBlocksAsJson(
+            array(
+                'cart',
+                'shipping_method',
+                'review'
+            )
+        );
 
         return $this->_jsonResponse($result);
     }
 
     /**
      * Update shopping cart data action
+     *
+     * @return string
      *
      * @see Mage_Checkout_CartController::updatePostAction()
      */
@@ -227,6 +284,13 @@ $error = false;
         return $this->_jsonResponse($result);
     }
 
+    /**
+     * Get blocks as JSON
+     *
+     * @param array $blockNames Array with names of blocks
+     *
+     * @return array
+     */
     protected function _getBlocksAsJson($blockNames)
     {
         $response = array();
@@ -248,6 +312,8 @@ $error = false;
     /**
      * Genereate JSON response
      *
+     * @param array $data Block information
+     *
      * @return void
      */
     protected function _jsonResponse($data = array())
@@ -264,11 +330,13 @@ $error = false;
      * text => the message text
      * type => type of a message
      *
-     * @see Mage_Checkout_Block_Cart_Item_Renderer::getMessages()
+     * @param Mage_Sales_Model_Quote_Item $quoteItem Quote item
      *
      * @return array
+     *
+     * @see Mage_Checkout_Block_Cart_Item_Renderer::getMessages()
      */
-    public function _getQuoteItemMessages($quoteItem)
+    protected function _getQuoteItemMessages($quoteItem)
     {
         $messages = array();
 
@@ -285,6 +353,7 @@ $error = false;
 
         // Add messages saved previously in checkout session
         $checkoutSession = $this->_getSession();
+
         if ($checkoutSession) {
             /* @var $collection Mage_Core_Model_Message_Collection */
             $collection = $checkoutSession->getQuoteItemMessages($quoteItem->getId(), true);

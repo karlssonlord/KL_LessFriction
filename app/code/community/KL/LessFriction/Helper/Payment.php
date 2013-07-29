@@ -1,4 +1,14 @@
 <?php
+/**
+ * Payment helper
+ *
+ * @category   KL
+ * @package    KL_LessFriction
+ * @subpackage Helper
+ * @author     Andreas Karlsson <andreas@karlssonlord.com>
+ * @copyright  2013 Karlsson & Lord AB
+ * @license    GPL v2 http://choosealicense.com/licenses/gpl-v2/
+ */
 class KL_LessFriction_Helper_Payment extends Mage_Core_Helper_Abstract
 {
     /**
@@ -12,7 +22,7 @@ class KL_LessFriction_Helper_Payment extends Mage_Core_Helper_Abstract
          * @todo Add check of configuration setting
          **/
         if (count($this->_getMethods()) == 1) {
-            return false;   
+            return false;
         } else {
             return true;
         }
@@ -21,7 +31,7 @@ class KL_LessFriction_Helper_Payment extends Mage_Core_Helper_Abstract
     /**
      * Check if customer can use payment method
      *
-     * @param object $method
+     * @param object $method Payment method
      *
      * @return boolean
      *
@@ -44,7 +54,7 @@ class KL_LessFriction_Helper_Payment extends Mage_Core_Helper_Abstract
         $minTotal = $method->getConfigData('min_order_total');
         $maxTotal = $method->getConfigData('max_order_total');
 
-        if((!empty($minTotal) && ($total < $minTotal)) || (!empty($maxTotal) && ($total > $maxTotal))) {
+        if ((!empty($minTotal) && ($total < $minTotal)) || (!empty($maxTotal) && ($total > $maxTotal))) {
             return false;
         }
 
@@ -67,8 +77,9 @@ class KL_LessFriction_Helper_Payment extends Mage_Core_Helper_Abstract
         foreach ($methods as $key => $method) {
             if ($this->_canUseMethod($method)
                 && ($total != 0
-                    || $method->getCode() == 'free'
-                    || ($quote->hasRecurringItems() && $method->canManageRecurringProfiles()))) {
+                || $method->getCode() == 'free'
+                || ($quote->hasRecurringItems() && $method->canManageRecurringProfiles()))
+            ) {
                 // Do nothing
             } else {
                 unset($methods[$key]);

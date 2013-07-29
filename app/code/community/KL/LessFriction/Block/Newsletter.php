@@ -1,11 +1,18 @@
 <?php
-class KL_LessFriction_Block_Newsletter extends Mage_Checkout_Block_Onepage_Abstract
+/**
+ * Payment block
+ *
+ * @category   KL
+ * @package    KL_LessFriction
+ * @subpackage KL_LessFriction_Block
+ * @author     Erik Eng <erik@karlssonlord.com>
+ * @author     Andreas Karlsson <andreas@karlssonlord.com>
+ * @copyright  2013 Karlsson & Lord AB
+ * @license    GPL v2 http://choosealicense.com/licenses/gpl-v2/
+ */
+class KL_LessFriction_Block_Newsletter
+    extends Mage_Checkout_Block_Onepage_Abstract
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     /**
      * Is checked
      *
@@ -13,6 +20,8 @@ class KL_LessFriction_Block_Newsletter extends Mage_Checkout_Block_Onepage_Abstr
      */
     public function isChecked()
     {
-        return (bool) $this->getCheckout()->getCustomerIsSubscribed();
+        $isChecked = (bool) $this->getCheckout()->getCustomerIsSubscribed();
+
+        return $isChecked;
     }
 }

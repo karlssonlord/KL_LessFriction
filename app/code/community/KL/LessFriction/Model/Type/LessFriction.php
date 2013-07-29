@@ -1,13 +1,24 @@
 <?php
+/**
+ * LessFriction checkout model
+ *
+ * @category   KL
+ * @package    KL_LessFriction
+ * @subpackage Model
+ * @author     Andreas Karlsson <andreas@karlssonlord.com>
+ * @copyright  2013 Karlsson & Lord AB
+ * @license    GPL v2 http://choosealicense.com/licenses/gpl-v2/
+ */
 class KL_LessFriction_Model_Type_LessFriction
     extends Mage_Checkout_Model_Type_Onepage
 {
     /**
      * Save checkout shipping address
      *
-     * @param   array $data
-     * @param   int $customerAddressId
-     * @return  Mage_Checkout_Model_Type_Onepage
+     * @param array $data              Address data
+     * @param int   $customerAddressId Customer address id
+     *
+     * @return Mage_Checkout_Model_Type_Onepage
      */
     public function saveShipping($data, $customerAddressId)
     {
