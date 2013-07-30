@@ -1,4 +1,31 @@
 <?php
+/**
+ * Less Friction
+ *
+ * Copyright (C) 2013 Karlsson & Lord AB
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * @category   KL
+ * @package    KL_LessFriction
+ * @subpackage Controllers
+ * @author     Andreas Karlsson <andreas@karlssonlord.com>
+ * @copyright  2013 Karlsson & Lord AB
+ * @license    http://choosealicense.com/licenses/gpl-v2/ GPL v2
+ */
+
 require_once Mage::getModuleDir('controllers', 'Mage_Checkout')
     . DS . 'CartController.php';
 
@@ -10,10 +37,25 @@ require_once Mage::getModuleDir('controllers', 'Mage_Checkout')
  * @subpackage Controllers
  * @author     Andreas Karlsson <andreas@karlssonlord.com>
  * @copyright  2013 Karlsson & Lord AB
- * @license    GPL v2 http://choosealicense.com/licenses/gpl-v2/
+ * @license    http://choosealicense.com/licenses/gpl-v2/ GPL v2
  */
 class KL_LessFriction_CartController extends Mage_Checkout_CartController
 {
+
+    /**
+     * Shopping cart display action
+     *
+     * @return void
+     */
+    public function indexAction()
+    {
+        if (Mage::helper('lessfriction')->includeCart()) {
+            $this->_redirect('checkout/onepage', array('_secure'=>true));
+        }
+
+        parent::indexAction();
+    }
+
     /**
      * Initialize coupon
      *
