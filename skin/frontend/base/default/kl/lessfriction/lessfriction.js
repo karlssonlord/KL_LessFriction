@@ -46,8 +46,24 @@ var Checkout,
 
         },
 
-        queueRequest: function(url, options) {
-            this._queue.push($H({url: url, options: options, timstamp: +new Date()}));
+        _setLoadingSections: function(relations) {
+            if(typeof relations !== 'undefined' && relations.length > 0) {
+                for (var i = 0; i < relations.length; i++) {
+                    $$('.' + relations[i] + '-section').each(function(section) {
+                        var overlay = section.addClassName('loading').down('.overlay');
+                        if (overlay) overlay.show();
+                    });
+                }
+            }
+        },
+
+        queueRequest: function(url, options, config) {
+            this._queue.push($H({
+                url: url,
+                options: options,
+                timstamp: +new Date(),
+                config: config
+            }));
 
             if (!this._interval) {
                 this.ajaxRequest();
@@ -70,6 +86,10 @@ var Checkout,
                     var url       = queueItem.get('url');
                     var options   = queueItem.get('options');
                     var that      = this;
+
+                    // Set all loading sections for this queue item
+                    checkout._setLoadingSections(queueItem.get('config').relations);
+
                     if (typeof options === 'undefined') {
                         options = {};
                     }
@@ -100,11 +120,13 @@ var Checkout,
                                     result.responseJSON.blocks[name]
                                 );
 
-                                sectionContainers.each(function (el) {
-                                    new Effect.Highlight(el, {
-                                        duration: 0.5
+                                if (this.isDeveloperMode) {
+                                    sectionContainers.each(function (el) {
+                                        new Effect.Highlight(el, {
+                                            duration: 0.5
+                                        });
                                     });
-                                });
+                                }
                             }
 
                             that.available = true;
@@ -122,6 +144,7 @@ var Checkout,
                     clearInterval(this._interval);
                     this._interval = false;
                     return;
+
                 /**
                  * Checkout is not available for handling requests...
                  **/
@@ -338,11 +361,7 @@ var Checkout,
                 }
 
                 if (this._config.relations) {
-                    if (params) {
-                        params += '&';
-                    }
-
-                    this.setLoadingBlocks();
+                    if (params) params += '&';
                     params += 'relations=' + this._config.relations.toString();
                 }
 
@@ -356,29 +375,7 @@ var Checkout,
                     parameters: params
                 };
 
-                checkout.queueRequest(this._config.saveUrl, options);
-            }
-        },
-
-        setLoadingBlocks: function() {
-            for (var i = 0; i < this._config.relations.length; i++) {
-
-                checkout.log('.' + this._config.relations[i] + '-section');
-
-                $$('.' + this._config.relations[i] + '-section').each(function(section) {
-                    var overlay = section.addClassName('loading').down('.overlay');
-                    if (overlay) overlay.show();
-                });
-            }
-        },
-
-        resetLoadingBlocks: function() {
-            // TODO: Make sure no ajax-request is running
-            for (var i = 0; i < this._config.relations.length; i++) {
-                $$('.' + this._config.relations[i] + '-section').each(function(section) {
-                    var overlay = section.removeClassName('loading').down('.overlay');
-                    if (overlay) overlay.hide();
-                });
+                checkout.queueRequest(this._config.saveUrl, options, this._config);
             }
         },
 
@@ -386,10 +383,7 @@ var Checkout,
          * Reset load waiting
          */
         resetLoadWaiting: function(transport) {
-
             checkout.log('resetLoadWaiting');
-
-            this.resetLoadingBlocks();
         },
 
         /**
@@ -440,12 +434,13 @@ var Checkout,
     Cart = Class.create(Section, {
         init: function() {
             this.beforeInit();
+            var that = this;
 
             var increaseOrDecreaseQty = document.on(
                 'click',
                 '.increaseQty,.decreaseQty',
                 function(event, element) {
-                    checkout.queueRequest(element.href);
+                    checkout.queueRequest(element.href, {}, that._config);
                     Event.stop(event);
                 }.bind(this)
             );
@@ -467,7 +462,7 @@ var Checkout,
                 'click',
                 '#shopping-cart-table .btn-remove',
                 function(event, element) {
-                    checkout.queueRequest(element.href);
+                    checkout.queueRequest(element.href, {}, that._config);
                     element.up('tr').remove();
                     Event.stop(event);
                 }.bind(this)
@@ -500,7 +495,8 @@ var Checkout,
                     {
                         parameters: params,
                         onSuccess: this.nextStep.bindAsEventListener(this)
-                    }
+                    },
+                    this._config
                 );
             }
         },
@@ -784,11 +780,7 @@ var Checkout,
             var params = '';
             if (this._validate()) {
                 if (this._config.relations) {
-                    if (params) {
-                        params += '&';
-                    }
-
-                    this.setLoadingBlocks();
+                    if (params) params += '&';
                     params += 'relations=' + this._config.relations.toString();
                 }
 
@@ -808,7 +800,7 @@ var Checkout,
                     parameters: params
                 };
 
-                checkout.queueRequest(this._config.saveUrl, options);
+                checkout.queueRequest(this._config.saveUrl, options, this._config);
             }
         },
     });
