@@ -1,5 +1,22 @@
 <?php
 /**
+ * Less Friction
+ * Copyright (C) 2013 Karlsson & Lord AB
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
  * Observer model
  *
  * @category   KL
@@ -106,15 +123,15 @@ class KL_LessFriction_Model_Observer
                     || $method->getCode() == 'free'
                     || ($quote->hasRecurringItems() && $method->canManageRecurringProfiles()))
                 ) {
-                    $availablePaymentMethods[] = $method->getCode();
+                    $availableMethods[] = $method->getCode();
                 } else {
                     unset($methods[$key]);
                 }
             }
 
-            if (count($availablePaymentMethods) == 1) {
+            if (count($availableMethods) == 1) {
                 Mage::getModel('checkout/type_onepage')
-                    ->savePayment(array('method' => current($availablePaymentMethods)));
+                    ->savePayment(array('method' => current($availableMethods)));
             }
         }
     }
@@ -255,18 +272,61 @@ class KL_LessFriction_Model_Observer
                             ->subscribe($quote->getBillingAddress()->getEmail());
 
                         if ($status == Mage_Newsletter_Model_Subscriber::STATUS_NOT_ACTIVE) {
-                            $session->addSuccess(Mage::helper('lessfriction')->__('Confirmation request has been sent regarding your newsletter subscription'));
+                            $session->addSuccess(
+                                Mage::helper('lessfriction')->__(
+                                    'Confirmation request has been sent '
+                                    . 'regarding your newsletter subscription'
+                                )
+                            );
                         }
                     } catch (Mage_Core_Exception $e) {
-                        $session->addException($e, Mage::helper('lessfriction')->__('There was a problem with the newsletter subscription: %s', $e->getMessage()));
+                        $session->addException(
+                            $e,
+                            Mage::helper('lessfriction')->__(
+                                'There was a problem with the newsletter '
+                                . 'subscription: %s', $e->getMessage()
+                            )
+                        );
                     } catch (Exception $e) {
-                        $session->addException($e, Mage::helper('lessfriction')->__('There was a problem with the newsletter subscription'));
+                        $session->addException(
+                            $e,
+                            Mage::helper('lessfriction')->__(
+                                'There was a problem with the newsletter '
+                                . 'subscription'
+                            )
+                        );
                     }
 
                     break;
             }
 
             Mage::getSingleton('checkout/session')->setCustomerIsSubscribed(0);
+        }
+    }
+
+    public function addGuestOrderToCustomer($observer)
+    {
+        /**
+         * It doesn't hurt to be extra careful when fiddling with the
+         * orders, customer might want to be redirected to a third
+         * party for payment – then we don't want to risk any
+         * unexpected exceptions.
+         **/
+        try {
+            Mage::log('trying to merge', null, 'merge.log', true);
+            $order = $observer->getOrder();
+
+            if ($order && !$order->getCustomerId()) {
+                Mage::log('we have the order', null, 'merge.log', true);
+                $customer = Mage::getModel("customer/customer")
+                    ->setWebsiteId(Mage::app()->getWebsite()->getId())
+                    ->loadByEmail($order->getCustomerEmail());
+
+                $order->setCustomer($customer);
+                $order->setCustomerIsGuest(0);
+            }
+        } catch (Exception $e) {
+            Mage::log('failed to merge', null, 'merge.log', true);
         }
     }
 }

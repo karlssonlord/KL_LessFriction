@@ -30,6 +30,23 @@ require_once Mage::getModuleDir('controllers', 'Mage_Checkout')
     . DS . 'OnepageController.php';
 
 /**
+ * Less Friction
+ * Copyright (C) 2013 Karlsson & Lord AB
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
  * Onepage Checkout Controller
  *
  * @category   KL
@@ -151,6 +168,58 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
             $result = $this->getOnepage()->saveCheckoutMethod($method);
             $this->_jsonResponse($result);
         }
+    }
+
+    /**
+     * Customer email exists action
+     *
+     * Generates a JSON response.
+     *
+     * @return void
+     */
+    public function customerEmailExistsAction()
+    {
+        $email    = $this->getRequest()->getPost('email', false);
+        $result   = array();
+        $checkout = Mage::getModel('lessfriction/type_lessfriction');
+        $config   = Mage::getModel('lessfriction/config');
+
+        if ($email !== false) {
+            if ($this->_customerEmailExists($email, Mage::app()->getWebsite()->getId())
+                && $config->switchToGuestCheckoutIfCustomerEmailExists() === true
+            ) {
+                $result['force_method'] = $checkout::METHOD_GUEST;
+            } else {
+                $result['force_method'] = 1;
+            }
+        }
+
+        $this->_jsonResponse($result);
+    }
+
+    /**
+     * Check if customer email exists
+     *
+     * @param string $email     Customer email
+     * @param int    $websiteId Website ID
+     *
+     * @return false|Mage_Customer_Model_Customer
+     */
+    protected function _customerEmailExists($email, $websiteId = null)
+    {
+        $customer = Mage::getModel('customer/customer');
+
+        if ($websiteId) {
+            $customer->setWebsiteId($websiteId);
+        }
+
+        $customer->loadByEmail($email);
+
+        if ($customer->getId()) {
+            return $customer;
+        }
+
+        return false;
     }
 
     /**
