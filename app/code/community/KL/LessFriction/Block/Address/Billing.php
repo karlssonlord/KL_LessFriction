@@ -17,6 +17,15 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
+ * @category   KL
+ * @package    KL_LessFriction
+ * @subpackage KL_LessFriction_Block
+ * @author     Andreas Karlsson <andreas@karlssonlord.com>
+ * @copyright  2013 Karlsson & Lord AB
+ * @license    LGPL v2.1 http://choosealicense.com/licenses/lgpl-v2.1/
+ */
+
+/**
  * Billing address block
  *
  * @category   KL
@@ -24,7 +33,7 @@
  * @subpackage KL_LessFriction_Block
  * @author     Andreas Karlsson <andreas@karlssonlord.com>
  * @copyright  2013 Karlsson & Lord AB
- * @license    GPL v2 http://choosealicense.com/licenses/gpl-v2/
+ * @license    LGPL v2.1 http://choosealicense.com/licenses/lgpl-v2.1/
  */
 class KL_LessFriction_Block_Address_Billing
     extends Mage_Checkout_Block_Onepage_Billing
