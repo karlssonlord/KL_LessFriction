@@ -92,6 +92,14 @@
                     </setCustomerIsSubscribed>
                 </observers>
             </checkout_type_onepage_save_order>
+            <sales_order_save_before>
+                <observers>
+                    <lessfriction>
+                        <class>lessfriction/observer</class>
+                        <method>addGuestOrderToCustomer</method>
+                    </lessfriction>
+                </observers>
+            </sales_order_save_before>
         </events>
     </frontend>
     <adminhtml>
@@ -118,7 +126,9 @@
     <default>
         <lessfriction>
             <login>
-                <hide>1</hide>
+                <hide>0</hide>
+                <merge_guest_orders>0</merge_guest_orders>
+                <customer_email_exists>0</customer_email_exists>
             </login>
         </lessfriction>
         <newsletter>

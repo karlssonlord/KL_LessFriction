@@ -106,6 +106,18 @@ var Checkout,
                             this.log(result.responseJSON.blocks);
                             this.log(result.responseJSON);
 
+                            if (result.responseJSON.force_method) {
+                                this.available = true;
+                                if (result.responseJSON.force_method == 1) {
+                                    this.setMethod(this.oldMethod);
+                                } else {
+                                    this.oldMethod = this.method;
+                                    this.setMethod(result.responseJSON.force_method);
+                                }
+
+                                return;
+                            }
+
                             if (result.responseJSON.redirect) {
                                 location.href = result.responseJSON.redirect;
                                 return;
@@ -678,6 +690,15 @@ var Checkout,
             data.each(function (pair) {
                 $$('[name="' + pair.key + '"]').first().setValue(pair.value);
             });
+        },
+        customerEmailExists: function(email) {
+            checkout.queueRequest(
+                '/checkout/onepage/customerEmailExists/',
+                {
+                    parameters: 'email=' + email,
+                    onSuccess:  this.onSuccess
+                }
+            );
         }
     });
 
