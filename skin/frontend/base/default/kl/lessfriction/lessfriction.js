@@ -28,6 +28,7 @@ var Checkout,
 
     Checkout.prototype = {
         initialize: function(config) {
+            this._config         = config;
             this.isDeveloperMode = false;
             this.saveMethodUrl   = config.saveMethodUrl;
             this.available       = true;
@@ -85,14 +86,19 @@ var Checkout,
                     var queueItem = this._queue.shift();
                     var url       = queueItem.get('url');
                     var options   = queueItem.get('options');
+                    var config    = queueItem.get('config');
                     var that      = this;
 
+
                     // Set all loading sections for this queue item
-                    checkout._setLoadingSections(queueItem.get('config').relations);
+                    if (typeof config !== 'undefined' && typeof config.relations !== 'undefined') {
+                        checkout._setLoadingSections(config.relations);
+                    }
 
                     if (typeof options === 'undefined') {
                         options = {};
                     }
+
                     if (typeof options.onSuccess === 'undefined') {
                         options.onSuccess = function(result) {};
                     }
