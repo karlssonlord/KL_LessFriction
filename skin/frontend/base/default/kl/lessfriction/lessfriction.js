@@ -91,7 +91,7 @@ var Checkout,
 
 
                     // Set all loading sections for this queue item
-                    if (typeof config !== 'undefined' && typeof config.relations !== 'undefined') {
+                    if (typeof config !== 'undefined') {
                         checkout._setLoadingSections(config.relations);
                     }
 
