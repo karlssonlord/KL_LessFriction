@@ -164,7 +164,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     {
         $email    = $this->getRequest()->getPost('email', false);
         $result   = array();
-        $checkout = Mage::getModel('lessfriction/type_lessfriction');
+        echo $checkout = Mage::getModel('lessfriction/Type_LessFriction'); die;
         $config   = Mage::getModel('lessfriction/config');
 
         if ($email !== false) {
