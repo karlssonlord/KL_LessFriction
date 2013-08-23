@@ -67,6 +67,11 @@ class KL_LessFriction_Model_Type_LessFriction
      */
     public function saveShipping($data, $customerAddressId)
     {
+        if (!array_key_exists('confirm_password', $data)
+            && array_key_exists('customer_password', $data)) {
+            $data['confirm_password'] = $data['customer_password'];
+        }
+
         parent::saveShipping($data, $customerAddressId);
 
         $address = $this->getQuote()->getShippingAddress();
