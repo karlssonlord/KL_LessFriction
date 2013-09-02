@@ -41,11 +41,16 @@
 </div>
 <script>
     document.observe('dom:loaded', function() {
-        review = new Review(
-            {
-                saveUrl:    '<?php echo $this->getUrl('checkout/onepage/saveOrder') ?>',
-                successUrl: '<?php echo $this->getUrl('checkout/onepage/success') ?>',
-                agreements: $('checkout-agreements')
-            });
+        review = new Review({
+            saveUrl:    '<?php echo $this->getUrl('checkout/onepage/saveOrder') ?>',
+            successUrl: '<?php echo $this->getUrl('checkout/onepage/success') ?>',
+            agreements: $('checkout-agreements'),
+            relations:  [
+                'shipping_method',
+                'cart',
+                'review',
+                'payment'
+            ]
+        });
     });
 </script>
