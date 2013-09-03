@@ -122,7 +122,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
         }
 
         $this->getLayout()->getBlock('head')->setTitle(
-            $this->__('Less Friction Checkout')
+            $this->__('Checkout')
         );
 
         $this->renderLayout();
