@@ -115,6 +115,7 @@ var Checkout,
                             if (result.responseJSON.force_method) {
                                 this.available = true;
                                 if (result.responseJSON.force_method == 1) {
+                                    this.oldMethod = this.method;
                                     this.setMethod(this.oldMethod);
                                 } else {
                                     this.oldMethod = this.method;
