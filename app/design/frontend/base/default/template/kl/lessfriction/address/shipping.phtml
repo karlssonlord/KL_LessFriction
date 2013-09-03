@@ -262,7 +262,8 @@
             test:  '<?php echo $this->getUrl('checkout/onepage/getAddress') ?>address/',
             saveUrl: '<?php echo $this->getUrl('checkout/onepage/saveShipping') ?>',
             test3: '<?php echo $this->getUrl('checkout/onepage/shippingMethod') ?>',
-            relations: ['payment','shipping_method','review']
+            relations: ['payment','shipping_method','review'],
+            customerEmailExistsUrl: '<?php echo $this->getUrl('checkout/onepage/customerEmailExists') ?>'
         });
         shippingForm          = new VarienForm('co-shipping-form');
         $('shipping:region_id').setAttribute(

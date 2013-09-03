@@ -304,7 +304,8 @@
             form:    'co-billing-form',
             test1:   '<?php echo $this->getUrl('checkout/onepage/getAddress') ?>address/',
             saveUrl: '<?php echo $this->getUrl('checkout/onepage/saveBilling') ?>',
-            relations: ['payment','review']
+            relations: ['payment','review'],
+            customerEmailExistsUrl: '<?php echo $this->getUrl('checkout/onepage/customerEmailExists') ?>'
         });
 
         $('billing-address-select') && billingAddress.newAddress(!$('billing-address-select').value);

@@ -699,7 +699,7 @@ var Checkout,
         },
         customerEmailExists: function(email) {
             checkout.queueRequest(
-                '/checkout/onepage/customerEmailExists/',
+                this._config.customerEmailExistsUrl,
                 {
                     parameters: 'email=' + email,
                     onSuccess:  this.onSuccess
