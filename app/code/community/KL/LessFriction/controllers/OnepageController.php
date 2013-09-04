@@ -122,7 +122,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
         }
 
         $this->getLayout()->getBlock('head')->setTitle(
-            $this->__('Less Friction Checkout')
+            $this->__('Checkout')
         );
 
         $this->renderLayout();
@@ -164,7 +164,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     {
         $email    = $this->getRequest()->getPost('email', false);
         $result   = array();
-        $checkout = Mage::getModel('lessfriction/type_lessfriction');
+        $checkout = Mage::getModel('lessfriction/Type_LessFriction');
         $config   = Mage::getModel('lessfriction/config');
 
         if ($email !== false) {
