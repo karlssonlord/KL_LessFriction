@@ -26,7 +26,7 @@
         <?php endif; ?>
         <?php
             /**
-             * If customer has adresses 
+             * If customer has adresses
              *
              * If customer is logged in and has saved adresses, we should show
              * a select element with the customer's addresses
@@ -58,7 +58,7 @@
                         ?>
                     </li>
                     <li class="contacts">
-                    <?php 
+                    <?php
                         /**
                          * If billing address is the primary address
                          * and the user is not logged in, show field
@@ -164,7 +164,7 @@
                             id="shipping:city" />
                         </div>
                     </li>
-                    <li class="region">
+                    <li>
                         <label for="shipping:region" class="required">
                             <?php echo $this->__('State/Province') ?> <em>*</em>
                         </label>
@@ -245,7 +245,7 @@
 
     var shippingForm,
         shippingRegionUpdater,
-        shipping;
+        shippingForm;
 
     document.observe('dom:loaded', function() {
 
@@ -267,7 +267,7 @@
         });
         shippingForm          = new VarienForm('co-shipping-form');
         $('shipping:region_id').setAttribute(
-            'defaultValue', 
+            'defaultValue',
             "<?php echo $this->getAddress()->getRegionId() ?>"
         );
         $('shipping-address-select') && shippingAddress.newAddress(!$('shipping-address-select').value);

@@ -289,10 +289,13 @@
 
 <script>
     new Validation('co-billing-form');
+    var billingForm,
+        billingRegionUpdater,
+        billingAddress;
 
     document.observe('dom:loaded', function() {
-        var billingForm          = new VarienForm('co-billing-form');
-        var billingRegionUpdater = new RegionUpdater(
+        billingForm          = new VarienForm('co-billing-form');
+        billingRegionUpdater = new RegionUpdater(
                                         'billing:country_id',
                                         'billing:region',
                                         'billing:region_id',
