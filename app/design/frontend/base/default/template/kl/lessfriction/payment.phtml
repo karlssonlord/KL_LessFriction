@@ -2,15 +2,14 @@
     var quoteBaseGrandTotal = <?php echo (float)$this->getQuoteBaseGrandTotal(); ?>;
     var checkQuoteBaseGrandTotal = quoteBaseGrandTotal;
     var lastPrice;
+    var payment;
 
     document.observe('dom:loaded', function() {
-        payment = new PaymentMethod(
-            {
-                form:      'co-payment-form',
-                saveUrl:   '<?php echo $this->getUrl('checkout/onepage/savePayment') ?>',
-                relations: ['review']
-            }
-        );
+        payment = new PaymentMethod({
+            form:      'co-payment-form',
+            saveUrl:   '<?php echo $this->getUrl('checkout/onepage/savePayment') ?>',
+            relations: ['review']
+        });
         payment.currentMethod = "<?php echo $this->getChild('methods')->getSelectedMethodCode() ?>";
     });
 </script>
