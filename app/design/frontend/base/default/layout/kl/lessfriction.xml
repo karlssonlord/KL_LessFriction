@@ -78,11 +78,13 @@
                 </block>
 
                 <!-- Shipping address -->
-                <block type="lessfriction/address_shipping" name="checkout.onepage.shipping" as="shipping" template="kl/lessfriction/address/shipping.phtml"/>
+                <block type="lessfriction/address_shipping" name="checkout.onepage.shipping" as="shipping" template="kl/lessfriction/address/shipping.phtml">
+                    <block type="lessfriction/newsletter" name="checkout.lessfriction.newsletter" template="kl/lessfriction/address/newsletter.phtml" />
+                </block>
 
                 <!-- Billing address -->
                 <block type="lessfriction/address_billing" name="checkout.onepage.billing" as="billing" template="kl/lessfriction/address/billing.phtml">
-                    <block type="lessfriction/newsletter" name="checkout.onepage.billing.newsletter" template="kl/lessfriction/address/newsletter.phtml" />
+                    <block type="lessfriction/newsletter" name="checkout.lessfriction.newsletter" template="kl/lessfriction/address/newsletter.phtml" />
                 </block>
 
                 <!-- Review -->
