@@ -77,7 +77,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
          * If quote is empty or has errors
          **/
         if (!$quote->hasItems() || $quote->getHasError()) {
-            if ($includeCart == false) {
+            if ($includeCart === false) {
                 $this->_redirect('checkout/cart');
 
                 return;
@@ -111,6 +111,12 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
         $this->getOnepage()->initCheckout();
 
         $this->loadLayout();
+
+        $root = $this->getLayout()->getBlock('root');
+
+        if ($root && (!$quote->hasItems() || $quote->getHasError())) {
+            $root->addBodyClass('lessfriction-empty-cart');
+        }
 
         /**
          * Inititalize session messages
