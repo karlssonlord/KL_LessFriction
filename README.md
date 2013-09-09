@@ -24,11 +24,32 @@ The easiest way to install the module is by using [modman](https://github.com/ka
 3. Clear the cache
 4. Check out
 
-### Styling
+
+## Get started
+
+### Configure
+
+#### Cart
+
+#### Cross sell
+
+#### Login
+
+#### Addresses
+
+#### Shipping methods
+
+#### Payment methods
+
+#### Section order
+
+### Implement
+
+#### Styling
 
 Every loading block (section) in the checkout will have the class `.loading` applied to it. Also a `.overlay` is shown in each loading block.
 
-#### Idle
+##### Idle
 
 ```html
 <div class="review-section">
@@ -37,7 +58,7 @@ Every loading block (section) in the checkout will have the class `.loading` app
 </div>
 ```
 
-#### Loading
+##### Loading
 
 ```html
 <div class="review-section loading">
@@ -45,10 +66,6 @@ Every loading block (section) in the checkout will have the class `.loading` app
     <div class="overlay"></div>
 </div>
 ```
-
-## Get started
-
-Instructions.
 
 ## Authors
 
