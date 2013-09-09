@@ -409,7 +409,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
 
         try {
             /**
-             * Assure that the terms and conditions hav been read
+             * Assure that the terms and conditions have been read
              */
             $requiredAgreements = Mage::helper('checkout')->getRequiredAgreementIds();
 
