@@ -83,6 +83,14 @@
                     </lessfriction>
                 </observers>
             </controller_action_predispatch_checkout_onepage_index>
+            <controller_action_predispatch_checkout_cart_index>
+                <observers>
+                    <lessfriction>
+                        <class>lessfriction/observer</class>
+                        <method>preDispatch</method>
+                    </lessfriction>
+                </observers>
+            </controller_action_predispatch_checkout_cart_index>
             <checkout_type_onepage_save_order>
                 <observers>
                     <setCustomerIsSubscribed>
