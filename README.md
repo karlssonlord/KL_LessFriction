@@ -1,6 +1,6 @@
-# Less Friction Checkout by Karlsson & Lord
+# Less Friction Checkout
 
-Module description.
+##### A Magento module from Karlsson & Lord
 
 ## Features
 
@@ -28,28 +28,31 @@ The easiest way to install the module is by using [modman](https://github.com/ka
 
 Every loading block (section) in the checkout will have the class `.loading` applied to it. Also a `.overlay` is shown in each loading block.
 
-Idle:
+#### Idle
 
-    <div class="review-section">
-        …
-        <div class="overlay" style="display: none;"></div>
-    </div>
+```html
+<div class="review-section">
+    …
+    <div class="overlay" style="display: none;"></div>
+</div>
+```
 
-Loading:
+#### Loading
 
-    <div class="review-section loading">
-        …
-        <div class="overlay"></div>
-    </div>
+```html
+<div class="review-section loading">
+    …
+    <div class="overlay"></div>
+</div>
+```
 
 ## Get started
-
-Instructions.
-
-## Contribute
 
 Instructions.
 
 ## Authors
 
 * Andreas Karlsson
+* Erik Eng
+* Jacob Klapwijk
+* Robert Lord
