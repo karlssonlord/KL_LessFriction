@@ -71,20 +71,40 @@ class KL_LessFriction_Model_Observer
         /* @var $address Mage_Sales_Model_Quote_Address */
         $shippingAddress = $quote->getShippingAddress();
 
+        /* @var $store Mage_Core_Model_Store */
+        $store           = Mage::app()->getStore();
+
+        /* @var $allowedCountriesConfig string */
+        $allowedCountriesConfig = Mage::getStoreConfig(
+            'general/country/allow', $store->getId()
+        );
+
+        /* @var $allowedCountries array */
+        $allowedCountries = explode(',', $allowedCountriesConfig);
+
         if ($billingAddress) {
-            if (!$billingAddress->getCountryId()) {
+            if (!$billingAddress->getCountryId()
+                || !in_array($billingAddress->getCountryId(), $allowedCountries)
+            ) {
                 $billingAddress->setCountryId($this->_getDefaultCountry()->getCountryId())->save();
             }
         }
 
         if ($shippingAddress) {
-            if (!$shippingAddress->getCountryId() || $shippingAddress->getShippingRatesCollection()->count() == 1) {
-                $shippingAddress->setCountryId($this->_getDefaultCountry()->getCountryId())
+            if (!$shippingAddress->getCountryId()
+                || !in_array($shippingAddress->getCountryId(), $countryList)
+                || $shippingAddress->getShippingRatesCollection()->count() == 1
+            ) {
+                $shippingAddress
+                    ->setCountryId($this->_getDefaultCountry()->getCountryId())
                     ->setCollectShippingRates(true)
                     ->collectShippingRates()
                     ->save();
             } elseif ($shippingAddress->getCountryId()) {
-                $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->save();
+                $shippingAddress
+                    ->setCollectShippingRates(true)
+                    ->collectShippingRates()
+                    ->save();
             }
         }
 
@@ -314,6 +334,13 @@ class KL_LessFriction_Model_Observer
         }
     }
 
+    /**
+     * Add guset order to customer object
+     *
+     * @param Varien_Event_Observer $observer Observer object
+     *
+     * @return void
+     */
     public function addGuestOrderToCustomer($observer)
     {
         /**
