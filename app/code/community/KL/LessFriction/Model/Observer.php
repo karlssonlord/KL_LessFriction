@@ -92,7 +92,7 @@ class KL_LessFriction_Model_Observer
 
         if ($shippingAddress) {
             if (!$shippingAddress->getCountryId()
-                || !in_array($shippingAddress->getCountryId(), $countryList)
+                || !in_array($shippingAddress->getCountryId(), $allowedCountries)
                 || $shippingAddress->getShippingRatesCollection()->count() == 1
             ) {
                 $shippingAddress
