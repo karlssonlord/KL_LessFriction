@@ -10,11 +10,6 @@
 * Skip payment method step
 * Newsletter signup checkbox
 
-### Options
-
-* System -> Configuration -> Less Friction
-* System -> Configuration -> Newsletter -> Checkout
-
 ## Install
 
 The easiest way to install the module is by using [modman](https://github.com/karlssonlord/modman):
@@ -28,6 +23,13 @@ The easiest way to install the module is by using [modman](https://github.com/ka
 ## Get started
 
 ### Configure
+
+You probably want to check the settings under the following sections in Magento admin:
+
+1. System &rarr; Configuration &rarr; Less Friction
+2. System &rarr; Configuration &rarr; Newsletter &rarr; Checkout
+
+#### General
 
 #### Cart
 
