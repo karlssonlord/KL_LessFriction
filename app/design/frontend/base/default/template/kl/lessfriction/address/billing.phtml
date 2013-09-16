@@ -1,21 +1,25 @@
 <?php
-    $_helper      = $this->helper('customer/address');
-    $_streetLines = $_helper->getStreetLines();
-    $_fieldsToValidate = array(
-            'company',
-            'street',
-            'vat_id',
-            'city',
-            'region',
-            'postcode',
-            'telephone'
-        );
+/**
+ * Billing address form
+ *
+ */
 
-    foreach ($_fieldsToValidate as $key) {
-        $_validationClass[$key]    = $_helper->getAttributeValidationClass($key);
-    }
+$_helper      = $this->helper('customer/address');
+$_streetLines = $_helper->getStreetLines();
+$_fieldsToValidate = array(
+    'company',
+    'street',
+    'vat_id',
+    'city',
+    'region',
+    'postcode',
+    'telephone');
 
-    $_validationClass['streetAlt'] = trim(str_replace('required-entry', '', $_validationClass['street']));
+foreach ($_fieldsToValidate as $key) {
+    $_validationClass[$key] = $_helper->getAttributeValidationClass($key);
+}
+
+$_validationClass['streetAlt'] = trim(str_replace('required-entry', '', $_validationClass['street']));
 ?>
 <form action="" id="co-billing-form" class="address-form <?php if (!$this->isPrimaryAddress()): ?> primary<?php endif; ?>">
     <h2><?php echo $this->__('Billing Address'); ?></h2>
@@ -255,7 +259,9 @@
                     <input type="hidden" name="billing[save_in_address_book]" value="1" />
                 <?php endif; ?>
 
-                <?php echo $this->getChildHtml('checkout.onepage.billing.newsletter'); ?>
+                <?php if($this->isPrimaryAddress()) : ?>
+                    <?php echo $this->getChildHtml('checkout.onepage.billing.newsletter'); ?>
+                <?php endif; ?>
 
                 <?php echo $this->getChildHtml('form.additional.info'); ?>
             </fieldset>
