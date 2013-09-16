@@ -643,7 +643,7 @@ var Checkout,
              * This solution is naive and expects that the adresses
              * are alone in separate sections
              */
-            if ($(this._config.form).hasClassName('primary')) {
+            if (!$(this._config.form).hasClassName('primary')) {
                 $(this._config.form).up(1).hide();
             }
 

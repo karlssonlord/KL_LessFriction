@@ -21,7 +21,7 @@ foreach ($_fieldsToValidate as $key) {
 
 $_validationClass['streetAlt'] = trim(str_replace('required-entry', '', $_validationClass['street']));
 ?>
-<form action="" id="co-billing-form" class="address-form <?php if (!$this->isPrimaryAddress()): ?> primary<?php endif; ?>">
+<form action="" id="co-billing-form" class="address-form<?php echo $this->isPrimaryAddress() ? ' primary' : ''; ?>">
     <h2><?php echo $this->__('Billing Address'); ?></h2>
 
     <ul class="form-list">
