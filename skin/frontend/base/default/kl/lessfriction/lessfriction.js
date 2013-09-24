@@ -20,6 +20,13 @@ var Checkout,
 (function() {
 
     /**
+     * Enable inline validation hints (this is default in enterprise)
+     *
+     */
+    Validation.defaultOptions.immediate = true;
+    Validation.defaultOptions.addClassNameToContainer = true;
+
+    /**
      * Checkout
      *
      * Enter short description here...
