@@ -58,6 +58,13 @@ var Checkout,
             }
         },
 
+        _resetLoadingSections: function() {
+            $$('[class*="-section loading"]').each(function(section) {
+                var overlay = section.removeClassName('loading').down('.overlay');
+                if (overlay) overlay.hide();
+            });
+        },
+
         queueRequest: function(url, options, config) {
             this._queue.push($H({
                 url: url,
@@ -409,6 +416,10 @@ var Checkout,
          * Next step
          */
         nextStep: function(transport) {
+
+            // Clearing any loading sections due to this request
+            checkout._resetLoadingSections();
+
             if (transport && transport.responseText) {
                 try {
                     response = eval('(' + transport.responseText + ')');
