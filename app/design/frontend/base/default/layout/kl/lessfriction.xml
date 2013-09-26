@@ -78,7 +78,9 @@
                 </block>
 
                 <!-- Shipping address -->
-                <block type="lessfriction/address_shipping" name="checkout.onepage.shipping" as="shipping" template="kl/lessfriction/address/shipping.phtml"/>
+                <block type="lessfriction/address_shipping" name="checkout.onepage.shipping" as="shipping" template="kl/lessfriction/address/shipping.phtml">
+                    <block type="lessfriction/newsletter" name="checkout.onepage.shipping.newsletter" template="kl/lessfriction/address/newsletter.phtml" />
+                </block>
 
                 <!-- Billing address -->
                 <block type="lessfriction/address_billing" name="checkout.onepage.billing" as="billing" template="kl/lessfriction/address/billing.phtml">

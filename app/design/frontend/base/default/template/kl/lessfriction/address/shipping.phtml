@@ -1,23 +1,27 @@
 <?php
-    $_helper      = $this->helper('customer/address');
-    $_streetLines = $_helper->getStreetLines();
-    $_fieldsToValidate = array(
-            'company',
-            'street',
-            'vat_id',
-            'city',
-            'region',
-            'postcode',
-            'telephone'
-        );
+/**
+ * Shipping address form
+ *
+ */
 
-    foreach ($_fieldsToValidate as $key) {
-        $_validationClass[$key]    = $_helper->getAttributeValidationClass($key);
-    }
+$_helper      = $this->helper('customer/address');
+$_streetLines = $_helper->getStreetLines();
+$_fieldsToValidate = array(
+    'company',
+    'street',
+    'vat_id',
+    'city',
+    'region',
+    'postcode',
+    'telephone');
 
-    $_validationClass['streetAlt'] = trim(str_replace('required-entry', '', $_validationClass['street']));
+foreach ($_fieldsToValidate as $key) {
+    $_validationClass[$key] = $_helper->getAttributeValidationClass($key);
+}
+
+$_validationClass['streetAlt'] = trim(str_replace('required-entry', '', $_validationClass['street']));
 ?>
-<form action="" id="co-shipping-form" class="address-form <?php if (!$this->isPrimaryAddress()): ?> primary<?php endif; ?>">
+<form action="" id="co-shipping-form" class="address-form<?php echo $this->isPrimaryAddress() ? ' primary' : ''; ?>">
     <h2><?php echo $this->__('Shipping Address'); ?></h2>
 
     <ul class="form-list">
@@ -25,18 +29,17 @@
             <?php echo $this->getChildHtml('get_address'); ?>
         <?php endif; ?>
         <?php
-            /**
-             * If customer has adresses
-             *
-             * If customer is logged in and has saved adresses, we should show
-             * a select element with the customer's addresses
-             */
-            if ($this->customerHasAddresses()):
-        ?>
-        <li class="from-address-book">
-            <label for="shipping-address-select"><?php echo $this->__('Select a shipping address from your address book or enter a new address.') ?></label>
-            <?php echo $this->getAddressesHtmlSelect('shipping') ?>
-        </li>
+        /**
+         * If customer has adresses
+         *
+         * If customer is logged in and has saved adresses, we should show
+         * a select element with the customer's addresses
+         */
+        if ($this->customerHasAddresses()): ?>
+            <li class="from-address-book">
+                <label for="shipping-address-select"><?php echo $this->__('Select a shipping address from your address book or enter a new address.') ?></label>
+                <?php echo $this->getAddressesHtmlSelect('shipping') ?>
+            </li>
         <?php endif ?>
 
         <li id="shipping-new-address-form"<?php if ($this->customerHasAddresses()): ?> style="display:none;"<?php endif; ?>>
@@ -47,24 +50,24 @@
                 <ul>
                     <li>
                         <?php
-                            /**
-                             * First name and last name
-                             */
-                            echo $this->getLayout()->createBlock('customer/widget_name')
-                                ->setObject($this->getAddress())
-                                ->setFieldIdFormat('shipping:%s')
-                                ->setFieldNameFormat('shipping[%s]')
-                                ->toHtml();
+                        /**
+                         * First name and last name
+                         */
+                        echo $this->getLayout()->createBlock('customer/widget_name')
+                            ->setObject($this->getAddress())
+                            ->setFieldIdFormat('shipping:%s')
+                            ->setFieldNameFormat('shipping[%s]')
+                            ->toHtml();
                         ?>
                     </li>
                     <li class="contacts">
                     <?php
-                        /**
-                         * If billing address is the primary address
-                         * and the user is not logged in, show field
-                         * for email address here
-                         */
-                        if(!$this->isCustomerLoggedIn() && $this->isPrimaryAddress()):
+                    /**
+                     * If billing address is the primary address
+                     * and the user is not logged in, show field
+                     * for email address here
+                     */
+                    if(!$this->isCustomerLoggedIn() && $this->isPrimaryAddress()):
                     ?>
                         <div class="field input-box">
                             <label for="shipping:email" class="required"><?php echo $this->__('Email Address') ?> <em>*</em></label>
@@ -112,33 +115,33 @@
                                 class="input-text <?php echo $_validationClass['street'] ?>" />
                         </div>
                         <?php for ($_i = 2, $_n = $_streetLines; $_i <= $_n; $_i++): ?>
-                        <div class="field">
-                            <input
-                                type="text"
-                                title="<?php echo $this->__('Street Address %s', $_i) ?>"
-                                name="shipping[street][]"
-                                id="shipping:street<?php echo $_i ?>"
-                                value="<?php echo $this->escapeHtml($this->getAddress()->getStreet($_i)) ?>"
-                                class="input-text <?php echo $_validationClass['streetAlt'] ?>" />
-                        </div>
+                            <div class="field">
+                                <input
+                                    type="text"
+                                    title="<?php echo $this->__('Street Address %s', $_i) ?>"
+                                    name="shipping[street][]"
+                                    id="shipping:street<?php echo $_i ?>"
+                                    value="<?php echo $this->escapeHtml($this->getAddress()->getStreet($_i)) ?>"
+                                    class="input-text <?php echo $_validationClass['streetAlt'] ?>" />
+                            </div>
                         <?php endfor; ?>
                     </li>
                     <?php
-                        /**
-                         * If VAT attribute is visible
-                         */
-                        if ($_helper->isVatAttributeVisible()):
+                    /**
+                     * If VAT attribute is visible
+                     */
+                    if ($_helper->isVatAttributeVisible()):
                     ?>
-                    <li>
-                        <label for="billing:vat_id"><?php echo $this->__('VAT Number'); ?></label>
-                        <input
-                            type="text"
-                            id="shipping:vat_id"
-                            name="shipping[vat_id]"
-                            value="<?php echo $this->escapeHtml($this->getAddress()->getVatId()); ?>"
-                            title="<?php echo $this->__('VAT Number'); ?>"
-                            class="input-text <?php echo $_validationClass['vat'] ?>" />
-                    </li>
+                        <li>
+                            <label for="billing:vat_id"><?php echo $this->__('VAT Number'); ?></label>
+                            <input
+                                type="text"
+                                id="shipping:vat_id"
+                                name="shipping[vat_id]"
+                                value="<?php echo $this->escapeHtml($this->getAddress()->getVatId()); ?>"
+                                title="<?php echo $this->__('VAT Number'); ?>"
+                                class="input-text <?php echo $_validationClass['vat'] ?>" />
+                        </li>
                     <?php endif; ?>
                     <li class="postaddress">
                         <div class="field">
@@ -191,50 +194,53 @@
                         <?php echo $this->getCountryHtmlSelect('shipping') ?>
                     </li>
                     <?php if(!$this->isCustomerLoggedIn() && $this->isPrimaryAddress()): ?>
-                    <li class="fields" id="register-customer-password">
-                        <div class="field">
-                            <label for="shipping:customer_password" class="required"><?php echo $this->__('Password') ?> <em>*</em></label>
-                            <div class="input-box">
-                                <input type="password" name="shipping[customer_password]" id="shipping:customer_password" title="<?php echo $this->__('Password') ?>" class="input-text required-entry validate-password" />
+                        <li class="fields" id="register-customer-password">
+                            <div class="field">
+                                <label for="shipping:customer_password" class="required"><?php echo $this->__('Password') ?> <em>*</em></label>
+                                <div class="input-box">
+                                    <input type="password" name="shipping[customer_password]" id="shipping:customer_password" title="<?php echo $this->__('Password') ?>" class="input-text required-entry validate-password" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="field">
-                            <label for="shipping:confirm_password" class="required"><?php echo $this->__('Confirm Password') ?> <em>*</em></label>
-                            <div class="input-box">
-                                <input type="password" name="shipping[confirm_password]" title="<?php echo $this->__('Confirm Password') ?>" id="shipping:confirm_password" class="input-text required-entry validate-cpassword" />
+                            <div class="field">
+                                <label for="shipping:confirm_password" class="required"><?php echo $this->__('Confirm Password') ?> <em>*</em></label>
+                                <div class="input-box">
+                                    <input type="password" name="shipping[confirm_password]" title="<?php echo $this->__('Confirm Password') ?>" id="shipping:confirm_password" class="input-text required-entry validate-cpassword" />
+                                </div>
                             </div>
-                        </div>
-                    </li>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php if($this->isPrimaryAddress()) : ?>
+                        <li><?php echo $this->getChildHtml('checkout.onepage.shipping.newsletter'); ?></li>
                     <?php endif; ?>
 
                     <?php if ($this->isCustomerLoggedIn() && $this->customerHasAddresses()): ?>
-                    <li>
-                        <label for="shipping:save_in_address_book">
-                            <input
-                                type="checkbox"
-                                name="shipping[save_in_address_book]"
-                                value="1"
-                                title="<?php echo $this->__('Save in address book') ?>"
-                                id="shipping:save_in_address_book"
-                                <?php if ($this->getAddress()->getSaveInAddressBook()): ?>
-                                checked="checked"
-                                <?php endif;?>
-                                class="checkbox" />
-                            <?php echo $this->__('Save in address book') ?>
-                        </label>
-                    </li>
-                    <?php if ($this->isPrimaryAddress()): ?>
-                    <li><label for="shipping:use_for_billing"><input type="checkbox" id="shipping:use_for_billing" name="shipping[use_for_billing]" checked="checked" value="1" /> <?php echo $this->__('Use this address for billing'); ?></label></li>
-                    <?php endif; ?>
-                </ul>
+                        <li>
+                            <label for="shipping:save_in_address_book">
+                                <input
+                                    type="checkbox"
+                                    name="shipping[save_in_address_book]"
+                                    value="1"
+                                    title="<?php echo $this->__('Save in address book') ?>"
+                                    id="shipping:save_in_address_book"
+                                    <?php if ($this->getAddress()->getSaveInAddressBook()): ?>
+                                    checked="checked"
+                                    <?php endif;?>
+                                    class="checkbox" />
+                                <?php echo $this->__('Save in address book') ?>
+                            </label>
+                        </li>
+                        <?php if ($this->isPrimaryAddress()): ?>
+                            <li><label for="shipping:use_for_billing"><input type="checkbox" id="shipping:use_for_billing" name="shipping[use_for_billing]" checked="checked" value="1" /> <?php echo $this->__('Use this address for billing'); ?></label></li>
+                        <?php endif; ?>
+                        </ul>
                     <?php else: ?>
-                    <?php if ($this->isPrimaryAddress()): ?>
-                    <li><label for="shipping:use_for_billing"><input type="checkbox" id="shipping:use_for_billing" name="shipping[use_for_billing]" checked="checked" value="1" /> <?php echo $this->__('Use this address for billing'); ?></label></li>
-                    <?php endif; ?>
-                </ul>
-
-                <input type="hidden" name="shipping[save_in_address_book]" value="1" />
-                    <?php endif;?>
+                        <?php if ($this->isPrimaryAddress()): ?>
+                            <li><label for="shipping:use_for_billing"><input type="checkbox" id="shipping:use_for_billing" name="shipping[use_for_billing]" checked="checked" value="1" /> <?php echo $this->__('Use this address for billing'); ?></label></li>
+                        <?php endif; ?>
+                    </ul>
+                    <input type="hidden" name="shipping[save_in_address_book]" value="1" />
+                <?php endif;?>
             </fieldset>
         </li>
     </ul>
