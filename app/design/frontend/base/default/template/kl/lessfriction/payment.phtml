@@ -21,3 +21,8 @@
         </fieldset>
     </form>
 <?php endif; ?>
+<script>
+    if(typeof PaymentMethod !== 'undefined' && PaymentMethod.prototype.reloaded) {
+        payment.reloaded();
+    };
+</script>
