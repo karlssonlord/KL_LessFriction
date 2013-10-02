@@ -462,6 +462,7 @@ var Checkout,
                 }
 
                 $$('.btn-checkout').invoke('removeAttribute', 'disabled');
+                $$('.review-section .overlay').first().hide();
 
                 return false;
             }
@@ -816,6 +817,7 @@ var Checkout,
                 'click',
                 '.btn-checkout',
                 function(event, element) {
+                    $$('.review-section .overlay').first().show();
                     element.disabled = true;
                     this.save();
                     Event.stop(event);
