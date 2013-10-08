@@ -11,6 +11,9 @@
             relations: ['review']
         });
         payment.currentMethod = "<?php echo $this->getChild('methods')->getSelectedMethodCode() ?>";
+        if(typeof PaymentMethod !== 'undefined' && PaymentMethod.prototype.reloaded) {
+            payment.reloaded();
+        };
     });
 </script>
 <?php if ($this->isVisible()) : ?>
@@ -21,8 +24,3 @@
         </fieldset>
     </form>
 <?php endif; ?>
-<script>
-    if(typeof PaymentMethod !== 'undefined' && PaymentMethod.prototype.reloaded) {
-        payment.reloaded();
-    };
-</script>
