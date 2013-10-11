@@ -562,6 +562,11 @@ var Checkout,
         switchMethod: function(method) {
             checkout.log(method);
 
+            // Don't do anything if things are the same as before
+            if(method === this.currentMethod) {
+                return;
+            }
+
             if (this.currentMethod && $('payment_form_'+this.currentMethod)) {
                 this.changeVisible(this.currentMethod, true);
                 $('payment_form_'+this.currentMethod).fire('payment-method:switched-off', {method_code : this.currentMethod});
