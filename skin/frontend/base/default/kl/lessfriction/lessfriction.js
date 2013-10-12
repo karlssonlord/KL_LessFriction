@@ -593,10 +593,9 @@ var Checkout,
          * Validation
          */
         validate: function() {
-            var methods   = document.getElementsByName('payment[method]');
-
+            var methods         = document.getElementsByName('payment[method]');
             var silentValidator = new SectionValidation(this._config.form);
-            var validator = new Validation(this._config.form);
+            var validator       = new Validation(this._config.form);
 
             if (!silentValidator.validate()) {
                 return false;
@@ -615,6 +614,14 @@ var Checkout,
                 );
 
                 return false;
+            }
+
+            /**
+             * If only one payment method is available the input field probably
+             * is of the type hidden, so let it pass the validation
+             */
+            if (methods.length == 1 && methods[0].type == 'hidden') {
+                return true;
             }
 
             for (var i = 0; i < methods.length; i++) {
