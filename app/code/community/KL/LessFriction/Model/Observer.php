@@ -64,6 +64,7 @@ class KL_LessFriction_Model_Observer
     {
         /* @var $quote Mage_Sales_Model_Quote */
         $quote = $this->_getQuote();
+        $quote->collectTotals();
 
         /* @var $address Mage_Sales_Model_Quote_Address */
         $billingAddress  = $quote->getBillingAddress();
@@ -92,6 +93,23 @@ class KL_LessFriction_Model_Observer
             $this->_setPaymentMethod();
             $this->_setShippingMethod();
         }
+    }
+
+    /**
+     * Update shipping method
+     *
+     * @param Varien_Event_Observer $observer Observer object
+     *
+     * @return void
+     */
+    public function updateShippingMethod()
+    {
+        /* @var $quote Mage_Sales_Model_Quote */
+        $quote = $this->_getQuote();
+        $quote->getShippingAddress()->setCollectShippingRates(true)
+            ->collectShippingRates()->save();
+        $quote->collectTotals()->save();
+        $this->_setShippingMethod();
     }
 
     /**
@@ -169,7 +187,7 @@ class KL_LessFriction_Model_Observer
         /**
          * Checking for min/max order total for assigned payment method
          */
-        $total = $quote->getBaseGrandTotal();
+        $total    = $quote->getBaseGrandTotal();
         $minTotal = $method->getConfigData('min_order_total');
         $maxTotal = $method->getConfigData('max_order_total');
 
@@ -189,6 +207,9 @@ class KL_LessFriction_Model_Observer
     {
         $config = $this->_getConfig();
 
+        /* @var $quote Mage_Sales_Model_Quote */
+        $quote  = $this->_getQuote();
+
         /**
          * If there's only one shipping method available we might want to preselect
          * it based on how the module is configured in admin
@@ -197,9 +218,6 @@ class KL_LessFriction_Model_Observer
             || $config->preselectCheapestShippingMethod()
             || $config->hideIfFreeShipping()
         ) {
-
-            /* @var $quote Mage_Sales_Model_Quote */
-            $quote  = $this->_getQuote();
             $groups = $quote->getShippingAddress()->getGroupedAllShippingRates();
 
             if (!empty($groups)) {
@@ -212,7 +230,6 @@ class KL_LessFriction_Model_Observer
                             if (!isset($shippingMethod)
                                 || $shippingMethod->getPrice() > $item->getPrice()
                             ) {
-
                                 $shippingMethod = $item;
                             }
                         }
@@ -230,6 +247,7 @@ class KL_LessFriction_Model_Observer
                 $quote->getShippingAddress()->setShippingMethod(
                     $shippingMethod->getCode()
                 );
+                $quote->setTotalsCollectedFlag(false)->collectTotals();
             }
         }
     }
