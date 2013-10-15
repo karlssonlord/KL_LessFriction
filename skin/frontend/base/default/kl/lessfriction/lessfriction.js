@@ -182,6 +182,7 @@ var Checkout,
                  * Checkout is not available for handling requests...
                  **/
                 } else {
+                    // TODO: This is thrown irregularly, don't know why
                     this.log("Pending AJAX request...");
                 }
             }.bind(this), 250);
@@ -583,9 +584,7 @@ var Checkout,
                     }
 
                     this.keyTimeout = setTimeout(function() {
-
                         checkout.log('Try to save address');
-
                         this.save();
                     }.bind(this), 500);
                 }.bind(this));
@@ -829,7 +828,6 @@ var Checkout,
             }.bind(this));
         },
         save: function(){
-            checkout.log('Save section');
             var params = '';
             if (this._validate()) {
                 if (this._config.relations) {
@@ -855,7 +853,8 @@ var Checkout,
 
                 checkout.queueRequest(this._config.saveUrl, options, this._config);
             }
-        },
+        }
+        // TODO: _validate() should be implemented here to validate all sections
     });
 
 
