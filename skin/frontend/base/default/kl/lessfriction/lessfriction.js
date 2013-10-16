@@ -787,6 +787,13 @@ var Checkout,
      * Enter short description here...
      */
     BillingAddress  = Class.create(Address, {
+        setEmail: function(){
+            $('billing:email').value = $('shipping:email').value;
+        },
+
+        beforeInit: function(){
+            this.addBeforeValidateFunction('billing', this.setEmail);
+        },
         resetSelectedAddress: function(form) {
             var selectElement = $('billing-address-select')
             if (selectElement) {
