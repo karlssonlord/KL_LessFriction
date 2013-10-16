@@ -673,18 +673,28 @@ var Checkout,
             $(this._config.form).getElements().invoke('observe', 'keyup', function(e) {
                 var element = Event.element(e);
 
+                // If keyup in Klarna form, do nothing
+                if(element.readAttribute('name') === 'pno') {
+                    return;
+                }
+
                 if (this.keyTimeout) {
                     clearTimeout(this.keyTimeout);
                 }
 
                 this.keyTimeout = setTimeout(function() {
-                    checkout.log('Try to save address');
+                    checkout.log('Try to save address 2');
                     this.save();
                 }.bind(this), 500);
             }.bind(this));
 
             $(this._config.form).getElements().invoke('observe', 'change', function(e) {
                 var element = Event.element(e);
+
+                // If change in Klarna form, do nothing
+                if(element.readAttribute('name') === 'pno') {
+                    return;
+                }
 
                 if (this.keyTimeout) {
                     clearTimeout(this.keyTimeout);
