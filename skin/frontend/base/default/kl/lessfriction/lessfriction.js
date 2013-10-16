@@ -788,7 +788,9 @@ var Checkout,
      */
     BillingAddress  = Class.create(Address, {
         setEmail: function(){
-            $('billing:email').value = $('shipping:email').value;
+            if ($('billing:email') && $('shipping:email')) {
+                $('billing:email').value = $('shipping:email').value;
+            };
         },
 
         beforeInit: function(){
