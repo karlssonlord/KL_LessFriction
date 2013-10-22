@@ -1,6 +1,8 @@
 /**
  * We'll need a bunch of global variables thanks to
  * how Magento is designed.
+ *
+ * TODO: Do we really?
  */
 var Checkout,
     checkout,
@@ -29,7 +31,7 @@ var Checkout,
     /**
      * Checkout
      *
-     * Enter short description here...
+     * TODO: Enter short description here...
      */
     Checkout = Class.create();
 
@@ -50,10 +52,18 @@ var Checkout,
             }
         },
 
+        /**
+         * TODO: Purpose/Idéa?
+         *
+         */
         _onSectionClick: function(event) {
 
         },
 
+        /**
+         * Displaying a section as "loading" based on it's relations
+         *
+         */
         _setLoadingSections: function(relations) {
             if(typeof relations !== 'undefined' && relations.length > 0) {
                 for (var i = 0; i < relations.length; i++) {
@@ -65,6 +75,10 @@ var Checkout,
             }
         },
 
+        /**
+         * Resetting loading sections from "loading" states
+         *
+         */
         _resetLoadingSections: function() {
             $$('[class*="-section loading"]').each(function(section) {
                 var overlay = section.removeClassName('loading').down('.overlay');
@@ -72,6 +86,10 @@ var Checkout,
             });
         },
 
+        /**
+         * Backend request queueing
+         *
+         */
         queueRequest: function(url, options, config) {
             this._queue.push($H({
                 url: url,
@@ -199,7 +217,7 @@ var Checkout,
         setMethod: function(method) {
             if (method != 'guest' && method != 'register') {
                 var message = Translator.translate('Please choose to register or to checkout as a guest').stripTags();
-                alert(message);
+                alert(message); // TODO: This is generally a bad idea.
                 return false;
             }
 
@@ -283,6 +301,8 @@ var Checkout,
 
         /**
          * Initialize class
+         *
+         * Calling init()
          */
         initialize: function(config) {
             this._config       = config;
@@ -314,11 +334,12 @@ var Checkout,
         },
 
         /**
-         * Local initialization
+         * Local (generic) Section initialization
+         *
+         * This is called if method is not declared in each section.
          */
         init: function() {
             this.beforeInit();
-
             this.afterInit();
         },
 
@@ -359,8 +380,10 @@ var Checkout,
         },
 
         /**
-        * Validation
-        */
+         * Validation
+         *
+         * TODO: This is important, why?
+         */
         _validate: function() {
             var result = this.beforeValidate();
 
@@ -382,7 +405,9 @@ var Checkout,
         },
 
         /**
-         * Save
+         * Save Section
+         *
+         * TODO: Describe my purpose plz.
          */
         save: function() {
             checkout.log('Save section');
@@ -415,6 +440,8 @@ var Checkout,
 
         /**
          * Reset load waiting
+         *
+         * TODO: This is triggered by Section.onComplete, what's the idea here?
          */
         resetLoadWaiting: function(transport) {
             checkout.log('resetLoadWaiting');
@@ -422,6 +449,8 @@ var Checkout,
 
         /**
          * Next step
+         *
+         * TODO: Describe me..
          */
         nextStep: function(transport) {
 
@@ -453,15 +482,16 @@ var Checkout,
 
             if (response.error) {
                 if (response.message) {
-                    alert(response.message);
+                    alert(response.message); // TODO: This is generally a bad idea.
                 } else {
                     if (response.error_messages) {
-                        alert(response.error_messages);
+                        alert(response.error_messages); // TODO: This is generally a bad idea.
                     } else {
-                        alert(response.error);
+                        alert(response.error); // TODO: This is generally a bad idea.
                     }
                 }
 
+                // TODO: Should be triggered by events?
                 $$('.btn-checkout').invoke('removeAttribute', 'disabled');
                 $$('.review-section .overlay').first().hide();
 
@@ -663,35 +693,38 @@ var Checkout,
             this.beforeInit();
 
             /**
-             * This solution is naive and expects that the adresses
+             * TODO: This solution is naive and expects that the adresses
              * are alone in separate sections
              */
             if (!$(this._config.form).hasClassName('primary')) {
                 $(this._config.form).up(1).hide();
             }
 
+            // TODO: Is this a good DRY approach in handling events? Should instead reuse a function for each event.
             $(this._config.form).getElements().invoke('observe', 'keyup', function(e) {
                 var element = Event.element(e);
 
-                // If keyup in Klarna form, do nothing
+                // If keyup in Klarna form, do nothing. TODO: This is ugly
                 if(element.readAttribute('name') === 'pno') {
                     return;
                 }
 
+                // TODO: Why is this important?
                 if (this.keyTimeout) {
                     clearTimeout(this.keyTimeout);
                 }
 
                 this.keyTimeout = setTimeout(function() {
-                    checkout.log('Try to save address 2');
+                    checkout.log('Try to save address');
                     this.save();
-                }.bind(this), 500);
+                }.bind(this), 500); // TODO: Should this really be a hard coded value?
             }.bind(this));
 
+            // TODO: Is this a good DRY approach in handling events?
             $(this._config.form).getElements().invoke('observe', 'change', function(e) {
                 var element = Event.element(e);
 
-                // If change in Klarna form, do nothing
+                // If change in Klarna form, do nothing. TODO: This is ugly
                 if(element.readAttribute('name') === 'pno') {
                     return;
                 }
@@ -747,7 +780,7 @@ var Checkout,
     /**
      * Shipping Address
      *
-     * Enter short description here...
+     * TODO: Enter short description here...
      */
     ShippingAddress = Class.create(Address, {
         resetSelectedAddress: function(form) {
@@ -770,6 +803,7 @@ var Checkout,
         }
     });
 
+    // TODO: This belongs to?
     var useForBilling = document.on(
         'click',
         '[name="shipping[use_for_billing]"]',
@@ -784,7 +818,7 @@ var Checkout,
     /**
      * Billing Address
      *
-     * Enter short description here...
+     * TODO: Enter short description here...
      */
     BillingAddress  = Class.create(Address, {
         setEmail: function(){
@@ -904,7 +938,7 @@ var Checkout,
                 }, this).all();
             }
         } catch (e) {
-            // Fail silently
+            // TODO: Do not fail silently
         }
 
         if (!result && this.options.focusOnError) {
@@ -913,7 +947,7 @@ var Checkout,
                     return $(elm).hasClassName('validation-failed')
                 }).first().focus()
             } catch(e) {
-                // Fail silently
+                // TODO: Do not fail silently
             }
         }
 
@@ -954,7 +988,7 @@ var Checkout,
                     return true;
                 }
             } catch(e) {
-                throw(e)
+                throw(e);
             }
         }
     });
