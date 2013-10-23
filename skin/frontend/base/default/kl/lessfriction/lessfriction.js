@@ -104,7 +104,7 @@ var Checkout,
         },
 
         ajaxRequest: function() {
-            this.log("Set interval");
+            this.log('Set interval');
 
             this._interval = setInterval(function() {
 
@@ -184,6 +184,7 @@ var Checkout,
                         }.bind(that);
                     }(that));
 
+                    // TODO: Only make request if !== with last one, to handle unnecessary requests
                     var request = new Ajax.Request(url, options);
 
                 /**
@@ -697,7 +698,7 @@ var Checkout,
              * are alone in separate sections
              */
             if (!$(this._config.form).hasClassName('primary')) {
-                $(this._config.form).up(1).hide();
+                $(this._config.form).up().hide();  // TODO: This should use a setting, not a relative element
             }
 
             // TODO: Is this a good DRY approach in handling events? Should instead reuse a function for each event.
@@ -810,7 +811,7 @@ var Checkout,
         function(event, element) {
             var form = $('co-billing-form');
             if (form) {
-                form.up(1).toggle();
+                form.up().toggle(); // TODO: This should use a setting, not a relative element
             }
         }.bind(this)
     );
