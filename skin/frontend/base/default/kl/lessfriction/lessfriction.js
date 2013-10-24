@@ -899,6 +899,9 @@ var Checkout, // class
             if(shippingAddress && billingAddress) {
                 isValid = true;
             }
+            else {
+                checkout._resetLoadingSections();
+            }
 
             return isValid;
         },
