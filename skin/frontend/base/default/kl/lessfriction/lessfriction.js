@@ -106,6 +106,7 @@ var Checkout,
         ajaxRequest: function() {
             this.log('Set interval');
 
+            // TODO: Is this definition not too deep? Why not parallel to ajaxRequest?
             this._interval = setInterval(function() {
 
                 /**
@@ -202,7 +203,7 @@ var Checkout,
                  **/
                 } else {
                     // TODO: This is thrown irregularly, don't know why
-                    this.log("Pending AJAX request...");
+                    this.log('Pending AJAX request...');
                 }
             }.bind(this), 250);
         },
@@ -251,9 +252,9 @@ var Checkout,
             $('co-messages').update(messageHtml);
         },
 
-        log: function(message) {
-            if (this.isDeveloperMode && window.console) {
-                console.log(message);
+        log: function() {
+            if (this.isDeveloperMode && window.console && arguments) {
+                console.log(arguments);
             }
         }
     };
@@ -361,9 +362,10 @@ var Checkout,
             (this.func.get('before').get('validate')).each(function(validate) {
                 hasValidation = true;
 
-                if ((validate.value)() == false) {
+                if ((validate.value)() == false) { // TODO: This is calling the *Address.setEmail(), woot?!
                     validateResult = false;
                 }
+
             }.bind(this));
 
             if (!hasValidation) {
@@ -381,28 +383,21 @@ var Checkout,
         },
 
         /**
-         * Validation
+         * Generic Section Validation
          *
-         * TODO: This is important, why?
+         *
          */
         _validate: function() {
-            var result = this.beforeValidate();
+            this.beforeValidate(); // Run added methods before validating section
 
-            if (result === true) {
+            if (this.validate() === true) {
+                this.afterValidate();
                 return true;
             }
-
-            result = this.validate();
-            if (result === true) {
-                return true;
+            else {
+                this.afterValidate();
+                return false;
             }
-
-            result = this.afterValidate();
-            if (result === true) {
-                return true;
-            }
-
-            return false;
         },
 
         /**
@@ -411,7 +406,7 @@ var Checkout,
          * TODO: Describe my purpose plz.
          */
         save: function() {
-            checkout.log('Save section');
+            checkout.log('Saving section', this);
 
             if (this._validate()) {
                 if (this._config.form) {
@@ -579,8 +574,8 @@ var Checkout,
      */
     ShippingMethod  = Class.create(Section, {
         validate: function() {
-            return true;
-        },
+            return false;
+        }
     });
 
 
@@ -615,7 +610,7 @@ var Checkout,
                     }
 
                     this.keyTimeout = setTimeout(function() {
-                        checkout.log('Try to save address');
+                        checkout.log('Try to save address 1');
                         this.save();
                     }.bind(this), 500);
                 }.bind(this));
@@ -701,46 +696,32 @@ var Checkout,
                 $(this._config.form).up().hide();  // TODO: This should use a setting, not a relative element
             }
 
-            // TODO: Is this a good DRY approach in handling events? Should instead reuse a function for each event.
-            $(this._config.form).getElements().invoke('observe', 'keyup', function(e) {
-                var element = Event.element(e);
+            // Setting up event handles
+            $(this._config.form).getElements().invoke('observe',
+                'keyup', this._saveSectionEvent.bind(this));
 
-                // If keyup in Klarna form, do nothing. TODO: This is ugly
-                if(element.readAttribute('name') === 'pno') {
-                    return;
-                }
-
-                // TODO: Why is this important?
-                if (this.keyTimeout) {
-                    clearTimeout(this.keyTimeout);
-                }
-
-                this.keyTimeout = setTimeout(function() {
-                    checkout.log('Try to save address');
-                    this.save();
-                }.bind(this), 500); // TODO: Should this really be a hard coded value?
-            }.bind(this));
-
-            // TODO: Is this a good DRY approach in handling events?
-            $(this._config.form).getElements().invoke('observe', 'change', function(e) {
-                var element = Event.element(e);
-
-                // If change in Klarna form, do nothing. TODO: This is ugly
-                if(element.readAttribute('name') === 'pno') {
-                    return;
-                }
-
-                if (this.keyTimeout) {
-                    clearTimeout(this.keyTimeout);
-                }
-
-                this.keyTimeout = setTimeout(function() {
-                    checkout.log('Try to save address');
-                    this.save();
-                }.bind(this), 500);
-            }.bind(this));
+            $(this._config.form).getElements().invoke('observe',
+                'change', this._saveSectionEvent.bind(this));
 
             this.afterInit();
+        },
+        // TODO: Should we really try to save for every event?
+        _saveSectionEvent: function(e) {
+            var element = Event.element(e);
+
+            // If change in Klarna form, do nothing. TODO: This is ugly
+            if(element.readAttribute('name') === 'pno') {
+                return;
+            }
+
+            if (this.keyTimeout) {
+                clearTimeout(this.keyTimeout);
+            }
+
+            this.keyTimeout = setTimeout(function() {
+                checkout.log('Try to save section', this);
+                this.save();
+            }.bind(this), 500);
         },
         validate: function() {
             var validator      = new SectionValidation(this._config.form);
@@ -804,7 +785,7 @@ var Checkout,
         }
     });
 
-    // TODO: This belongs to?
+    // TODO: This belongs to? Not used, yet.
     var useForBilling = document.on(
         'click',
         '[name="shipping[use_for_billing]"]',
@@ -822,10 +803,11 @@ var Checkout,
      * TODO: Enter short description here...
      */
     BillingAddress  = Class.create(Address, {
-        setEmail: function(){
+        setEmail: function() {
             if ($('billing:email') && $('shipping:email')) {
                 $('billing:email').value = $('shipping:email').value;
             };
+            return // something thats a validation boolean true/false
         },
 
         beforeInit: function(){
@@ -849,7 +831,8 @@ var Checkout,
         }
     });
 
-    var useForBilling = document.on(
+    // TODO: But why is this in the checkout global scope? Not used, yet.
+    var useForShipping = document.on(
         'click',
         '[name="billing[use_for_shipping]"]',
         function(event, element) {
@@ -914,7 +897,7 @@ var Checkout,
 
 
     var SectionValidation       = Class.create();
-    SectionValidation.prototype = new Validation;
+    SectionValidation.prototype = new Validation; // TODO: Looks like this is run in each section template aswell.
     Object.extend(SectionValidation, Validation);
 
     SectionValidation.prototype.validate = function() {
