@@ -54,6 +54,11 @@ class KL_LessFriction_Block_Layout extends Mage_Checkout_Block_Onepage
             $stepCodes = array_diff($stepCodes, array('login'));
         }
 
+        // TODO: This is primary for flipping the address steps order when outputted in the same section
+        if(Mage::getModel('lessfriction/config')->getPrimaryAddressType() === 'shipping') {
+           $stepCodes = array_reverse($stepCodes);
+        }
+
         foreach ($stepCodes as $step) {
             $steps[$step] = $checkout->getStepData($step);
         }
