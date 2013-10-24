@@ -4,8 +4,8 @@
  *
  * TODO: Do we really?
  */
-var Checkout,
-    checkout,
+var Checkout, // class
+    checkout, // instance
     Cart,
     cart,
     PaymentMethod,
@@ -890,8 +890,21 @@ var Checkout,
 
                 checkout.queueRequest(this._config.saveUrl, options, this._config);
             }
-        }
-        // TODO: _validate() should be implemented here to validate all sections
+        },
+        validate: function() {
+            var isValid = false;
+            checkout.log('Validating address forms via the Review Section');
+
+            var shippingAddress = shippingForm.validator.validate();
+            var billingAddress  = billingForm.validator.validate();
+
+            if(shippingAddress && billingAddress) {
+                isValid = true;
+            }
+
+            return isValid;
+        },
+
     });
 
 
