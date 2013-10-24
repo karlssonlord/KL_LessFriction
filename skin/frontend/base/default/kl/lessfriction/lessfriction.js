@@ -488,8 +488,8 @@ var Checkout, // class
                 }
 
                 // TODO: Should be triggered by events?
-                $$('.btn-checkout').invoke('removeAttribute', 'disabled');
-                $$('.review-section .overlay').first().hide();
+                // checkout._resetLoadingSections();
+
 
                 return false;
             }
@@ -858,11 +858,9 @@ var Checkout, // class
                 'click',
                 '.btn-checkout',
                 function(event, element) {
-                    $$('.review-section .overlay').first().show();
-                    element.disabled = true;
+                    checkout._setLoadingSections(['review']);
                     this.save();
-                    Event.stop(event);
-            }.bind(this));
+                }.bind(this));
         },
         save: function(){
             var params = '';
