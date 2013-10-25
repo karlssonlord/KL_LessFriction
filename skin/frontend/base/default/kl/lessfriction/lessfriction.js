@@ -574,7 +574,7 @@ var Checkout, // class
      */
     ShippingMethod  = Class.create(Section, {
         validate: function() {
-            return false;
+            return true;
         }
     });
 
