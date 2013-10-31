@@ -1,20 +1,30 @@
 <script>
-    var quoteBaseGrandTotal = <?php echo (float)$this->getQuoteBaseGrandTotal(); ?>;
-    var checkQuoteBaseGrandTotal = quoteBaseGrandTotal;
-    var lastPrice;
-    var payment;
+    var quoteBaseGrandTotal = <?php echo (float)$this->getQuoteBaseGrandTotal(); ?>,
+        checkQuoteBaseGrandTotal = quoteBaseGrandTotal,
+        lastPrice,
+        payment;
 
-    document.observe('dom:loaded', function() {
-        payment = new PaymentMethod({
-            form:      'co-payment-form',
-            saveUrl:   '<?php echo $this->getUrl('checkout/onepage/savePayment') ?>',
-            relations: ['review']
-        });
-        payment.currentMethod = "<?php echo $this->getChild('methods')->getSelectedMethodCode() ?>";
-        if(typeof PaymentMethod !== 'undefined' && PaymentMethod.prototype.reloaded) {
-            payment.reloaded();
-        };
-    });
+    (function() {
+        var setupPayment = function() {
+            payment = new PaymentMethod({
+                form:      'co-payment-form',
+                saveUrl:   '<?php echo $this->getUrl('checkout/onepage/savePayment') ?>',
+                relations: ['review']
+            });
+            payment.currentMethod = "<?php echo $this->getChild('methods')->getSelectedMethodCode() ?>";
+            if(typeof PaymentMethod !== 'undefined' && PaymentMethod.prototype.reloaded) {
+                payment.reloaded();
+            }
+        }
+
+        <?php if($this->getRequest()->isXmlHttpRequest()) : ?>
+            setupPayment();
+        <?php else : ?>
+            document.observe('dom:loaded', function() {
+                setupPayment();
+            });
+        <?php endif; ?>
+    })();
 </script>
 <?php if ($this->isVisible()) : ?>
     <h2><?php echo $this->__('Payment Method'); ?></h2>
