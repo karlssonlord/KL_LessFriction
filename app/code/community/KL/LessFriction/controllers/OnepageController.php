@@ -465,7 +465,6 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
             $result['success'] = true;
             $result['error'] = false;
         } catch (Exception $e) {
-            Mage::log("Exception: " . $e->getMessage(), null, 'robban.log', true);
             $result['error'] = $e->getMessage();
         }
 
