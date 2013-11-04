@@ -9,7 +9,7 @@
             payment = new PaymentMethod({
                 form:      'co-payment-form',
                 saveUrl:   '<?php echo $this->getUrl('checkout/onepage/savePayment') ?>',
-                relations: ['review']
+                relations: ['review', 'shipping']
             });
             payment.currentMethod = "<?php echo $this->getChild('methods')->getSelectedMethodCode() ?>";
             if(typeof PaymentMethod !== 'undefined' && PaymentMethod.prototype.reloaded) {
