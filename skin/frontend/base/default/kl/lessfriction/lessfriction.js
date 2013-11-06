@@ -621,7 +621,7 @@ var Checkout, // class
             if (method) {
                 this.lastUsedMethod = method;
             }
-
+            shippingRegionUpdater.update(); // hide Region fields if neccessary
             this.currentMethod = method;
             this.save();
         },
