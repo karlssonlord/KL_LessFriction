@@ -505,7 +505,6 @@ var Checkout, // class
                 'click',
                 '.increaseQty,.decreaseQty',
                 function(event, element) {
-                    console.log(element);
                     checkout.queueRequest(element.readAttribute('data-href'), {}, that._config);
                     Event.stop(event);
                 }.bind(this)
