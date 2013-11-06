@@ -505,7 +505,8 @@ var Checkout, // class
                 'click',
                 '.increaseQty,.decreaseQty',
                 function(event, element) {
-                    checkout.queueRequest(element.href, {}, that._config);
+                    console.log(element);
+                    checkout.queueRequest(element.readAttribute('data-href'), {}, that._config);
                     Event.stop(event);
                 }.bind(this)
             );
@@ -527,7 +528,7 @@ var Checkout, // class
                 'click',
                 '#shopping-cart-table .btn-remove',
                 function(event, element) {
-                    checkout.queueRequest(element.href, {}, that._config);
+                    checkout.queueRequest(element.readAttribute('data-href'), {}, that._config);
                     element.up('tr').remove();
                     Event.stop(event);
                 }.bind(this)
