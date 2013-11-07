@@ -344,26 +344,64 @@ class KL_LessFriction_Model_Observer
     public function addGuestOrderToCustomer($observer)
     {
         /**
+         * Check configuration if option is enabled
+         */
+        if ( ! $this->_getConfig()->addGuestOrdersToCustomer() ) {
+            return $observer;
+        }
+
+        /**
          * It doesn't hurt to be extra careful when fiddling with the
          * orders, customer might want to be redirected to a third
          * party for payment – then we don't want to risk any
          * unexpected exceptions.
          **/
         try {
-            Mage::log('trying to merge', null, 'merge.log', true);
+
+            /**
+             * Fetch order
+             */
             $order = $observer->getOrder();
 
+            /**
+             * Make sure order object was found an no customerId is set on the order
+             */
             if ($order && !$order->getCustomerId()) {
-                Mage::log('we have the order', null, 'merge.log', true);
+
+                /**
+                 * Log a message
+                 */
+                Mage::log('Trying to merge order ' . $order->getIncrementId() . '...', null, 'merge.log', true);
+
+                /**
+                 * Look for customer in the database
+                 */
                 $customer = Mage::getModel("customer/customer")
                     ->setWebsiteId(Mage::app()->getWebsite()->getId())
                     ->loadByEmail($order->getCustomerEmail());
 
-                $order->setCustomer($customer);
-                $order->setCustomerIsGuest(0);
+                /**
+                 * Assure a customer was found
+                 */
+                if ( $customer ) {
+                    /**
+                     * Set customer object
+                     */
+                    $order->setCustomer($customer);
+
+                    /**
+                     * Make sure order isn't a guest checkout anymore
+                     */
+                    $order->setCustomerIsGuest(0);
+
+                    /**
+                     * Log it
+                     */
+                    Mage::log('Successfully merged order #' . $order->getId() . ' with customer object', null, 'merge.log');
+                }
             }
         } catch (Exception $e) {
-            Mage::log('failed to merge', null, 'merge.log', true);
+            Mage::log('Failed to merge order.', null, 'merge.log', true);
         }
     }
 }
