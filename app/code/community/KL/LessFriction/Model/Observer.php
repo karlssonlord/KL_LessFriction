@@ -383,7 +383,7 @@ class KL_LessFriction_Model_Observer
                 /**
                  * Assure a customer was found
                  */
-                if ( $customer ) {
+                if ( $customer && $customer->getId() ) {
                     /**
                      * Set customer object
                      */
