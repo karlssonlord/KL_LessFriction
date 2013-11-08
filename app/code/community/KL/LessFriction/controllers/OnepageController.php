@@ -330,13 +330,16 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
         $result = $this->getOnepage()->saveShippingMethod($data);
 
         $this->getOnepage()
+            ->getQuote()
+            ->collectTotals()
+            ->save();
+
+        $this->getOnepage()
                     ->getQuote()
                     ->getShippingAddress()
                     ->setCollectShippingRates(true)
                     ->collectShippingRates()
                     ->save();
-
-        $this->getOnepage()->getQuote()->collectTotals()->save();
 
         $relations = $this->getRequest()->getPost('relations', '');
         $relations = explode(',', $relations);
