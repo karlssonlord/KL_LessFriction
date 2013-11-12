@@ -136,6 +136,10 @@ var Checkout, // class
                         options.onSuccess = function(result) {};
                     }
 
+                    options.onError = (function() {
+                        that.available = true;
+                    }(that));
+
                     options.onSuccess = (function() {
                         var cache = options.onSuccess;
 
@@ -144,6 +148,8 @@ var Checkout, // class
 
                             this.log(result.responseJSON.blocks);
                             this.log(result.responseJSON);
+
+                            that.available = true;
 
                             if (result.responseJSON.force_method) {
                                 this.available = true;
@@ -181,7 +187,6 @@ var Checkout, // class
                                 }
                             }
 
-                            that.available = true;
                         }.bind(that);
                     }(that));
 
@@ -196,6 +201,7 @@ var Checkout, // class
 
                     clearInterval(this._interval);
                     this._interval = false;
+                    this.available = true;
                     return;
 
                 /**
@@ -452,6 +458,7 @@ var Checkout, // class
 
             // Clearing any loading sections due to this request
             checkout._resetLoadingSections();
+            // clear pending requests?
 
             if (transport && transport.responseText) {
                 try {
