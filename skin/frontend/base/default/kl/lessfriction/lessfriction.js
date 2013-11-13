@@ -767,14 +767,22 @@ var Checkout, // class
      */
     ShippingAddress = Class.create(Address, {
 
+        showHideRegion: function(){
+            if ($('shipping:region_id').hasClassName('required-entry')) {
+                $$('li.shipping-region').first().show();
+            }
+            else{
+                $$('li.shipping-region').first().hide();
+            }
+        },
+
         beforeInit: function(){
-            if (shippingSelect = $(this._config.form).select('[name="shipping[country_id]"]').first()){
-                shippingSelect.observe('change', function(){
-                    if ($('shipping:region_id').hasClassName('required-entry')) {
-                        $$('li.region').first().toggleClassName('hidden');
-                    }
+            this.showHideRegion()
+            if (countrySelect = $(this._config.form).select('[name="shipping[country_id]"]').first()){
+                countrySelect.observe('change', function(){
+                    shippingAddress.showHideRegion();
                 });
-            };
+            }
         },
         resetSelectedAddress: function(form) {
             var selectElement = $('shipping-address-select')
