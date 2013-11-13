@@ -19,5 +19,8 @@
                 }
             );
         });
+        if ($('co-shipping-method-form').select('input').length == 1) {
+            shippingMethod.save()
+        }
     </script>
 <?php endif; ?>

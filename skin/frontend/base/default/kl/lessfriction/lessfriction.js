@@ -17,9 +17,7 @@ var Checkout, // class
     ShippingAddress,
     shippingAddress,
     BillingAddress,
-    billingAddress,
-    testform;
-
+    billingAddress;
 (function() {
 
     /**
