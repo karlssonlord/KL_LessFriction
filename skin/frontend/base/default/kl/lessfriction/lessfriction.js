@@ -17,7 +17,8 @@ var Checkout, // class
     ShippingAddress,
     shippingAddress,
     BillingAddress,
-    billingAddress;
+    billingAddress,
+    testform;
 
 (function() {
 
@@ -676,7 +677,6 @@ var Checkout, // class
     });
 
 
-
     /**
      * Address
      *
@@ -695,6 +695,7 @@ var Checkout, // class
             if (!$(this._config.form).hasClassName('primary')) {
                 $(this._config.form).up().hide();  // TODO: This should use a setting, not a relative element
             }
+
 
             // Setting up event handles
             $(this._config.form).getElements().invoke('observe',
@@ -765,6 +766,16 @@ var Checkout, // class
      * TODO: Enter short description here...
      */
     ShippingAddress = Class.create(Address, {
+
+        beforeInit: function(){
+            if (shippingSelect = $(this._config.form).select('[name="shipping[country_id]"]').first()){
+                shippingSelect.observe('change', function(){
+                    if ($('shipping:region_id').hasClassName('required-entry')) {
+                        $$('li.region').first().toggleClassName('hidden');
+                    }
+                });
+            };
+        },
         resetSelectedAddress: function(form) {
             var selectElement = $('shipping-address-select')
             if (selectElement) {
