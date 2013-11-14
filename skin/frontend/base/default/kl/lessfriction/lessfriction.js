@@ -135,6 +135,10 @@ var Checkout, // class
                         options.onSuccess = function(result) {};
                     }
 
+                    options.onError = (function() {
+                        that.available = true;
+                    }(that));
+
                     options.onSuccess = (function() {
                         var cache = options.onSuccess;
 
@@ -183,6 +187,8 @@ var Checkout, // class
                             that.available = true;
                         }.bind(that);
                     }(that));
+
+
 
                     // TODO: Only make request if !== with last one, to handle unnecessary requests
                     var request = new Ajax.Request(url, options);
