@@ -483,12 +483,21 @@ var Checkout, // class
 
             if (response.error) {
                 if (response.message) {
-                    alert(response.message); // TODO: This is generally a bad idea.
-                } else {
+                    checkout.setMessage(response.message.text, response.message.type);
+                }
+                if (response.messages) {
+                response.messages.each(function(message) {
+                    checkout.setMessage(message.text, message.type);
+                });
+            }
+                else {
                     if (response.error_messages) {
-                        alert(response.error_messages); // TODO: This is generally a bad idea.
-                    } else {
-                        alert(response.error); // TODO: This is generally a bad idea.
+                        response.error_messages.each(function(message) {
+                            checkout.setMessage(message.text, message.type);
+                        });
+                    }
+                    else {
+                        checkout.setMessage(response.error, "error");
                     }
                 }
 
