@@ -255,6 +255,7 @@ var Checkout, // class
         setMessage: function(text, type) {
             var messageHtml = "<ul><li class=\"" + type + "-msg\"><ul><li><span>" + text + "</span></li></ul></li></ul>";
             $('co-messages').update(messageHtml);
+            window.location = '#co-messages';
         },
 
         log: function() {
