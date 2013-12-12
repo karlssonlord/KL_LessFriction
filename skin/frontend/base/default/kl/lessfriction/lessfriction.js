@@ -581,7 +581,7 @@ var Checkout, // class
                     this._config
                 );
             }
-        },
+        }
     });
 
     /**
