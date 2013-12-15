@@ -638,8 +638,23 @@ var Checkout, // class
             if (method) {
                 this.lastUsedMethod = method;
             }
-            shippingRegionUpdater.update();
-            shippingAddress.showHideRegion(); // hide Region fields if neccessary
+
+            if (typeof shippingRegionUpdater !== 'undefined') {
+                shippingRegionUpdater.update();
+            }
+
+            if (typeof shippingAddress !== 'undefined') {
+                shippingAddress.showHideRegion(); // hide Region fields if neccessary
+            }
+
+            if (typeof billingRegionUpdater !== 'undefined') {
+                billingRegionUpdater.update();
+            }
+
+            if (typeof billingAddress !== 'undefined') {
+                billingAddress.showHideRegion(); // hide Region fields if neccessary
+            }
+
             this.currentMethod = method;
             this.save();
         },
@@ -839,6 +854,15 @@ var Checkout, // class
      * TODO: Enter short description here...
      */
     BillingAddress  = Class.create(Address, {
+        showHideRegion: function(){
+            if ($('billing:region_id').hasClassName('required-entry')) {
+                $$('li.billing-region').first().show();
+            }
+            else{
+                $$('li.billing-region').first().hide();
+            }
+        },
+
         setEmail: function() {
             if ($('billing:email') && $('shipping:email')) {
                 $('billing:email').value = $('shipping:email').value;
