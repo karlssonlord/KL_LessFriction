@@ -25,7 +25,9 @@ $_validationClass['streetAlt'] = trim(str_replace('required-entry', '', $_valida
     <h2><?php echo $this->__('Billing Address'); ?></h2>
 
     <ul class="form-list">
-
+        <?php if ($this->isPrimaryAddress()): ?>
+            <?php echo $this->getChildHtml('get_address'); ?>
+        <?php endif; ?>
         <?php
             /**
              * If customer has adresses
@@ -166,7 +168,7 @@ $_validationClass['streetAlt'] = trim(str_replace('required-entry', '', $_valida
                                     id="billing:city" />
                             </div>
                         </li>
-                        <li>
+                        <li class="billing-region">
                             <label for="billing:region" class="required">
                                 <?php echo $this->__('State/Province') ?> <em>*</em>
                             </label>

@@ -59,8 +59,12 @@ class KL_LessFriction_Block_Address_Shipping
      */
     public function isPrimaryAddress()
     {
-        $type = Mage::getModel('lessfriction/config')->getPrimaryAddressType();
-        $flag = ($type == 'shipping');
+        if ($this->isShow()) {
+            $type = Mage::getModel('lessfriction/config')->getPrimaryAddressType();
+            $flag = ($type == 'shipping');
+        } else {
+            $flag = false;
+        }
 
         return $flag;
     }

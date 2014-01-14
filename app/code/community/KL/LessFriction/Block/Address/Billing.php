@@ -72,6 +72,10 @@ class KL_LessFriction_Block_Address_Billing
      */
     public function isPrimaryAddress()
     {
+        if ($this->getQuote()->isVirtual()) {
+            return true;
+        }
+
         $type = Mage::getModel('lessfriction/config')->getPrimaryAddressType();
         $flag = ($type == 'billing');
 
