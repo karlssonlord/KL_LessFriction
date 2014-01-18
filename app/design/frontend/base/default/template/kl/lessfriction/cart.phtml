@@ -51,7 +51,8 @@ document.on('dom:loaded', function() {
     cart = new Cart({
         form:      'co-cart-form',
         saveUrl:   '<?php echo $this->getUrl('checkout/cart/updatePostJson') ?>',
-        couponUrl: '<?php echo $this->getUrl('checkout/cart/couponPostJson') ?>'
+        couponUrl: '<?php echo $this->getUrl('checkout/cart/couponPostJson') ?>',
+        relations: ['cart','shipping_method','payment','review']
     });
 });
 </script>

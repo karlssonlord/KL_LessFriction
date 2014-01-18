@@ -141,6 +141,7 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
             $result['blocks'] = $this->_getBlocksAsJson(
                 array(
                     'cart',
+                    'payment_method',
                     'shipping_method',
                     'review'
                 )
@@ -269,6 +270,7 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
             array(
                 'cart',
                 'shipping_method',
+                'payment',
                 'review'
             )
         );
