@@ -331,7 +331,7 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
     /**
      * Get blocks as JSON
      *
-     * @param array $blockNames Array with names of blocks
+     * @param array $blockNames Array with block names
      *
      * @return array
      */
@@ -347,7 +347,9 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
         $layout->generateBlocks();
 
         foreach ($blockNames as $blockName) {
-            $response[$blockName] = $layout->getBlock($blockName)->toHtml();
+            if ($layout->getBlock($blockName)) {
+                $response[$blockName] = $layout->getBlock($blockName)->toHtml();
+            }
         }
 
         return $response;
