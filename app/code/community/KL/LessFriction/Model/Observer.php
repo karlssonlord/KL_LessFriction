@@ -122,11 +122,18 @@ class KL_LessFriction_Model_Observer
     protected function _getDefaultCountry()
     {
         if ($this->defaultCountry === null) {
-            $countryId = Mage::registry('client_country_id') ?
-                            Mage::registry('client_country_id') :
-                            Mage::helper('core')->getDefaultCountry();
+
+            $countryId = Mage::getSingleton('core/session')
+                ->getCountryCode();
+
+            if (!$countryId) {
+                $countryId = Mage::registry('client_country_id') ?
+                                Mage::registry('client_country_id') :
+                                Mage::helper('core')->getDefaultCountry();
+            }
 
             $this->defaultCountry = new Varien_Object(array('country_id' => $countryId));
+
         }
 
         return $this->defaultCountry;
