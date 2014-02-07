@@ -69,11 +69,10 @@ class KL_LessFriction_Model_Config
      * @return boolean
      */
     public function showCrosssell()
-    {
-        $type = Mage::getStoreConfigFlag('lessfriction/crosssell/type');
-
-        return $type == 'none';
-    }
+   {
+       $type = Mage::getStoreConfig('lessfriction/cross_sell/type');
+       return $type !== 'none';
+   }
 
     /**
      * Should single payment method be pre-selected?
