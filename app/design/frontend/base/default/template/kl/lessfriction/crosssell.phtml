@@ -1,2 +1,2 @@
-<?php echo $this->getStaticBlock(); ?>
+<?php echo Mage::helper('cms')->getBlockTemplateProcessor()->filter($this->getStaticBlock()); ?>
 <?php echo $this->getChildHtml('list'); ?>
