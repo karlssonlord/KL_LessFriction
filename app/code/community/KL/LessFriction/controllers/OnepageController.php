@@ -100,6 +100,10 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
             }
         }
 
+        // Needed for coupon codes to work as expected
+        $quote->getShippingAddress()
+            ->setCollectShippingRates(true);
+
         Mage::getSingleton('checkout/session')->setCartWasUpdated(false);
         Mage::getSingleton('customer/session')->setBeforeAuthUrl(
             Mage::getUrl(
