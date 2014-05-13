@@ -978,6 +978,7 @@ var Checkout, // class
         var result    = false;
         var useTitles = this.options.useTitles;
         var callback  = this.options.onElementValidate;
+        this.options.focusOnError = false;
 
         try {
             if (this.options.stopOnFirst) {
