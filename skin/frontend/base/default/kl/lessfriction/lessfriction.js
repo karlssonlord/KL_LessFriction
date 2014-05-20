@@ -743,7 +743,7 @@ var Checkout, // class
             var element = Event.element(e);
 
             // If change in Klarna form, do nothing. TODO: This is ugly
-            if(element.readAttribute('name') === 'pno') {
+            if(['pno', 'klarna_ssn'].indexOf(element.readAttribute('name')) !== -1) {
                 return;
             }
 
