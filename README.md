@@ -29,6 +29,11 @@ You probably want to check the settings under the following sections in Magento 
 1. System &rarr; Configuration &rarr; Less Friction
 2. System &rarr; Configuration &rarr; Newsletter &rarr; Checkout
 
+#### Options
+
+* `saveMethodUrl` - Endpoint URL
+* `defaultMethod` - `guest`, `register` or `false`
+
 #### General
 
 #### Cart
