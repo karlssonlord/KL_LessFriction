@@ -603,12 +603,25 @@ var Checkout, // class
      * Enter short description here...
      */
     PaymentMethod   = Class.create(Section, {
-        switchMethod: function(method) {
-            checkout.log(method);
+        switchMethod: function(method, clicked) {
+            clicked = clicked || false;
+            checkout.log(method, clicked);
 
             // Don't do anything if things are the same as before
-            if(method === this.currentMethod) {
+            if(method === this.currentMethod && method !== 'paypal_express') {
                 return;
+            }
+
+            // If clicked and method is paypal_express
+            if(method === 'paypal_express') {
+                if(!clicked) return;
+
+                checkout._setLoadingSections([
+                    'cart',
+                    'shipping',
+                    'billing',
+                    'review'
+                    ]);
             }
 
             if (this.currentMethod && $('payment_form_'+this.currentMethod)) {
