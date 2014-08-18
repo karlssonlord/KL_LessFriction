@@ -164,6 +164,12 @@ var Checkout, // class
                             }
 
                             if (result.responseJSON.redirect) {
+                                checkout._setLoadingSections([
+                                    'cart',
+                                    'shipping',
+                                    'billing',
+                                    'review'
+                                    ]);
                                 location.href = result.responseJSON.redirect;
                                 return;
                             }
