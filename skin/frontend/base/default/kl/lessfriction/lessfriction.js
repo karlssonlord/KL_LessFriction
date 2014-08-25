@@ -166,6 +166,7 @@ var Checkout, // class
                             if (result.responseJSON.redirect) {
                                 checkout._setLoadingSections([
                                     'cart',
+                                    'payment',
                                     'shipping',
                                     'billing',
                                     'review'
