@@ -44,6 +44,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
     const LAYOUT_HANDLE_BASE    = 'lessfriction_boilerplate';
     const LAYOUT_HANDLE_DEFAULT = 'lessfriction_default';
     const LAYOUT_HANDLE_JSON    = 'lessfriction_json';
+    const NEW_CUSTOMER_EMAIL = 'new_customer_email';
 
     /**
      * Index
@@ -176,9 +177,10 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
         $result   = array();
         $checkout = Mage::getModel('lessfriction/Type_LessFriction');
         $config   = Mage::getModel('lessfriction/config');
+        $websiteId = Mage::app()->getWebsite()->getId();
 
         if ($email !== false) {
-            if ($this->_customerEmailExists($email, Mage::app()->getWebsite()->getId())
+            if ($this->_customerEmailExists($email, $websiteId)
                 && $config->switchToGuestCheckoutIfCustomerEmailExists() === true
             ) {
                 $result['force_method'] = $checkout::METHOD_GUEST;
@@ -186,6 +188,8 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
                 $result['force_method'] = 1;
             }
         }
+
+        $this->raiseCustomerEmailEvent($email, $websiteId, $this->getOnepage()->getQuote()->getId());
 
         $this->_jsonResponse($result);
     }
@@ -579,5 +583,16 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
         }
 
         return $response;
+    }
+
+    /**
+     * @param $email
+     * @param $websiteId
+     * @param $quoteId
+     */
+    protected function raiseCustomerEmailEvent($email, $websiteId, $quoteId)
+    {
+        $data = array('address' => $email, 'site' => $websiteId, 'quote' => $quoteId);
+        Mage::dispatchEvent(self::NEW_CUSTOMER_EMAIL, $data);
     }
 }
