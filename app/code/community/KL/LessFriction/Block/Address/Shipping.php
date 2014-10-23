@@ -83,13 +83,18 @@ class KL_LessFriction_Block_Address_Shipping
             $options = array();
 
             foreach ($this->getCustomer()->getAddresses() as $address) {
-                $options[] = array(
+                $options[$address->getId()] = array(
                     'value' => $address->getId(),
                     'label' => $address->format('oneline')
                 );
             }
 
             $addressId = $this->getAddress()->getCustomerAddressId();
+
+            $billingAddressId = $this->getDefaultBillingAddressId();
+            if ($billingAddressId && (count($options)>1)){
+                unset($options[$billingAddressId]);
+            }
 
             if (empty($addressId)) {
 
@@ -123,4 +128,27 @@ class KL_LessFriction_Block_Address_Shipping
 
         return '';
     }
+
+    /**
+     * Get customer Billing Address Id
+     *
+     * @return int
+     */
+
+    public function getDefaultBillingAddressId()
+    {
+        if ($this->isCustomerLoggedIn()) {
+            $customerId = Mage::getSingleton('customer/session')
+                ->getCustomer()
+                ->getId();
+            $customer = Mage::getModel('customer/customer')->load($customerId);
+            $defaultBilling = $customer->getDefaultBillingAddress();
+
+            return $defaultBilling->getId();
+        }
+
+        return '';
+    }
+
+
 }
