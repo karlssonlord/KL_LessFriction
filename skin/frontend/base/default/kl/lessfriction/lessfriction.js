@@ -17,7 +17,8 @@ var Checkout, // class
     ShippingAddress,
     shippingAddress,
     BillingAddress,
-    billingAddress;
+    billingAddress,
+    SectionValidation;
 (function() {
 
     /**
@@ -990,7 +991,7 @@ var Checkout, // class
 
 
 
-    var SectionValidation       = Class.create();
+    SectionValidation       = Class.create();
     SectionValidation.prototype = new Validation; // TODO: Looks like this is run in each section template aswell.
     Object.extend(SectionValidation, Validation);
 
