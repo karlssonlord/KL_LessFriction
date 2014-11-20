@@ -778,6 +778,9 @@ var Checkout, // class
             }.bind(this), 500);
         },
         validate: function() {
+            if (!$(this._config.form).up().visible()) {
+                return false;
+            }
             var validator      = new SectionValidation(this._config.form);
             if (validator.validate()) {
                 delete validator;
