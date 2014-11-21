@@ -17,7 +17,8 @@ var Checkout, // class
     ShippingAddress,
     shippingAddress,
     BillingAddress,
-    billingAddress;
+    billingAddress,
+    SectionValidation;
 (function() {
 
     /**
@@ -790,6 +791,9 @@ var Checkout, // class
             }.bind(this), 500);
         },
         validate: function() {
+            if (!$(this._config.form).up().visible()) {
+                return false;
+            }
             var validator      = new SectionValidation(this._config.form);
             if (validator.validate()) {
                 delete validator;
@@ -1003,7 +1007,7 @@ var Checkout, // class
 
 
 
-    var SectionValidation       = Class.create();
+    SectionValidation       = Class.create();
     SectionValidation.prototype = new Validation; // TODO: Looks like this is run in each section template aswell.
     Object.extend(SectionValidation, Validation);
 
