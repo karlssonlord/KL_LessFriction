@@ -39,6 +39,17 @@ class KL_LessFriction_Block_Address_Shipping
     extends Mage_Checkout_Block_Onepage_Shipping
 {
     /**
+     * @var null
+     */
+    private $shipToCountrySelect;
+
+    public function __construct($dummy, $shipToCountrySelect = null)
+    {
+
+        $this->shipToCountrySelect = $shipToCountrySelect ? : new KL_LessFriction_Helper_ShipToSelectBuilder;
+    }
+
+    /**
      * Return Sales Quote Address model (shipping address)
      *
      * @return Mage_Sales_Model_Quote_Address
@@ -107,8 +118,8 @@ class KL_LessFriction_Block_Address_Shipping
             }
 
             $select = $this->getLayout()->createBlock('core/html_select')
-                ->setName($type.'_address_id')
-                ->setId($type.'-address-select')
+                ->setName($type . '_address_id')
+                ->setId($type . '-address-select')
                 ->setClass('address-select')
                 ->setExtraParams(
                     'onchange="' . $type . 'Address.newAddress(!this.value)"'
@@ -123,4 +134,12 @@ class KL_LessFriction_Block_Address_Shipping
 
         return '';
     }
+
+    public function getShipToCountrySelect()
+    {
+        $countryCode = Mage::getStoreConfig('general/country/default');
+
+        return $this->shipToCountrySelect->buildFor($countryCode);
+    }
+
 }
