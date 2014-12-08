@@ -261,7 +261,7 @@ var Checkout, // class
             document.body.fire('login:setMethod', {method : this.method});
         },
 
-        setMessage: function(text, type) {
+       setMessage: function(text, type) {
             var messageHtml = "<ul><li class=\"" + type + "-msg\"><ul><li><span>" + text + "</span></li></ul></li></ul>";
             $('co-messages').update(messageHtml);
             window.location = '#co-messages';
@@ -487,7 +487,7 @@ var Checkout, // class
              */
             if (response.messages) {
                 response.messages.each(function(message) {
-                    checkout.setMessage(message.text, message.type);
+                    checkout.setMessage(message.text, message.type , "coupon-msg");
                 });
             }
 
@@ -658,7 +658,7 @@ var Checkout, // class
             if (method) {
                 this.lastUsedMethod = method;
             }
-
+             /*
             if (typeof shippingRegionUpdater !== 'undefined') {
                 shippingRegionUpdater.update();
             }
@@ -673,7 +673,7 @@ var Checkout, // class
 
             if (typeof billingAddress !== 'undefined') {
                 billingAddress.showHideRegion(); // hide Region fields if neccessary
-            }
+            }*/
 
             this.currentMethod = method;
             this.save();
