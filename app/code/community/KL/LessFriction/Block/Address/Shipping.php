@@ -46,7 +46,10 @@ class KL_LessFriction_Block_Address_Shipping
     public function __construct($dummy, $shipToCountrySelect = null)
     {
 
-        $this->shipToCountrySelect = $shipToCountrySelect ? : new KL_LessFriction_Helper_ShipToSelectBuilder;
+        $this->shipToCountrySelect = $shipToCountrySelect ? : new KL_LessFriction_Helper_ShipToSelectBuilder(
+            Mage::getStoreConfig('carriers/freeshipping/specificcountry'),
+            Mage::getModel('directory/country')
+        );
     }
 
     /**

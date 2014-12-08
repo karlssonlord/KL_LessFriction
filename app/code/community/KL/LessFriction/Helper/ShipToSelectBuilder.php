@@ -11,10 +11,10 @@ class KL_LessFriction_Helper_ShipToSelectBuilder
      */
     private $countryDirectory;
 
-    public function __construct($allowedCountries = null, $countryDirectory = null)
+    public function __construct($allowedCountries, Mage_Core_Model_Abstract $countryDirectory)
     {
-        $this->allowedCountries = $allowedCountries ? : Mage::getStoreConfig('lessfriction/shipping/specificcountry');
-        $this->countryDirectory = $countryDirectory ? : Mage::getModel('directory/country');
+        $this->allowedCountries = $allowedCountries;
+        $this->countryDirectory = $countryDirectory;
     }
 
     /**
