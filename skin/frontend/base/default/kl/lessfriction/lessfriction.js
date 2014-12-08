@@ -487,7 +487,7 @@ var Checkout, // class
              */
             if (response.messages) {
                 response.messages.each(function(message) {
-                    checkout.setMessage(message.text, message.type);
+                    checkout.setMessage(message.text, message.type , "coupon-msg");
                 });
             }
 
