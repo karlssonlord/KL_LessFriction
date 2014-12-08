@@ -108,7 +108,7 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
                         $result['messages'][] = array(
                             'type' => 'error',
                             'text' => $this->__(
-                                'Coupon code "%s" is not valid.',
+                                'Promotional code "%s" is not valid. Please contact customer at service: onlineinfo@hope-sthlm.com.',
                                 Mage::helper('core')->htmlEscape($couponCode)
                             )
                         );
