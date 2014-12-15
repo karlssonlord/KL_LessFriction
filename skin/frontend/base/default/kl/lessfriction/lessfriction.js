@@ -18,6 +18,7 @@ var Checkout, // class
     shippingAddress,
     BillingAddress,
     billingAddress,
+    Section,
     SectionValidation;
 (function() {
 
@@ -284,7 +285,7 @@ var Checkout, // class
      * steps or block – this is the boilerplate class
      * for them.
      */
-    var Section = Class.create({
+    Section = Class.create({
         func: $H({
             'before': $H({
                 'init':     $H({}),
