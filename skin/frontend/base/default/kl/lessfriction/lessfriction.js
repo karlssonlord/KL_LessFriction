@@ -488,7 +488,7 @@ var Checkout, // class
              */
             if (response.messages) {
                 response.messages.each(function(message) {
-                    checkout.setMessage(message.text, message.type , "coupon-msg");
+                    checkout.setMessage(message.text, message.type);
                 });
             }
 
@@ -542,7 +542,6 @@ var Checkout, // class
                 'input.qty',
                 function(event, element) {
                     this.save();
-                    this.updateCartSideBar();
                     Event.stop(event);
                 }.bind(this)
             );
@@ -555,7 +554,6 @@ var Checkout, // class
                 function(event, element) {
                     checkout.queueRequest(element.readAttribute('data-href'), {}, that._config);
                     element.up('tr').remove();
-                    this.updateCartSideBar();
                     Event.stop(event);
                 }.bind(this)
             );
@@ -590,17 +588,6 @@ var Checkout, // class
                     },
                     this._config
                 );
-            }
-        },
-        updateCartSideBar: function() {
-            var inputs, index, qtyItem;
-            qtyItem = 0;
-            inputs = $$(".qtyItem");
-            if (inputs !== undefined){
-                for (index = 0; index < inputs.length; ++index) {
-                    qtyItem += parseFloat(inputs[index].value);
-                }
-                $('cartSideBar').update("Cart ("+qtyItem+")");
             }
         }
     });
