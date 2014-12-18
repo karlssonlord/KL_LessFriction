@@ -15,6 +15,11 @@
             <lessfriction>
                 <class>KL_LessFriction_Helper</class>
             </lessfriction>
+            <directory>
+                <rewrite>
+                    <data>KL_LessFriction_Helper_Country</data>
+                </rewrite>
+            </directory>
         </helpers>
         <models>
             <lessfriction>
@@ -25,6 +30,11 @@
                     <type_onepage>KL_LessFriction_Model_Type_Onepage</type_onepage>
                 </rewrite>
             </checkout>
+            <directory_resource>
+                <rewrite>
+                    <country_collection>KL_LessFriction_Model_Resource_Country_Collection</country_collection>
+                </rewrite>
+            </directory_resource>
         </models>
         <resources>
             <lessfriction_setup>
