@@ -808,7 +808,7 @@ var Checkout, // class
             checkout.queueRequest(
                 this._config.customerEmailExistsUrl,
                 {
-                    parameters: 'email=' + email,
+                    parameters: 'email=' + encodeURIComponent(email),
                     onSuccess:  this.onSuccess
                 }
             );
