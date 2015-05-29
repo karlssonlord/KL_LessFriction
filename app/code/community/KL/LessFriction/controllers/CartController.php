@@ -371,6 +371,11 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
      */
     protected function _jsonResponse($data = array())
     {
+        Mage::dispatchEvent(
+            'checkout_json_response',
+            array('quote' => $this->_getCart()->getQuote())
+        );
+
         $jsonData = Mage::helper('core')->jsonEncode($data);
         $this->getResponse()->setHeader('Content-type', 'application/json');
         $this->getResponse()->setBody($jsonData);

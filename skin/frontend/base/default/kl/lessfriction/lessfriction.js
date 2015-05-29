@@ -66,7 +66,6 @@ var Checkout, // class
          *
          */
         _setLoadingSections: function(relations) {
-            // TODO: Disable "Place Order" button
             if(typeof relations !== 'undefined' && relations.length > 0) {
                 for (var i = 0; i < relations.length; i++) {
                     $$('.' + relations[i] + '-section').each(function(section) {
@@ -75,6 +74,8 @@ var Checkout, // class
                     });
                 }
             }
+
+            document.fire('lessfriction:setLoadingSections', {});
         },
 
         /**
@@ -82,11 +83,12 @@ var Checkout, // class
          *
          */
         _resetLoadingSections: function() {
-            // TODO: Enable "Place Order" button
             $$('[class*="-section loading"]').each(function(section) {
                 var overlay = section.removeClassName('loading').down('.overlay');
                 if (overlay) overlay.hide();
             });
+
+            document.fire('lessfriction:resetLoadingSections', {});
         },
 
         /**

@@ -506,6 +506,11 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
      */
     protected function _jsonResponse($data = array())
     {
+        Mage::dispatchEvent(
+            'checkout_json_response',
+            array('quote' => $this->getOnepage()->getQuote())
+        );
+
         $jsonData = Mage::helper('core')->jsonEncode($data);
         $this->getResponse()->setHeader('Content-type', 'application/json');
         $this->getResponse()->setBody($jsonData);
