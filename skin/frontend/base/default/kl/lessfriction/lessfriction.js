@@ -243,10 +243,12 @@ var Checkout, // class
 
             this.log(method);
 
-            if (method == 'guest') {
-                Element.hide('register-customer-password');
-            } else if(method == 'register') {
-                Element.show('register-customer-password');
+            if ($('register-customer-password')) {
+                if (method == 'guest') {
+                    Element.hide('register-customer-password');
+                } else if(method == 'register') {
+                    Element.show('register-customer-password');
+                }
             }
 
             this.queueRequest(
@@ -827,11 +829,12 @@ var Checkout, // class
     ShippingAddress = Class.create(Address, {
 
         showHideRegion: function(){
-            if ($('shipping:region_id').hasClassName('required-entry')) {
-                $$('li.shipping-region').first().show();
-            }
-            else{
-                $$('li.shipping-region').first().hide();
+            if ($$('li.shipping-region').length) {
+                if ($('shipping:region_id').hasClassName('required-entry')) {
+                    $$('li.shipping-region').first().show();
+                } else{
+                    $$('li.shipping-region').first().hide();
+                }
             }
         },
 
