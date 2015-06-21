@@ -267,7 +267,14 @@ var Checkout, // class
             document.body.fire('login:setMethod', {method : this.method});
         },
 
-        setMessage: function(text, type) {
+        setMessage: function(text, type, inlineElement) {
+            var event = new CustomEvent('alertVisitor', {'detail': {
+                'msg': text,
+                'type': type,
+                'inlineElement': inlineElement
+            }});
+            document.dispatchEvent(event);
+            
             var messageHtml = "<ul><li class=\"" + type + "-msg\"><ul><li><span>" + text + "</span></li></ul></li></ul>";
             $('co-messages').update(messageHtml);
             window.location = '#co-messages';
