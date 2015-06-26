@@ -1,8 +1,4 @@
-var loginForm;
-
 document.observe('dom:loaded', function() {
-    loginForm = new VarienForm('login-form', true);
-
     if ($('login-email')) {
         $('login-email').observe('keypress', bindLoginPost);
     }
