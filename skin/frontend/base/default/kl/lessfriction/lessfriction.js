@@ -274,7 +274,7 @@ var Checkout, // class
                 'inlineElement': inlineElement
             }});
             document.dispatchEvent(event);
-            
+
             var messageHtml = "<ul><li class=\"" + type + "-msg\"><ul><li><span>" + text + "</span></li></ul></li></ul>";
             $('co-messages').update(messageHtml);
             window.location = '#co-messages';
@@ -790,9 +790,6 @@ var Checkout, // class
             }.bind(this), 500);
         },
         validate: function() {
-            if (!$(this._config.form).up().visible()) {
-                return false;
-            }
             var validator      = new SectionValidation(this._config.form);
             if (validator.validate()) {
                 delete validator;
