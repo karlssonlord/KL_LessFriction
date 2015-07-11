@@ -25,6 +25,11 @@
                     <type_onepage>KL_LessFriction_Model_Type_Onepage</type_onepage>
                 </rewrite>
             </checkout>
+            <salesrule>
+                <rewrite>
+                    <quote_freeshipping>KL_LessFriction_Model_Quote_Freeshipping</quote_freeshipping>
+                </rewrite>
+            </salesrule>
         </models>
         <resources>
             <lessfriction_setup>
@@ -91,6 +96,14 @@
                     </lessfriction>
                 </observers>
             </controller_action_predispatch_checkout_cart_index>
+            <free_shipping_validation_point_was_passed>
+                <observers>
+                    <lessfriction>
+                        <class>lessfriction/observer_setFreeShippingOnAddress</class>
+                        <method>handle</method>
+                    </lessfriction>
+                </observers>
+            </free_shipping_validation_point_was_passed>
             <checkout_type_onepage_save_order>
                 <observers>
                     <setCustomerIsSubscribed>

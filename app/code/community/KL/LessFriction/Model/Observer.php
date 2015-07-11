@@ -62,6 +62,7 @@ class KL_LessFriction_Model_Observer
      */
     public function preDispatch(Varien_Event_Observer $observer)
     {
+        Mage::log($observer->getEvent()->getName(), null, 'foobar.log', true);
         /* @var $quote Mage_Sales_Model_Quote */
         $quote = $this->_getQuote();
 
@@ -224,11 +225,15 @@ class KL_LessFriction_Model_Observer
             || $config->preselectCheapestShippingMethod()
             || $config->hideIfFreeShipping()
         ) {
-
             /* @var $quote Mage_Sales_Model_Quote */
             $quote  = $this->_getQuote();
-            $groups = $quote->getShippingAddress()->getGroupedAllShippingRates();
+            $groups = $quote
+                ->getShippingAddress()
+//                ->collectShippingRates()
+                ->getGroupedAllShippingRates()
+            ;
 
+            //getShippingRates
             if (!empty($groups)) {
                 foreach ($groups as $code => $groupItems) {
                     /**
@@ -253,10 +258,7 @@ class KL_LessFriction_Model_Observer
                         }
                     }
                 }
-
-                $quote->getShippingAddress()->setShippingMethod(
-                    $shippingMethod->getCode()
-                );
+                return $this->saveShippingMethod($quote, $shippingMethod);
             }
         }
     }
@@ -410,5 +412,16 @@ class KL_LessFriction_Model_Observer
         } catch (Exception $e) {
             Mage::log('Failed to merge order.', null, 'merge.log', true);
         }
+    }
+
+    /**
+     * @param $quote
+     * @param $shippingMethod
+     */
+    protected function saveShippingMethod($quote, $shippingMethod)
+    {
+        $quote->getShippingAddress()->setShippingMethod(
+            $shippingMethod->getCode()
+        );
     }
 }
