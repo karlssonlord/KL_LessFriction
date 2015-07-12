@@ -104,6 +104,22 @@
                     </lessfriction>
                 </observers>
             </free_shipping_validation_point_was_passed>
+            <checkout_cart_save_after>
+                <observers>
+                    <lessfriction>
+                        <class>lessfriction/observer</class>
+                        <method>fireShippingValidationEvent</method>
+                    </lessfriction>
+                </observers>
+            </checkout_cart_save_after>
+            <customer_was_not_eligible_for_free_shipping>
+                <observers>
+                    <lessfriction>
+                        <class>KL_LessFriction_Model_Shipping_MethodProvider</class>
+                        <method>setShippingMethod</method>
+                    </lessfriction>
+                </observers>
+            </customer_was_not_eligible_for_free_shipping>
             <checkout_type_onepage_save_order>
                 <observers>
                     <setCustomerIsSubscribed>

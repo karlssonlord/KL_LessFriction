@@ -229,7 +229,6 @@ class KL_LessFriction_Model_Observer
             $quote  = $this->_getQuote();
             $groups = $quote
                 ->getShippingAddress()
-//                ->collectShippingRates()
                 ->getGroupedAllShippingRates()
             ;
 
@@ -258,6 +257,7 @@ class KL_LessFriction_Model_Observer
                         }
                     }
                 }
+
                 return $this->saveShippingMethod($quote, $shippingMethod);
             }
         }
@@ -424,4 +424,15 @@ class KL_LessFriction_Model_Observer
             $shippingMethod->getCode()
         );
     }
+
+    /**
+     * This method helps firing another custom event, that should be triggered
+     * in the cart not only on page reload, but on ajax cart update.
+     */
+    public function fireShippingValidationEvent()
+    {
+        $quote = Mage::getSingleton('checkout/cart')->getQuote();
+        Mage::dispatchEvent('free_shipping_validation_point_was_passed', array('quote' => $quote));
+    }
+
 }

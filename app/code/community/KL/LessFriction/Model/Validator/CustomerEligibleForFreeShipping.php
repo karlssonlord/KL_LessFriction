@@ -1,5 +1,8 @@
-<?php 
+<?php
 
+/**
+ * @author David Wickström <david@karlssonlord.com>
+ */
 class KL_LessFriction_Model_Validator_CustomerEligibleForFreeShipping implements KL_LessFriction_Model_Validator
 {
     /**

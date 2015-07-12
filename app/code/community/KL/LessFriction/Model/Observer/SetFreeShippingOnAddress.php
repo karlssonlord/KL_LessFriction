@@ -1,5 +1,8 @@
-<?php 
+<?php
 
+/**
+ * @author David Wickström <david@karlssonlord.com>
+ */
 class KL_LessFriction_Model_Observer_SetFreeShippingOnAddress
 {
     /**
@@ -18,26 +21,15 @@ class KL_LessFriction_Model_Observer_SetFreeShippingOnAddress
      */
     public function handle(Varien_Event_Observer $observer)
     {
-        $quote = $observer->getEvent()->getAddress()->getQuote();
+        $quote = $observer->getEvent()->getQuote();
+
         if ($this->validatorsPass()) {
             $this->setFreeShippingOnQuote($quote);
         } else {
-            // TODO: Works, but need to un-hard-code and grab a shipping method from a MethodProvider class
-            $quote->getShippingAddress()->setShippingMethod('flatrate_flatrate');
+            Mage::dispatchEvent('customer_was_not_eligible_for_free_shipping', array('quote' => $quote));
         }
 
         return $this;
-    }
-
-    /**
-     * Check if shipping method contains the word "free". Should be enough.
-     *
-     * @param $quote
-     * @return bool
-     */
-    protected function hasFreeShippingSetAlready($quote)
-    {
-        return strpos($quote->getShippingAddress()->getShippingMethod(), 'free') !== false;
     }
 
     /**
@@ -69,20 +61,6 @@ class KL_LessFriction_Model_Observer_SetFreeShippingOnAddress
     protected function getValidator($validatorClassPath)
     {
         return new $validatorClassPath;
-    }
-
-    /**
-     * @param $quote
-     * @return bool
-     */
-    protected function shippingRateNeedsToBeCollected($quote)
-    {
-        return $this->hasFreeShippingSetAlready($quote) || $this->hasNoShippingMethodSet($quote);
-    }
-
-    protected function hasNoShippingMethodSet($quote)
-    {
-        return $quote->getShippingAddress()->getShippingMethod() === null;
     }
 
 }
