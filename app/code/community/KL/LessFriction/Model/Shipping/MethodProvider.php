@@ -33,6 +33,8 @@ class KL_LessFriction_Model_Shipping_MethodProvider
     {
         $cheapestMethod = $this->getCheapestMethod($quote);
 
+        if (!$cheapestMethod) return $quote;
+
         return $quote->getShippingAddress()->setShippingMethod($cheapestMethod->getCode());
     }
 
