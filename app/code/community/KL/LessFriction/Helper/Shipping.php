@@ -21,7 +21,7 @@ class KL_LessFriction_Helper_Shipping extends Mage_Core_Helper_Abstract
      */
     public function customerIsEligibleForFreeShipping()
     {
-        return $this->calculateAmountLeftUntilFreeShippingActivates() == 0 && $this->freeShippingMethodIsEnabled();
+        return $this->calculateAmountLeftUntilFreeShippingActivates() == 0;
     }
 
     /**
