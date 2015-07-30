@@ -72,9 +72,19 @@ class KL_LessFriction_Model_Type_LessFriction
             $data['confirm_password'] = $data['customer_password'];
         }
 
+        if (isset($data['is_subscribed']) && !empty($data['is_subscribed'])) {
+            $this->getCheckout()->setCustomerIsSubscribed(1);
+        } else {
+            $this->getCheckout()->setCustomerIsSubscribed(0);
+        }
+
         parent::saveShipping($data, $customerAddressId);
 
         $address = $this->getQuote()->getShippingAddress();
+
+        if (true !== ($result = $this->_validateCustomerData($data))) {
+            return $result;
+        }
 
         if (isset($data['use_for_billing']) && $data['use_for_billing'] == 1) {
             $result = $this->saveBilling($data, $customerAddressId);
