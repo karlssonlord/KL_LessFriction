@@ -733,6 +733,10 @@ var Checkout, // class
                 return false;
             }
 
+            if (methods.length == 1) {
+                return true;
+            }
+
             for (var i = 0; i < methods.length; i++) {
                 if (methods[i].checked) {
                     return true;
