@@ -177,10 +177,10 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
             }
         }
 
-        if (!$this->_getCart()->getQuote()->hasItems()) {
+        // if (!$this->_getCart()->getQuote()->hasItems()) {
             $result['redirect'] = Mage::helper('checkout/url')->getCheckoutUrl();
-        }
-
+        // }
+/*
         $result['blocks'] = $this->_getBlocksAsJson(
             array(
                 'cart',
@@ -189,7 +189,7 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
                 'review'
             )
         );
-
+*/
         return $this->_jsonResponse($result);
     }
 
