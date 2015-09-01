@@ -225,6 +225,8 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
                 Mage::throwException($this->__('Quote item is not found.'));
             }
 
+            $oldQty = $quoteItem->getQty();
+
             $quoteItem->setQty($params['qty'])->save();
 
             $cart->save();
@@ -274,15 +276,19 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
             $result['error'] = 1;
         }
 
-        $result['blocks'] = $this->_getBlocksAsJson(
-            array(
-                'totals',
-                'cart',
-                'shipping_method',
-                'payment',
-                'review'
-            )
-        );
+        if ($oldQty > $params['qty']) {
+            $result['redirect'] = Mage::helper('checkout/url')->getCheckoutUrl();
+        } else {
+            $result['blocks'] = $this->_getBlocksAsJson(
+                array(
+                    'totals',
+                    'cart',
+                    'shipping_method',
+                    'payment',
+                    'review'
+                )
+            );
+        }
 
         return $this->_jsonResponse($result);
     }
