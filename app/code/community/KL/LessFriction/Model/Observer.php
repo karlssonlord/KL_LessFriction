@@ -126,7 +126,10 @@ class KL_LessFriction_Model_Observer
             $countryId = Mage::getSingleton('core/session')
                 ->getCountryCode();
 
-            if (!$countryId) {
+            $countryList = Mage::getStoreConfig('general/country/allow');
+            $countryList = explode(',', $countryList);
+
+            if (!$countryId || !in_array($countryId, $countryList)) {
                 $countryId = Mage::registry('client_country_id') ?
                                 Mage::registry('client_country_id') :
                                 Mage::helper('core')->getDefaultCountry();
