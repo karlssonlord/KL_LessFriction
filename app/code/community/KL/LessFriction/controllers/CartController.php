@@ -166,7 +166,10 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
 
         if ($itemId) {
             try {
-                $this->_getCart()->removeItem($itemId)->save();
+                $cart = $this->_getCart();
+                $cart->removeItem($itemId)->save();
+                $cart->getQuote()->setTotalsCollectedFlag(false);
+                $cart->getQuote()->collectTotals()->save();
             } catch (Exception $e) {
                 $this->_getSession()->addError(
                     $this->__('Cannot remove the item.')
