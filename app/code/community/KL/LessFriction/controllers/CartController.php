@@ -229,6 +229,9 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
             $cart->save();
             $this->_getSession()->setCartWasUpdated(false);
 
+            $cart->getQuote()->setTotalsCollectedFlag(false);
+            $cart->getQuote()->collectTotals()->save();
+
             if ($quoteItem->getHasError()) {
                 Mage::throwException($quoteItem->getMessage());
             }
