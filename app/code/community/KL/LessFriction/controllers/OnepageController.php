@@ -242,7 +242,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
             $data['email'] = trim($data['email']);
         }
 
-        $result = $this->getOnepage()->saveBilling($data, $addressId);
+        $result = Mage::getModel('lessfriction/Type_LessFriction')->saveBilling($data, $addressId);
 
         /**
          * Get the block relations, load them as JSON and add them
