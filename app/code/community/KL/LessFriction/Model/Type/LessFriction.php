@@ -104,6 +104,10 @@ class KL_LessFriction_Model_Type_LessFriction
             return array('error' => -1, 'message' => Mage::helper('checkout')->__('Invalid data.'));
         }
 
+        if (!isset($data['email'])) {
+            $data['email'] = $this->getQuote()->getCustomerEmail();
+        }
+
         $address = $this->getQuote()->getBillingAddress();
         /* @var $addressForm Mage_Customer_Model_Form */
         $addressForm = Mage::getModel('customer/form');
