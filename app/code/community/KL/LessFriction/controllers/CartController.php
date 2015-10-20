@@ -166,7 +166,10 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
 
         if ($itemId) {
             try {
-                $this->_getCart()->removeItem($itemId)->save();
+                $cart = $this->_getCart();
+                $cart->removeItem($itemId)->save();
+                $cart->getQuote()->setTotalsCollectedFlag(false);
+                $cart->getQuote()->collectTotals()->save();
             } catch (Exception $e) {
                 $this->_getSession()->addError(
                     $this->__('Cannot remove the item.')
@@ -228,6 +231,9 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
 
             $cart->save();
             $this->_getSession()->setCartWasUpdated(false);
+
+            $cart->getQuote()->setTotalsCollectedFlag(false);
+            $cart->getQuote()->collectTotals()->save();
 
             if ($quoteItem->getHasError()) {
                 Mage::throwException($quoteItem->getMessage());
@@ -371,6 +377,11 @@ class KL_LessFriction_CartController extends Mage_Checkout_CartController
      */
     protected function _jsonResponse($data = array())
     {
+        Mage::dispatchEvent(
+            'checkout_json_response',
+            array('quote' => $this->_getCart()->getQuote())
+        );
+
         $jsonData = Mage::helper('core')->jsonEncode($data);
         $this->getResponse()->setHeader('Content-type', 'application/json');
         $this->getResponse()->setBody($jsonData);
