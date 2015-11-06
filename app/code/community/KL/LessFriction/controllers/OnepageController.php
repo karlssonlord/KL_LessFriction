@@ -394,6 +394,16 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
             $result['error'] = $this->__('Unable to set payment method.');
         }
 
+        $quote = $this->getOnepage()->getQuote();
+
+        $quote->collectTotals()
+            ->save();
+
+        $quote->getShippingAddress()
+            ->setCollectShippingRates(true)
+            ->collectShippingRates()
+            ->save();
+
         $relations = $this->getRequest()->getPost('relations', '');
         $relations = explode(',', $relations);
 
