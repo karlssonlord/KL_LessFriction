@@ -66,7 +66,6 @@ var Checkout, // class
          *
          */
         _setLoadingSections: function(relations) {
-            // TODO: Disable "Place Order" button
             if(typeof relations !== 'undefined' && relations.length > 0) {
                 for (var i = 0; i < relations.length; i++) {
                     $$('.' + relations[i] + '-section').each(function(section) {
@@ -75,6 +74,8 @@ var Checkout, // class
                     });
                 }
             }
+
+            document.fire('lessfriction:setLoadingSections', {});
         },
 
         /**
@@ -82,11 +83,12 @@ var Checkout, // class
          *
          */
         _resetLoadingSections: function() {
-            // TODO: Enable "Place Order" button
             $$('[class*="-section loading"]').each(function(section) {
                 var overlay = section.removeClassName('loading').down('.overlay');
                 if (overlay) overlay.hide();
             });
+
+            document.fire('lessfriction:resetLoadingSections', {});
         },
 
         /**
@@ -241,10 +243,12 @@ var Checkout, // class
 
             this.log(method);
 
-            if (method == 'guest') {
-                Element.hide('register-customer-password');
-            } else if(method == 'register') {
-                Element.show('register-customer-password');
+            if ($('register-customer-password')) {
+                if (method == 'guest') {
+                    Element.hide('register-customer-password');
+                } else if(method == 'register') {
+                    Element.show('register-customer-password');
+                }
             }
 
             this.queueRequest(
@@ -263,7 +267,14 @@ var Checkout, // class
             document.body.fire('login:setMethod', {method : this.method});
         },
 
-        setMessage: function(text, type) {
+        setMessage: function(text, type, inlineElement) {
+            var event = new CustomEvent('alertVisitor', {'detail': {
+                'msg': text,
+                'type': type,
+                'inlineElement': inlineElement
+            }});
+            document.dispatchEvent(event);
+
             var messageHtml = "<ul><li class=\"" + type + "-msg\"><ul><li><span>" + text + "</span></li></ul></li></ul>";
             $('co-messages').update(messageHtml);
             window.location = '#co-messages';
@@ -722,6 +733,10 @@ var Checkout, // class
                 return false;
             }
 
+            if (methods.length == 1) {
+                return true;
+            }
+
             for (var i = 0; i < methods.length; i++) {
                 if (methods[i].checked) {
                     return true;
@@ -779,9 +794,6 @@ var Checkout, // class
             }.bind(this), 500);
         },
         validate: function() {
-            if (!$(this._config.form).up().visible()) {
-                return false;
-            }
             var validator      = new SectionValidation(this._config.form);
             if (validator.validate()) {
                 delete validator;
@@ -825,11 +837,12 @@ var Checkout, // class
     ShippingAddress = Class.create(Address, {
 
         showHideRegion: function(){
-            if ($('shipping:region_id').hasClassName('required-entry')) {
-                $$('li.shipping-region').first().show();
-            }
-            else{
-                $$('li.shipping-region').first().hide();
+            if ($$('li.shipping-region').length) {
+                if ($('shipping:region_id').hasClassName('required-entry')) {
+                    $$('li.shipping-region').first().show();
+                } else{
+                    $$('li.shipping-region').first().hide();
+                }
             }
         },
 

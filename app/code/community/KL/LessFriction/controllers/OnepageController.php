@@ -242,7 +242,7 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
             $data['email'] = trim($data['email']);
         }
 
-        $result = $this->getOnepage()->saveBilling($data, $addressId);
+        $result = Mage::getModel('lessfriction/Type_LessFriction')->saveBilling($data, $addressId);
 
         /**
          * Get the block relations, load them as JSON and add them
@@ -394,6 +394,16 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
             $result['error'] = $this->__('Unable to set payment method.');
         }
 
+        $quote = $this->getOnepage()->getQuote();
+
+        $quote->collectTotals()
+            ->save();
+
+        $quote->getShippingAddress()
+            ->setCollectShippingRates(true)
+            ->collectShippingRates()
+            ->save();
+
         $relations = $this->getRequest()->getPost('relations', '');
         $relations = explode(',', $relations);
 
@@ -506,6 +516,11 @@ class KL_LessFriction_OnepageController extends Mage_Checkout_OnepageController
      */
     protected function _jsonResponse($data = array())
     {
+        Mage::dispatchEvent(
+            'checkout_json_response',
+            array('quote' => $this->getOnepage()->getQuote())
+        );
+
         $jsonData = Mage::helper('core')->jsonEncode($data);
         $this->getResponse()->setHeader('Content-type', 'application/json');
         $this->getResponse()->setBody($jsonData);
