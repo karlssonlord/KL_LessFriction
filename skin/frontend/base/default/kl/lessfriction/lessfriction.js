@@ -628,7 +628,7 @@ var Checkout, // class
             checkout.log(method, clicked);
 
             // Don't do anything if things are the same as before
-            if(method === this.currentMethod && method !== 'paypal_express') {
+            if(method === this.currentMethod && method !== 'paypal_express' && !$('payment_form_'+method)) {
                 return;
             }
 
@@ -659,8 +659,10 @@ var Checkout, // class
                         clearTimeout(this.keyTimeout);
                     }
 
+                    this.state = $(this._config.form).serialize(true);
+
                     this.keyTimeout = setTimeout(function() {
-                        checkout.log('Try to save address 1');
+                        checkout.log('Try to save payment form');
                         this.save();
                     }.bind(this), 500);
                 }.bind(this));
@@ -668,6 +670,7 @@ var Checkout, // class
                 // Event fix for payment methods without form like "Check / Money order"
                 document.body.fire('payment-method:switched', {method_code : method});
             }
+
             if (method) {
                 this.lastUsedMethod = method;
             }
