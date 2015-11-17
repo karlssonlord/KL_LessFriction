@@ -675,16 +675,8 @@ var Checkout, // class
                 this.lastUsedMethod = method;
             }
 
-            if (typeof shippingRegionUpdater !== 'undefined') {
-                shippingRegionUpdater.update();
-            }
-
             if (typeof shippingAddress !== 'undefined') {
                 shippingAddress.showHideRegion(); // hide Region fields if neccessary
-            }
-
-            if (typeof billingRegionUpdater !== 'undefined') {
-                billingRegionUpdater.update();
             }
 
             if (typeof billingAddress !== 'undefined') {
