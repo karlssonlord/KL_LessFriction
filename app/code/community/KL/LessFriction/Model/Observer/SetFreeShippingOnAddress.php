@@ -50,8 +50,10 @@ class KL_LessFriction_Model_Observer_SetFreeShippingOnAddress
      */
     protected function setFreeShippingOnQuote($quote)
     {
-        $quote->getShippingAddress()->setShippingMethod('freeshipping_freeshipping');
-        $quote->save();
+        if (!$quote->getShippingAddress()->getShippingMethod()) {
+            $quote->getShippingAddress()->setShippingMethod('freeshipping_freeshipping');
+            $quote->save();
+        }
     }
 
     /**
