@@ -111,7 +111,9 @@ class KL_LessFriction_Model_Observer
 
         if ($billingAddress && $shippingAddress) {
             $this->_setPaymentMethod();
-            $this->_setShippingMethod();
+            if (!$shippingAddress->getShippingMethod()) {
+                $this->_setShippingMethod();
+            }
         }
     }
 
