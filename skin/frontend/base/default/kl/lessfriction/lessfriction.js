@@ -69,7 +69,7 @@ var Checkout, // class
             if(typeof relations !== 'undefined' && relations.length > 0) {
                 for (var i = 0; i < relations.length; i++) {
                     $$('.' + relations[i] + '-section').each(function(section) {
-                        var overlay = section.addClassName('loading').down('.overlay');
+                        var overlay = section.addClassName('loading').select('> .overlay').first();
                         if (overlay) overlay.show();
                     });
                 }
